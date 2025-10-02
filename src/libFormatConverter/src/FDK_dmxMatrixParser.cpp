@@ -191,7 +191,7 @@ INT EqualizerConfig(HANDLE_FDK_BITSTREAM hBs, SpeakerInformation* inputConfig, U
   equalizerPresent = FDKreadBit(hBs);
   if (equalizerPresent == 0) {
     eqConfig->numEQs = 0;
-    FDKmemclear(eqConfig->eqMap, sizeof(eqConfig->eqMap));
+    mpegh_FDKmemclear(eqConfig->eqMap, sizeof(eqConfig->eqMap));
     return 0;
   }
 

@@ -147,7 +147,7 @@ typedef mdct_t* H_MDCT;
  * \param overlap pointer to FIXP_DBL overlap buffer.
  * \param overlapBufferSize size in FIXP_DBLs of the given overlap buffer.
  */
-void mdct_init(H_MDCT hMdct, FIXP_DBL* overlap, INT overlapBufferSize);
+void mpegh_mdct_init(H_MDCT hMdct, FIXP_DBL* overlap, INT overlapBufferSize);
 
 /**
  * \brief perform MDCT transform (time domain to frequency domain) with given parameters.
@@ -172,18 +172,18 @@ INT mdct_block(H_MDCT hMdct, const INT_PCM* RESTRICT pTimeData, const INT noInSa
  * \param pExponent pointer to the exponent of a gain factor to be applied to IMDCT data.
  * \param tl length of the IMDCT where the gain *pGain * (2 ^ *pExponent) will be applied to.
  */
-void imdct_gain(FIXP_DBL* pGain, int* pExponent, int tl);
+void mpegh_imdct_gain(FIXP_DBL* pGain, int* pExponent, int tl);
 
 /**
  * \brief drain buffered output samples into given buffer. Changes the MDCT state.
  */
-INT imdct_drain(H_MDCT hMdct, FIXP_DBL* pTimeData, INT nrSamplesRoom);
+INT mpegh_imdct_drain(H_MDCT hMdct, FIXP_DBL* pTimeData, INT nrSamplesRoom);
 
 /**
  * \brief Copy overlap time domain data to given buffer. Does not change the MDCT state.
  * \return number of actually copied samples (ov + nr).
  */
-INT imdct_copy_ov_and_nr(H_MDCT hMdct, FIXP_DBL* pTimeData, INT nrSamples);
+INT mpegh_imdct_copy_ov_and_nr(H_MDCT hMdct, FIXP_DBL* pTimeData, INT nrSamples);
 
 INT imdct_copy_full(H_MDCT hMdct, FIXP_DBL* pTimeData, INT nrSamples);
 
@@ -196,7 +196,7 @@ INT imdct_copy_full(H_MDCT hMdct, FIXP_DBL* pTimeData, INT nrSamples);
  * \param wls pointer to the left side overlap window coefficients.
  * \param noOutSamples desired number of output samples.
  */
-void imdct_adapt_parameters(H_MDCT hMdct, int* pfl, int* pnl, int tl, const FIXP_WTP* wls,
+void mpegh_imdct_adapt_parameters(H_MDCT hMdct, int* pfl, int* pnl, int tl, const FIXP_WTP* wls,
                             int noOutSamples);
 
 /**
@@ -218,7 +218,7 @@ void imdct_adapt_parameters(H_MDCT hMdct, int* pfl, int* pnl, int tl, const FIXP
  * \param flags flags controlling the type of transform
  * \return number of output samples returned.
  */
-INT imlt_block(H_MDCT hMdct, FIXP_DBL* output, FIXP_DBL* spectrum, const SHORT scalefactor[],
+INT mpegh_imlt_block(H_MDCT hMdct, FIXP_DBL* output, FIXP_DBL* spectrum, const SHORT scalefactor[],
                const INT nSpec, const INT noOutSamples, const INT tl, const FIXP_WTP* wls, INT fl,
                const FIXP_WTP* wrs, const INT fr, FIXP_DBL gain, int flags);
 
@@ -246,7 +246,7 @@ inline INT imdct_block(H_MDCT hMdct, FIXP_DBL* output, FIXP_DBL* spectrum,
                        FIXP_DBL gain) {
   hMdct->prevAliasSymmetry = 0;
   hMdct->prevPrevAliasSymmetry = 0;
-  return imlt_block(hMdct, output, spectrum, scalefactor, nSpec, noOutSamples, tl, wls, fl, wrs, fr,
+  return mpegh_imlt_block(hMdct, output, spectrum, scalefactor, nSpec, noOutSamples, tl, wls, fl, wrs, fr,
                     gain, 0);
 }
 
@@ -274,7 +274,7 @@ inline INT imdst_block(H_MDCT hMdct, FIXP_DBL* output, FIXP_DBL* spectrum,
                        FIXP_DBL gain) {
   hMdct->prevAliasSymmetry = 1;
   hMdct->prevPrevAliasSymmetry = 1;
-  return imlt_block(hMdct, output, spectrum, scalefactor, nSpec, noOutSamples, tl, wls, fl, wrs, fr,
+  return mpegh_imlt_block(hMdct, output, spectrum, scalefactor, nSpec, noOutSamples, tl, wls, fl, wrs, fr,
                     gain, MLT_FLAG_CURR_ALIAS_SYMMETRY);
 }
 

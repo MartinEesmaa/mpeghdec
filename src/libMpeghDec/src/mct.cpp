@@ -215,10 +215,10 @@ int CMct_Initialize(CMctPtr* pCMctPtr, const ULONG mctChanMask, int firstSigIdx,
   if (pCMctPtr == NULL) return -1;
   if (*pCMctPtr != NULL) return -1;
 
-  mct = (CMct*)FDKcalloc(sizeof(CMct), 1);
+  mct = (CMct*)mpegh_FDKcalloc(sizeof(CMct), 1);
   if (!mct) return AAC_DEC_OUT_OF_MEMORY;
 
-  mct->mctWork = (CMctWorkPtr)FDKcalloc(sizeof(CMctWork), 1);
+  mct->mctWork = (CMctWorkPtr)mpegh_FDKcalloc(sizeof(CMctWork), 1);
   if (!mct->mctWork) {
     goto bail;
   }
@@ -234,9 +234,9 @@ int CMct_Initialize(CMctPtr* pCMctPtr, const ULONG mctChanMask, int firstSigIdx,
   }
 
   if (mct->numMctChannels) {
-    mct->prevOutSpec = (FIXP_DBL*)FDKmalloc(mct->numMctChannels * 1024 * sizeof(FIXP_DBL));
+    mct->prevOutSpec = (FIXP_DBL*)mpegh_FDKmalloc(mct->numMctChannels * 1024 * sizeof(FIXP_DBL));
     if (!mct->prevOutSpec) goto bail;
-    mct->prevOutSpec_exp = (SHORT*)FDKmalloc(mct->numMctChannels * 8 * 16 * sizeof(SHORT));
+    mct->prevOutSpec_exp = (SHORT*)mpegh_FDKmalloc(mct->numMctChannels * 8 * 16 * sizeof(SHORT));
     if (!mct->prevOutSpec_exp) goto bail;
   } else {
     mct->prevOutSpec = NULL;
@@ -250,10 +250,10 @@ int CMct_Initialize(CMctPtr* pCMctPtr, const ULONG mctChanMask, int firstSigIdx,
   return AAC_DEC_OK;
 
 bail:
-  if (mct->mctWork != NULL) FDKfree(mct->mctWork);
-  if (mct->prevOutSpec != NULL) FDKfree(mct->prevOutSpec);
-  /* if (mct->prevOutSpec_exp != NULL) FDKfree(mct->prevOutSpec_exp); */
-  FDKfree(mct);
+  if (mct->mctWork != NULL) mpegh_FDKfree(mct->mctWork);
+  if (mct->prevOutSpec != NULL) mpegh_FDKfree(mct->prevOutSpec);
+  /* if (mct->prevOutSpec_exp != NULL) mpegh_FDKfree(mct->prevOutSpec_exp); */
+  mpegh_FDKfree(mct);
 
   return AAC_DEC_OUT_OF_MEMORY;
 }
@@ -261,15 +261,15 @@ bail:
 void CMct_Destroy(CMctPtr self) {
   if (self != NULL) {
     if (self->mctWork != NULL) {
-      FDKfree(self->mctWork);
+      mpegh_FDKfree(self->mctWork);
     }
     if (self->prevOutSpec != NULL) {
-      FDKfree(self->prevOutSpec);
+      mpegh_FDKfree(self->prevOutSpec);
     }
     if (self->prevOutSpec_exp != NULL) {
-      FDKfree(self->prevOutSpec_exp);
+      mpegh_FDKfree(self->prevOutSpec_exp);
     }
-    FDKfree(self);
+    mpegh_FDKfree(self);
   }
 }
 
@@ -537,7 +537,7 @@ static void clean_sfb_band_MCT_STEFI_DMX(FIXP_DBL* outCoefficient, INT outCoeffi
     }
 
   } else {
-    FDKmemclear(outCoefficient, sizeof(FIXP_DBL) * length);
+    mpegh_FDKmemclear(outCoefficient, sizeof(FIXP_DBL) * length);
   }
 }
 
@@ -566,7 +566,7 @@ static int inverseDpcmAngleCoding(CMctPtr self, SHORT pairCoeffQSfb[], int pair,
         self->pairCoeffQSfbPrev[pair][band] = DEFAULT_ALPHA;
       }
 #else
-      FDKmemclear(self->pairCoeffQSfbPrev[pair],
+      mpegh_FDKmemclear(self->pairCoeffQSfbPrev[pair],
                   MAX_NUM_MCT_BANDS * sizeof(self->pairCoeffQSfbPrev[0][0]));
 #endif
     }
@@ -818,12 +818,12 @@ static void applyMctRotationIdx(FIXP_DBL* dmx, SHORT* dmxExp, FIXP_DBL* res, SHO
           (fMultDiv2(temp_dmx, SinAlpha) >> lScale) + (fMultDiv2(temp_res, CosAlpha) >> rScale);
     }
 
-    int headroom = getScalefactor(dmx, nSamples) - 1;
-    scaleValues(dmx, nSamples, headroom);
+    int headroom = mpegh_getScalefactor(dmx, nSamples) - 1;
+    mpegh_scaleValues(dmx, nSamples, headroom);
     *dmxExp = OutExp - headroom;
 
-    headroom = getScalefactor(res, nSamples) - 1;
-    scaleValues(res, nSamples, headroom);
+    headroom = mpegh_getScalefactor(res, nSamples) - 1;
+    mpegh_scaleValues(res, nSamples, headroom);
     *resExp = OutExp - headroom;
 #endif
   }
@@ -902,12 +902,12 @@ static void applyMctPrediction(FIXP_DBL* dmx, SHORT* dmxExp, FIXP_DBL* res, SHOR
     *p2CoeffL++ = tempL + help2;
   }
 
-  int headroom = getScalefactor(dmx, nSamples);
-  scaleValues(dmx, nSamples, headroom);
+  int headroom = mpegh_getScalefactor(dmx, nSamples);
+  mpegh_scaleValues(dmx, nSamples, headroom);
   *dmxExp = OutExp - headroom;
 
-  headroom = getScalefactor(res, nSamples);
-  scaleValues(res, nSamples, headroom);
+  headroom = mpegh_getScalefactor(res, nSamples);
+  mpegh_scaleValues(res, nSamples, headroom);
   *resExp = OutExp - headroom;
 }
 #endif /* #ifndef applyMctPrediction */
@@ -1151,7 +1151,7 @@ static void CMct_StereoFilling_GetPreviousDmx(
           } else {
             int width = pScaleFactorBandOffsets[sfb + 1] - pScaleFactorBandOffsets[sfb];
 
-            FDKmemcpy(outCoefficient, leftCoefficient, sizeof(FIXP_DBL) * width);
+            mpegh_FDKmemcpy(outCoefficient, leftCoefficient, sizeof(FIXP_DBL) * width);
 
             band_is_noise[group * 16 + sfb] = 0;
 
@@ -1352,7 +1352,7 @@ static void MCT_StereoFilling(FIXP_DBL* pSpec, SHORT* pSpec_exp,
     /* Find a suitable shift for dmx addition */
     const int shift = DFRACT_BITS - fNormz((FIXP_DBL)sfb_width);
 
-    INT head_shift_sfb = getScalefactor(&pSpec[bin_start], sfb_width);
+    INT head_shift_sfb = mpegh_getScalefactor(&pSpec[bin_start], sfb_width);
 
     /* Calculate the energy in the particular SFB */
     FIXP_DBL enRes = (FIXP_DBL)0;
@@ -1411,7 +1411,7 @@ static void MCT_StereoFilling(FIXP_DBL* pSpec, SHORT* pSpec_exp,
       INT energy_dmx_e = 0;
 
       /* Find the available headroom of the downmix signal and a suitable shift value*/
-      INT head_shift_dmx = getScalefactor(&dmx_prev[bin_start], sfb_width);
+      INT head_shift_dmx = mpegh_getScalefactor(&dmx_prev[bin_start], sfb_width);
 
       /* Calculate the energy of the previous downmix. If it is non-zero, then the
       downmix will be scaled and added to the signal.*/
@@ -1556,7 +1556,7 @@ static void MCT_StereoFilling(FIXP_DBL* pSpec, SHORT* pSpec_exp,
 
         /* Stereo filling changes the dynamic range of the signal,despite keeping the energy of
         the signal constant. */
-        INT head_shift = getScalefactor(&pSpec[bin_start], sfb_width);
+        INT head_shift = mpegh_getScalefactor(&pSpec[bin_start], sfb_width);
 
         /* Modify spectrum */
         for (int bin = bin_start; bin < bin_stop; bin++) {
@@ -1651,8 +1651,8 @@ int CMct_MCT_StereoFilling(CMctPtr self, CStreamInfo* streamInfo,
         FIXP_DBL emptyBuffer[1024];
         SHORT emptyBuffer_exp[(8 * 16)];
 
-        FDKmemclear(prevDmx, sizeof(FIXP_DBL) * 1024);
-        FDKmemclear(prevDmx_exp, sizeof(SHORT) * (8 * 16));
+        mpegh_FDKmemclear(prevDmx, sizeof(FIXP_DBL) * 1024);
+        mpegh_FDKmemclear(prevDmx_exp, sizeof(SHORT) * (8 * 16));
 
         FIXP_DBL* prevSpec1 = &self->prevOutSpec[work->codePairs[pair][0] * 1024];
         FIXP_DBL* prevSpec2 = &self->prevOutSpec[work->codePairs[pair][1] * 1024];
@@ -1666,8 +1666,8 @@ int CMct_MCT_StereoFilling(CMctPtr self, CStreamInfo* streamInfo,
         }
         /* If one of the previous elements is available for computing previous dmx */
         else if (zeroPrevOutSpec1 || zeroPrevOutSpec2) {
-          FDKmemclear(emptyBuffer, sizeof(FIXP_DBL) * 1024);
-          FDKmemclear(emptyBuffer_exp, sizeof(SHORT) * (8 * 16));
+          mpegh_FDKmemclear(emptyBuffer, sizeof(FIXP_DBL) * 1024);
+          mpegh_FDKmemclear(emptyBuffer_exp, sizeof(SHORT) * (8 * 16));
 
           if (zeroPrevOutSpec1) {
             prevSpec1 = emptyBuffer;
@@ -1699,8 +1699,8 @@ int CMct_MCT_StereoFilling(CMctPtr self, CStreamInfo* streamInfo,
          * subsequent tile processing intact */
         FIXP_DBL* prevDmx_temp = emptyBuffer;      /*Reuse available buffer*/
         SHORT* prevDmx_exp_temp = emptyBuffer_exp; /*Reuse available buffer*/
-        FDKmemcpy(prevDmx_temp, prevDmx, sizeof(FIXP_DBL) * 1024);
-        FDKmemcpy(prevDmx_exp_temp, prevDmx_exp, sizeof(SHORT) * (8 * 16));
+        mpegh_FDKmemcpy(prevDmx_temp, prevDmx, sizeof(FIXP_DBL) * 1024);
+        mpegh_FDKmemcpy(prevDmx_exp_temp, prevDmx_exp, sizeof(SHORT) * (8 * 16));
 
         /* Stereo Filling parameter calculation */
         MCT_StereoFilling(chInfo2->pSpectralCoefficient, chInfo2->pDynData->aSfbScale, chInfo2,
@@ -1723,8 +1723,8 @@ int CMct_MCT_StereoFilling(CMctPtr self, CStreamInfo* streamInfo,
                   iisIGFDecLibAccessSourceSpectrum_exponent(&stChInfo2->IGF_StaticData, tileIdx, 0);
 
               /* Use the stored prevDmx for Stereo Filing */
-              FDKmemcpy(prevDmx, prevDmx_temp, sizeof(FIXP_DBL) * 1024);
-              FDKmemcpy(prevDmx_exp, prevDmx_exp_temp, sizeof(SHORT) * 128);
+              mpegh_FDKmemcpy(prevDmx, prevDmx_temp, sizeof(FIXP_DBL) * 1024);
+              mpegh_FDKmemcpy(prevDmx_exp, prevDmx_exp_temp, sizeof(SHORT) * 128);
 
               /* Apply MCT Steffi over the particular tile */
               MCT_StereoFilling(p2_tile_spectrum, p2_tile_spectrum_exp, chInfo2, samplingRateInfo,
@@ -1737,7 +1737,7 @@ int CMct_MCT_StereoFilling(CMctPtr self, CStreamInfo* streamInfo,
                                       samplingRateInfo);
 
         } /* if(MCT_elFlags[chTag[ch2]] & AC_EL_ENHANCED_NOISE) */
-        FDKmemclear(band_is_noise, (8 * 16));
+        mpegh_FDKmemclear(band_is_noise, (8 * 16));
 
       } /* if(bIsShortBlock == 0) */
 
@@ -1820,13 +1820,13 @@ void CMct_StereoFilling_save_prev(CMctPtr self, CAacDecoderChannelInfo** pAacDec
 
   for (int i = 0; i < self->numMctChannels; i++) {
     chInfo = pAacDecoderChannelInfo[chTag[i]];
-    FDKmemcpy(&self->prevOutSpec[i * 1024], chInfo->pSpectralCoefficient, 1024 * sizeof(FIXP_DBL));
-    FDKmemcpy(&self->prevOutSpec_exp[i * (8 * 16)], chInfo->pDynData->aSfbScale,
+    mpegh_FDKmemcpy(&self->prevOutSpec[i * 1024], chInfo->pSpectralCoefficient, 1024 * sizeof(FIXP_DBL));
+    mpegh_FDKmemcpy(&self->prevOutSpec_exp[i * (8 * 16)], chInfo->pDynData->aSfbScale,
               (8 * 16) * sizeof(SHORT));
   }
 }
 
 void CMct_StereoFilling_clear_prev(CMctPtr self, CAacDecoderChannelInfo** pAacDecoderChannelInfo) {
-  FDKmemclear(&self->prevOutSpec[0], self->numMctChannels * 1024 * sizeof(FIXP_DBL));
-  FDKmemclear(&self->prevOutSpec_exp[0], self->numMctChannels * (8 * 16) * sizeof(SHORT));
+  mpegh_FDKmemclear(&self->prevOutSpec[0], self->numMctChannels * 1024 * sizeof(FIXP_DBL));
+  mpegh_FDKmemclear(&self->prevOutSpec_exp[0], self->numMctChannels * (8 * 16) * sizeof(SHORT));
 }

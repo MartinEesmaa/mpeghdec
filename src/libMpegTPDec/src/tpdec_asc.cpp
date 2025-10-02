@@ -102,7 +102,7 @@ void CProgramConfig_Reset(CProgramConfig* pPce) {
 }
 
 void CProgramConfig_Init(CProgramConfig* pPce) {
-  FDKmemclear(pPce, sizeof(CProgramConfig));
+  mpegh_FDKmemclear(pPce, sizeof(CProgramConfig));
 }
 
 int CProgramConfig_IsValid(const CProgramConfig* pPce) {
@@ -980,7 +980,7 @@ static TRANSPORTDEC_ERROR MpegHConfig_Parse(CSAudioSpecificConfig* asc, AUDIO_SC
  */
 
 void AudioSpecificConfig_Init(CSAudioSpecificConfig* asc) {
-  FDKmemclear(asc, sizeof(CSAudioSpecificConfig));
+  mpegh_FDKmemclear(asc, sizeof(CSAudioSpecificConfig));
 
   /* Init all values that should not be zero. */
   asc->m_aot = AOT_NONE;

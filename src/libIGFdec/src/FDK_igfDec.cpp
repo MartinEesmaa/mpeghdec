@@ -419,7 +419,7 @@ resets the internal decoder memory (context memory)
 **************************************************************************/
 static void iisIGFDecLibResetSCF(IGF_PRIVATE_STATIC_DATA* hPrivateStaticData,
                                  IGF_PRIVATE_DATA* hPrivateData, const INT frameType) {
-  FDKmemclear(hPrivateData->bitstreamData[frameType].sfe,
+  mpegh_FDKmemclear(hPrivateData->bitstreamData[frameType].sfe,
               sizeof(hPrivateData->bitstreamData[frameType].sfe));
 
   iisIGFSCFDecoderReset(&(hPrivateStaticData->hIGFSCFDecoder));
@@ -510,7 +510,7 @@ static void getWhiteSpectralData(FIXP_DBL* in, FIXP_DBL* out, FIXP_DBL* working_
   INT n_min;
 
   /* Find available headroom in input signal */
-  shl1 = getScalefactor(&in[start - 3], stop - start + 3);
+  shl1 = mpegh_getScalefactor(&in[start - 3], stop - start + 3);
 
   /* Generate 1e-3 in Q-10.41 */
   env = (ULONG)0x83126E98;        /* 0x4189374c<<1 */
@@ -647,7 +647,7 @@ static void getWhiteSpectralData(FIXP_DBL* in, FIXP_DBL* out, FIXP_DBL* working_
   /* Check, if all in[i] are zero, ... */
   if (n_min == 1000) {
     /* Obviously all in[i] are ZERO, let's quit after clearing the output */
-    FDKmemclear(&out[start], sizeof(FIXP_DBL) * (stop - start));
+    mpegh_FDKmemclear(&out[start], sizeof(FIXP_DBL) * (stop - start));
     hWorkMem->Initial_exp[0] = 0;
   } else {
     /* make n_min even */
@@ -741,7 +741,7 @@ static void iisIGFDecoderApplyWhitening(
           keep_tile_num = tile;
           run_once = 1;
         } else { /* when run once, then just copy  for the other tiles */
-          FDKmemcpy(hMap->fSpectrumTab[0], (&hGrid->sIGFMapInfoTab[keep_tile_num])->fSpectrumTab[0],
+          mpegh_FDKmemcpy(hMap->fSpectrumTab[0], (&hGrid->sIGFMapInfoTab[keep_tile_num])->fSpectrumTab[0],
                     sizeof(FIXP_DBL) * (hGrid->iIGFStartLine));
           hWorkMem->Initial_exp[0] = keep_initial_value;
         }
@@ -758,7 +758,7 @@ static void iisIGFDecoderApplyWhitening(
       width = hMap->iWidth;
 
       FIXP_DBL* p2_tile = hMap->fSpectrumTab[0];
-      FDKmemclear(p2_tile, sizeof(FIXP_DBL) * width);
+      mpegh_FDKmemclear(p2_tile, sizeof(FIXP_DBL) * width);
 
       /* The RNG acts differently for mono and stereo */
       if (mono_or_stereo_flag == 0) {
@@ -1085,7 +1085,7 @@ static void iisIGFDecoderCollectEnergiesMono(
 
       *temp_IGF_band += width;
 
-      shift = getScalefactor(pSpectralData_tb, width);
+      shift = mpegh_getScalefactor(pSpectralData_tb, width);
       shift1 = hWorkMem->intermediate_shift[win * IGF_MAX_SFB_SHORT + sfb];
 
       /*Calculate the normalization necessary due to addition*/
@@ -1264,7 +1264,7 @@ static void iisIGFDecoderMappingMono(
                               hMap->iDesStart, hGrid->iIGFStartLine, hGrid->iIGFMinLine,
                               &hMap->fSpectrumTab[0][0] + win * 128, *temp_IGF_band);
     } else {
-      FDKmemcpy(*temp_IGF_band, &hMap->fSpectrumTab[0][0] + win * 128,
+      mpegh_FDKmemcpy(*temp_IGF_band, &hMap->fSpectrumTab[0][0] + win * 128,
                 sizeof(FIXP_DBL) * (int)width);
     }
 
@@ -1275,7 +1275,7 @@ static void iisIGFDecoderMappingMono(
       FIXP_DBL* p2_temp_IGF_band = *temp_IGF_band;
 
       hWorkMem->intermediate_shift[win * IGF_MAX_SFB_SHORT + sfb] =
-          getScalefactor(p2_temp_IGF_band, width);
+          mpegh_getScalefactor(p2_temp_IGF_band, width);
 
       hWorkMem->Initial_exp[win * IGF_MAX_SFB_SHORT + sfb] =
           hWorkMem->Initial_exp[win * IGF_MAX_SFB_SHORT];
@@ -1352,7 +1352,7 @@ static void iisIGFDecoderMappingAndMSStereo(
                               hMapL->iDesStart, hGridL->iIGFStartLine, hGridL->iIGFMinLine,
                               &hMapL->fSpectrumTab[0][0] + win * 128, *temp_IGF_bandL);
     } else {
-      FDKmemcpy(*temp_IGF_bandL, &hMapL->fSpectrumTab[0][0] + win * 128,
+      mpegh_FDKmemcpy(*temp_IGF_bandL, &hMapL->fSpectrumTab[0][0] + win * 128,
                 sizeof(FIXP_DBL) * (int)width);
     }
 
@@ -1363,7 +1363,7 @@ static void iisIGFDecoderMappingAndMSStereo(
                               hMapL->iDesStart, hGridR->iIGFStartLine, hGridR->iIGFMinLine,
                               &hMapR->fSpectrumTab[0][0] + win * 128, *temp_IGF_bandR);
     } else {
-      FDKmemcpy(*temp_IGF_bandR, &hMapR->fSpectrumTab[0][0] + win * 128,
+      mpegh_FDKmemcpy(*temp_IGF_bandR, &hMapR->fSpectrumTab[0][0] + win * 128,
                 sizeof(FIXP_DBL) * (int)width);
     }
 
@@ -1402,7 +1402,7 @@ static void iisIGFDecoderMappingAndMSStereo(
           *p2_temp_IGF_bandR++ = val1R;
         } /* while(width--) */
 
-        FDKmemset(TNF_mask, 0x01, sizeof(UCHAR) * width);
+        mpegh_FDKmemset(TNF_mask, 0x01, sizeof(UCHAR) * width);
 
         if (delta >= 0) {
           hWorkMemR->Initial_exp[win * IGF_MAX_SFB_SHORT + sfb] += delta;
@@ -1416,9 +1416,9 @@ static void iisIGFDecoderMappingAndMSStereo(
 
       /* Find leading zeroes */
       hWorkMemL->intermediate_shift[win * IGF_MAX_SFB_SHORT + sfb] =
-          getScalefactor(*temp_IGF_bandL, width);
+          mpegh_getScalefactor(*temp_IGF_bandL, width);
       hWorkMemR->intermediate_shift[win * IGF_MAX_SFB_SHORT + sfb] =
-          getScalefactor(*temp_IGF_bandR, width);
+          mpegh_getScalefactor(*temp_IGF_bandR, width);
 
       *temp_IGF_bandL += width;
       *temp_IGF_bandR += width;
@@ -2136,7 +2136,7 @@ void CIgf_apply_stereo(IGF_PRIVATE_STATIC_DATA_HANDLE hPrivateStaticDataL,
                                    (hPrivateDataR->bitstreamData[frameType].igfUseEnfFlat)));
 
   UCHAR TNF_mask[1024];
-  FDKmemclear(TNF_mask + IGFstartLine, sizeof(UCHAR) * (IGFstopLine - IGFstartLine));
+  mpegh_FDKmemclear(TNF_mask + IGFstartLine, sizeof(UCHAR) * (IGFstopLine - IGFstartLine));
 
   for (group = 0; group < numOfGroups; group++) {
     /* memorize the offset of windows in a group: */
@@ -2250,7 +2250,7 @@ static void iisIGFDecLibInjectSourceSpectrum(
     hMap = &hGrid->sIGFMapInfoTab[t];
 
     /* copy from pSpectralData to the internal representation: */
-    FDKmemcpy(hMap->fSpectrumTab[0], pSpectralData, sizeof(FIXP_DBL) * copyNr);
+    mpegh_FDKmemcpy(hMap->fSpectrumTab[0], pSpectralData, sizeof(FIXP_DBL) * copyNr);
   }
 
   for (UCHAR t = 0; t < hGrid->iIGFNumTile; t++) {
@@ -2278,7 +2278,7 @@ void iisIGFDecLibInjectSourceSpectrumNew(
 
   for (t = 0; t < hGrid->iIGFNumTile; t++) {
     /* copy from pSpectralData scaling to the internal representation: */
-    FDKmemcpy(hPrivateStaticData->fSpectrumTab_sfb_exp[t], pSpectralData_exp,
+    mpegh_FDKmemcpy(hPrivateStaticData->fSpectrumTab_sfb_exp[t], pSpectralData_exp,
               sizeof(SHORT) * IGF_MAX_WIN * IGF_MAX_SFB_SHORT);
 
   } /* for( t = 0; t < hGrid->iIGFNumTile; t++ ) */
@@ -2287,7 +2287,7 @@ void iisIGFDecLibInjectSourceSpectrumNew(
     hMap = &hGrid->sIGFMapInfoTab[t];
 
     /* copy from pSpectralData to the internal representation: */
-    FDKmemcpy(hMap->fSpectrumTab[0], pSpectralData, sizeof(FIXP_DBL) * 1024);
+    mpegh_FDKmemcpy(hMap->fSpectrumTab[0], pSpectralData, sizeof(FIXP_DBL) * 1024);
 
   } /* for( t = 0; t < hGrid->iIGFNumTile; t++ ) */
 }
@@ -2526,7 +2526,7 @@ INT iisIGFDecLibGetNumberOfTiles(IGF_PRIVATE_STATIC_DATA_HANDLE hPrivateStaticDa
 
 static void DotProduct(FIXP_DBL* Output, INT* Output_exp, FIXP_DBL* Input, INT Input_exp,
                        INT length) {
-  INT shift = getScalefactor(Input, length);
+  INT shift = mpegh_getScalefactor(Input, length);
 
   const int loop_shift = DFRACT_BITS - fNormz((FIXP_DBL)length);
 
@@ -2546,7 +2546,7 @@ static void DotProduct(FIXP_DBL* Output, INT* Output_exp, FIXP_DBL* Input, INT I
 
 static FIXP_DBL Same_Exponent_Correlation(FIXP_DBL* X, FIXP_DBL* Y, INT* Exp, INT signal_length,
                                           INT correlation_length) {
-  INT shift = getScalefactor(X, signal_length);
+  INT shift = mpegh_getScalefactor(X, signal_length);
 
   /* Find a suitable shift for dmx addition */
   INT loop_shift = 31 - fixnorm_D(correlation_length);
@@ -2698,7 +2698,7 @@ static void iisIGF_TNFdetect(FIXP_DBL* p2_spectrum, const SHORT* specScale, cons
   StoreValues_Exp = maxExp - min_rxx_headroom;
 
   /* Allign maximum left for high precision */
-  INT shiftStV = getScalefactor(StoreValues + 1, (INT)maxOrder);
+  INT shiftStV = mpegh_getScalefactor(StoreValues + 1, (INT)maxOrder);
   for (int i = 1; i <= (INT)maxOrder; i++) {
     StoreValues[i] <<= shiftStV;
   }
@@ -2728,7 +2728,7 @@ static void iisIGF_TNFdetect(FIXP_DBL* p2_spectrum, const SHORT* specScale, cons
 static void iisIGF_TNFfilter(FIXP_DBL* p2_spectrum, const SHORT specScale, const SHORT numOfLines,
                              const UCHAR FilterOrder, const FIXP_DBL* Aarray, const INT AarrayExp) {
   /* Find the available headroom of the downmix signal and a suitable shift value*/
-  INT head_shift = getScalefactor(p2_spectrum, numOfLines);
+  INT head_shift = mpegh_getScalefactor(p2_spectrum, numOfLines);
 
   if (head_shift == 31) head_shift = 0;
 
@@ -2781,7 +2781,7 @@ void CIgf_TNF_apply(IGF_PRIVATE_STATIC_DATA_HANDLE hPrivateStaticData,
     UCHAR curr_order = 0;
 
     /* Filter coefficient array. The first value is always 1 */
-    FDKmemclear(Aarray, (TNF_MAX_FILTER_ORDER + 1) * sizeof(FIXP_DBL));
+    mpegh_FDKmemclear(Aarray, (TNF_MAX_FILTER_ORDER + 1) * sizeof(FIXP_DBL));
 
     /* "virtualSpec" contains a modified IGF spectrum values.  Typically IGF fills the zero-gaps
     with values from the base spectrum and leaves the non-zero values intact. In this spectrum

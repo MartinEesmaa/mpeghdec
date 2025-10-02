@@ -1260,9 +1260,9 @@ converter_status_t converter_init(
 
   if ((fcInt->immersiveDownmixFlag == 1) && ((nchanout == 5) || (nchanout == 6))) {
     initElevSptlParms(fcInt, sfreq_Hz, nchanout);
-    FDKmemcpy(dmx_rules, dmx_rules_immersive, sizeof(dmx_rules_immersive));
+    mpegh_FDKmemcpy(dmx_rules, dmx_rules_immersive, sizeof(dmx_rules_immersive));
   } else {
-    FDKmemcpy(dmx_rules, dmx_rules_classic, sizeof(dmx_rules_classic));
+    mpegh_FDKmemcpy(dmx_rules, dmx_rules_classic, sizeof(dmx_rules_classic));
   }
 
   /* more parameter error checking */
@@ -1465,11 +1465,11 @@ converter_status_t converter_init(
               alpha = fMult(alpha, FX_PI);
               INT alpha_e = 3;
 
-              FIXP_DBL sin_alpha0_m = fixp_sin(alpha0, alpha0_e);
-              FIXP_DBL cos_alpha0_m = fixp_cos(alpha0, alpha0_e);
+              FIXP_DBL sin_alpha0_m = mpegh_fixp_sin(alpha0, alpha0_e);
+              FIXP_DBL cos_alpha0_m = mpegh_fixp_cos(alpha0, alpha0_e);
 
-              FIXP_DBL sin_alpha_m = fixp_sin(alpha, alpha_e);
-              FIXP_DBL cos_alpha_m = fixp_cos(alpha, alpha_e);
+              FIXP_DBL sin_alpha_m = mpegh_fixp_sin(alpha, alpha_e);
+              FIXP_DBL cos_alpha_m = mpegh_fixp_cos(alpha, alpha_e);
 
               FIXP_DBL tan_alpha0_m = fDivNormSigned(sin_alpha0_m, cos_alpha0_m, &alpha0_e);
               FIXP_DBL tan_alpha_m = fDivNormSigned(sin_alpha_m, cos_alpha_m, &alpha_e);
@@ -1753,11 +1753,11 @@ converter_status_t converter_init(
                 alpha = fMult(alpha, FX_PI);
                 INT alpha_e = 3;
 
-                FIXP_DBL sin_alpha0_m = fixp_sin(alpha0, alpha0_e);
-                FIXP_DBL cos_alpha0_m = fixp_cos(alpha0, alpha0_e);
+                FIXP_DBL sin_alpha0_m = mpegh_fixp_sin(alpha0, alpha0_e);
+                FIXP_DBL cos_alpha0_m = mpegh_fixp_cos(alpha0, alpha0_e);
 
-                FIXP_DBL sin_alpha_m = fixp_sin(alpha, alpha_e);
-                FIXP_DBL cos_alpha_m = fixp_cos(alpha, alpha_e);
+                FIXP_DBL sin_alpha_m = mpegh_fixp_sin(alpha, alpha_e);
+                FIXP_DBL cos_alpha_m = mpegh_fixp_cos(alpha, alpha_e);
 
                 FIXP_DBL tan_alpha0_m = fDivNormSigned(sin_alpha0_m, cos_alpha0_m, &alpha0_e);
                 FIXP_DBL tan_alpha_m = fDivNormSigned(sin_alpha_m, cos_alpha_m, &alpha_e);

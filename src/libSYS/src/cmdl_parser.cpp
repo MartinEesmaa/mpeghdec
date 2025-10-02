@@ -114,8 +114,8 @@ static void GetNumberOfArgs(TEXTCHAR* str, INT* nArgs);
 
 static void removeQuotes(char* str) {
   if (str[0] == '"') {
-    FDKstrcpy(str, str + 1);
-    str[FDKstrlen(str) - 1] = 0;
+    mpegh_FDKstrcpy(str, str + 1);
+    str[mpegh_FDKstrlen(str) - 1] = 0;
   }
 }
 
@@ -134,7 +134,7 @@ INT IIS_ScanCmdl(INT argc, TEXTCHAR* argv[], const TEXTCHAR* str, ...) {
   va_list ap;
 
   if (argc == 0 || argc == 1) {
-    FDKprintf("No command line arguments\n");
+    mpegh_FDKprintf("No command line arguments\n");
     goto bail;
   }
 
@@ -142,7 +142,7 @@ INT IIS_ScanCmdl(INT argc, TEXTCHAR* argv[], const TEXTCHAR* str, ...) {
      because strlen() might read 4 bytes at a time. */
   str_clean = (TEXTCHAR*)calloc((unsigned int)_tcslen(str) + 3, sizeof(TEXTCHAR));
   if (str_clean == NULL) {
-    FDKprintf("Error allocating memory line %d, file %s\n", __LINE__, __FILE__);
+    mpegh_FDKprintf("Error allocating memory line %d, file %s\n", __LINE__, __FILE__);
     return 0;
   }
 
@@ -159,7 +159,7 @@ INT IIS_ScanCmdl(INT argc, TEXTCHAR* argv[], const TEXTCHAR* str, ...) {
   switches_used = (INT*)calloc(argc, sizeof(INT));
 
   if (b_str_opt == NULL || s_str == NULL || c_str_type == NULL || switches_used == NULL) {
-    FDKprintf("Error allocating memory line %d, file %s\n", __LINE__, __FILE__);
+    mpegh_FDKprintf("Error allocating memory line %d, file %s\n", __LINE__, __FILE__);
     goto bail;
   }
 
@@ -262,7 +262,7 @@ INT IIS_ScanCmdl(INT argc, TEXTCHAR* argv[], const TEXTCHAR* str, ...) {
       }
 
       default:
-        FDKprintfErr("warning: unsupported data identifier \"%c\"\n", c_str_type[i]);
+        mpegh_FDKprintfErr("warning: unsupported data identifier \"%c\"\n", c_str_type[i]);
         break;
     }
   }
@@ -462,30 +462,30 @@ extern "C" INT IIS_ProcessCmdlList(const TEXTCHAR* param_filename,
   char* line_ptr;
 
 #ifdef CMDFILE_PREFIX
-  FDKstrcpy(tmp, CMDFILE_PREFIX);
-  FDKstrcpy(tmp + FDKstrlen(CMDFILE_PREFIX), param_filename);
+  mpegh_FDKstrcpy(tmp, CMDFILE_PREFIX);
+  mpegh_FDKstrcpy(tmp + mpegh_FDKstrlen(CMDFILE_PREFIX), param_filename);
   /* Open the file with command lines */
-  config_fp = FDKfopen(tmp, "r");
+  config_fp = mpegh_FDKfopen(tmp, "r");
 #else
   /* Open the file with command lines */
-  config_fp = FDKfopen(param_filename, "r");
+  config_fp = mpegh_FDKfopen(param_filename, "r");
 #endif
 
   if (config_fp == NULL) {
 #ifdef CMDFILE_PREFIX
-    FDKprintf("\ncould not open config file %s", tmp);
+    mpegh_FDKprintf("\ncould not open config file %s", tmp);
 #else
-    FDKprintf("\ncould not open config file %s", param_filename);
+    mpegh_FDKprintf("\ncould not open config file %s", param_filename);
 #endif
     return 1;
   }
 
   /* Obtain a command line from config file */
-  while (FDKfgets(line, CMDL_MAX_STRLEN * CMDL_MAX_ARGC, config_fp) != NULL) {
+  while (mpegh_FDKfgets(line, CMDL_MAX_STRLEN * CMDL_MAX_ARGC, config_fp) != NULL) {
     argc = 1;
 
     /* Eat \n */
-    line_ptr = FDKstrchr(line, '\n');
+    line_ptr = mpegh_FDKstrchr(line, '\n');
     if (line_ptr != NULL) *line_ptr = ' ';
 
     line_ptr = line;
@@ -496,7 +496,7 @@ extern "C" INT IIS_ProcessCmdlList(const TEXTCHAR* param_filename,
       while (*line_ptr == ' ' && line_ptr < line + CMDL_MAX_STRLEN) line_ptr++;
       argv_ptr[argc] = line_ptr;
       /* Get pointer to next blank. */
-      line_ptr = FDKstrchr(line_ptr, ' ');
+      line_ptr = mpegh_FDKstrchr(line_ptr, ' ');
       /*  */
       if (line_ptr != NULL) {
         /* Null terminate */
@@ -510,7 +510,7 @@ extern "C" INT IIS_ProcessCmdlList(const TEXTCHAR* param_filename,
       if (argc == CMDL_MAX_ARGC && line_ptr != NULL) {
         /* Maximum number of argeuments haven been parsed,
            but there are still arguments in the line       */
-        FDKprintfErr(
+        mpegh_FDKprintfErr(
             "Error: Too many arguments. Please increase CMDL_MAX_ARGC if you need the encoder to "
             "read more arguments.\n");
         break;
@@ -518,16 +518,16 @@ extern "C" INT IIS_ProcessCmdlList(const TEXTCHAR* param_filename,
     } while (line_ptr != NULL);
 
     /* call "would be main()" */
-    if (argc > 2 && *argv_ptr[1] != '#' && FDKstrlen(argv_ptr[1]) > 1 &&
+    if (argc > 2 && *argv_ptr[1] != '#' && mpegh_FDKstrlen(argv_ptr[1]) > 1 &&
         !(argc == CMDL_MAX_ARGC && line_ptr != NULL)) {
       int retval;
 
       retval = (*pFunction)(argc, argv_ptr);
 
-      FDKprintf("main returned %d\n", retval);
+      mpegh_FDKprintf("main returned %d\n", retval);
     }
   }
 
-  FDKfclose(config_fp);
+  mpegh_FDKfclose(config_fp);
   return 0;
 }

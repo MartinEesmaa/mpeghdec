@@ -196,7 +196,7 @@ int qh_sphere_triangulation(int cicpIndex, vertexList* vL, triangleList* tL,
   tri.index[2] = pentagon[4];
   addTriangleToList(tL, tri);
 
-  positionIndexList = (surroundList*)FDKcalloc(vL->size, sizeof(surroundList));
+  positionIndexList = (surroundList*)mpegh_FDKcalloc(vL->size, sizeof(surroundList));
 
   if (!positionIndexList) {
     /*memory allocation error*/
@@ -227,7 +227,7 @@ int qh_sphere_triangulation(int cicpIndex, vertexList* vL, triangleList* tL,
       if (hTable) {
         /* copy downmix matrix from imaginary speaker table */
         *downmixMatrix =
-            (FIXP_DBL**)fdkCallocMatrix2D(hTable->numRow, hTable->numCol, sizeof(FIXP_DBL));
+            (FIXP_DBL**)mpegh_fdkCallocMatrix2D(hTable->numRow, hTable->numCol, sizeof(FIXP_DBL));
         if (*downmixMatrix == NULL) {
           /*memory allocation error*/
           err = 1;
@@ -244,12 +244,12 @@ int qh_sphere_triangulation(int cicpIndex, vertexList* vL, triangleList* tL,
     }
 
     if (!(*downmixMatrix)) {
-      *downmixMatrix = (FIXP_DBL**)fdkCallocMatrix2D(
+      *downmixMatrix = (FIXP_DBL**)mpegh_fdkCallocMatrix2D(
           realSpeaker, vL->size, sizeof(FIXP_DBL)); /* Dim: realSpeaker x (realSpeaker + ghost) */
-      adjacencyMatrix = (FIXP_DBL**)fdkCallocMatrix2D(
+      adjacencyMatrix = (FIXP_DBL**)mpegh_fdkCallocMatrix2D(
           vL->size, vL->size,
           sizeof(FIXP_DBL)); /* Dim: (realSpeaker + ghost) x (realSpeaker + ghost) */
-      mSquare = (FIXP_DBL**)fdkCallocMatrix2D(
+      mSquare = (FIXP_DBL**)mpegh_fdkCallocMatrix2D(
           vL->size, vL->size,
           sizeof(FIXP_DBL)); /* Dim: (realSpeaker + ghost) x (realSpeaker + ghost) */
       *downmixMatrixNumRows = realSpeaker;
@@ -349,10 +349,10 @@ int qh_sphere_triangulation(int cicpIndex, vertexList* vL, triangleList* tL,
     if (downmixMatrixSuperset) {
       /* multiply superset downmix matrix with imaginary speaker downmix matrix */
       FIXP_DBL** downmixMatrixImaginaries = *downmixMatrix;
-      *downmixMatrix = (FIXP_DBL**)fdkCallocMatrix2D(subsetSpeaker, vL->size, sizeof(FIXP_DBL));
+      *downmixMatrix = (FIXP_DBL**)mpegh_fdkCallocMatrix2D(subsetSpeaker, vL->size, sizeof(FIXP_DBL));
       if (*downmixMatrix == NULL) {
         /*memory allocation error*/
-        fdkFreeMatrix2D((void**)downmixMatrixImaginaries);
+        mpegh_fdkFreeMatrix2D((void**)downmixMatrixImaginaries);
         err = 1;
         goto bail;
       }
@@ -370,14 +370,14 @@ int qh_sphere_triangulation(int cicpIndex, vertexList* vL, triangleList* tL,
         }
       }
 
-      fdkFreeMatrix2D((void**)downmixMatrixImaginaries);
+      mpegh_fdkFreeMatrix2D((void**)downmixMatrixImaginaries);
     }
   }
 bail:
-  fdkFreeMatrix2D((void**)downmixMatrixSuperset);
-  fdkFreeMatrix2D((void**)adjacencyMatrix);
-  fdkFreeMatrix2D((void**)mSquare);
-  FDKfree(positionIndexList);
+  mpegh_fdkFreeMatrix2D((void**)downmixMatrixSuperset);
+  mpegh_fdkFreeMatrix2D((void**)adjacencyMatrix);
+  mpegh_fdkFreeMatrix2D((void**)mSquare);
+  mpegh_FDKfree(positionIndexList);
 
   return err;
 }
@@ -677,10 +677,10 @@ int add_imaginary_speakers(vertexList* vL, int* pentagon) {
   for (i = 0; i < numberOfRealSpeaker; i++) {
     if ((FIXP_DBL)fAbs(vL->element[i].sph.ele) < thresh) surroundListSize++;
   }
-  aziSurroundList = (surroundList*)FDKmalloc(
+  aziSurroundList = (surroundList*)mpegh_FDKmalloc(
       (surroundListSize + 2) *
       sizeof(surroundList)); /* a maximum number of 2 surround speaker can be added */
-  angleDiffList = (FIXP_DBL*)FDKmalloc((surroundListSize) * sizeof(FIXP_DBL));
+  angleDiffList = (FIXP_DBL*)mpegh_FDKmalloc((surroundListSize) * sizeof(FIXP_DBL));
 
   if (!aziSurroundList || !angleDiffList) {
     err = 1;
@@ -769,8 +769,8 @@ int add_imaginary_speakers(vertexList* vL, int* pentagon) {
   pentagon[4] = aziSurroundList[k].index;
 
 bail:
-  FDKfree(aziSurroundList);
-  FDKfree(angleDiffList);
+  mpegh_FDKfree(aziSurroundList);
+  mpegh_FDKfree(angleDiffList);
 
   return err;
 }
@@ -821,7 +821,7 @@ static CICP2GEOMETRY_ERROR augment_setup_to_superset(int* cicpIdx, vertexList* v
         }
       }
 
-      *downmix_mat = (FIXP_DBL**)fdkCallocMatrix2D(hTable->nSpeakersSubSet,
+      *downmix_mat = (FIXP_DBL**)mpegh_fdkCallocMatrix2D(hTable->nSpeakersSubSet,
                                                    hTable->nSpeakersSuperSet, sizeof(FIXP_DBL));
       if (*downmix_mat == NULL) {
         return CICP2GEOMETRY_ALLOC_ERROR;

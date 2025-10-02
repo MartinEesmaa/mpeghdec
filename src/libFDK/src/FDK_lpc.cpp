@@ -104,7 +104,7 @@ static const SCHAR order_ld[LPC_MAX_ORDER] = {
 
 /* IIRLattice */
 #ifndef FUNCTION_CLpc_SynthesisLattice_SGL
-void CLpc_SynthesisLattice(FIXP_DBL* signal, const int signal_size, const int signal_e,
+void mpegh_CLpc_SynthesisLattice(FIXP_DBL* signal, const int signal_size, const int signal_e,
                            const int signal_e_out, const int inc, const FIXP_SGL* coeff,
                            const int order, FIXP_DBL* state) {
   int i, j;
@@ -154,7 +154,7 @@ void CLpc_SynthesisLattice(FIXP_DBL* signal, const int signal_size, const int si
 #endif
 
 #ifndef FUNCTION_CLpc_SynthesisLattice_DBL
-void CLpc_SynthesisLattice(FIXP_DBL* signal, const int signal_size, const int signal_e,
+void mpegh_CLpc_SynthesisLattice(FIXP_DBL* signal, const int signal_size, const int signal_e,
                            const int signal_e_out, const int inc, const FIXP_DBL* coeff,
                            const int order, FIXP_DBL* state) {
   int i, j;
@@ -208,8 +208,8 @@ void CLpc_Synthesis(FIXP_DBL* signal, const int signal_size, const int inc,
   int lpcCoeffShift = lpcCoeff_e + 1;
 
   FIXP_LPC_TNS coeff[2 * LPC_MAX_ORDER];
-  FDKmemcpy(&coeff[0], lpcCoeff_m, order * sizeof(FIXP_LPC_TNS));
-  FDKmemcpy(&coeff[order], lpcCoeff_m, order * sizeof(FIXP_LPC_TNS));
+  mpegh_FDKmemcpy(&coeff[0], lpcCoeff_m, order * sizeof(FIXP_LPC_TNS));
+  mpegh_FDKmemcpy(&coeff[order], lpcCoeff_m, order * sizeof(FIXP_LPC_TNS));
 
   FDK_ASSERT(lpcCoeffShift >= 0);
   FDK_ASSERT(order <= LPC_MAX_ORDER);
@@ -252,8 +252,8 @@ void CLpc_Synthesis(FIXP_DBL* signal, const int signal_size, const int inc,
   int lpcCoeffShift = lpcCoeff_e + 1;
 
   FIXP_LPC coeff[2 * LPC_MAX_ORDER];
-  FDKmemcpy(&coeff[0], lpcCoeff_m, order * sizeof(FIXP_LPC));
-  FDKmemcpy(&coeff[order], lpcCoeff_m, order * sizeof(FIXP_LPC));
+  mpegh_FDKmemcpy(&coeff[0], lpcCoeff_m, order * sizeof(FIXP_LPC));
+  mpegh_FDKmemcpy(&coeff[order], lpcCoeff_m, order * sizeof(FIXP_LPC));
 
   FDK_ASSERT(lpcCoeffShift >= 0);
   FDK_ASSERT(order <= LPC_MAX_ORDER);
@@ -404,7 +404,7 @@ INT CLpc_ParcorToLpc(const FIXP_LPC reflCoeff[], FIXP_LPC LpcCoeff[], const int 
   return (shiftval);
 }
 
-void CLpc_AutoToParcor(FIXP_DBL acorr[], const int acorr_e, FIXP_LPC reflCoeff[],
+void mpegh_CLpc_AutoToParcor(FIXP_DBL acorr[], const int acorr_e, FIXP_LPC reflCoeff[],
                        const int numOfCoeff, FIXP_DBL* pPredictionGain_m, INT* pPredictionGain_e) {
   INT i, j, scale = 0;
   FIXP_DBL parcorWorkBuffer[LPC_MAX_ORDER];
@@ -412,7 +412,7 @@ void CLpc_AutoToParcor(FIXP_DBL acorr[], const int acorr_e, FIXP_LPC reflCoeff[]
   FIXP_DBL* workBuffer = parcorWorkBuffer;
   FIXP_DBL autoCorr_0 = acorr[0];
 
-  FDKmemclear(reflCoeff, numOfCoeff * sizeof(FIXP_LPC));
+  mpegh_FDKmemclear(reflCoeff, numOfCoeff * sizeof(FIXP_LPC));
 
   if (autoCorr_0 == FL2FXCONST_DBL(0.0)) {
     if (pPredictionGain_m != NULL) {
@@ -422,7 +422,7 @@ void CLpc_AutoToParcor(FIXP_DBL acorr[], const int acorr_e, FIXP_LPC reflCoeff[]
     return;
   }
 
-  FDKmemcpy(workBuffer, acorr + 1, numOfCoeff * sizeof(FIXP_DBL));
+  mpegh_FDKmemcpy(workBuffer, acorr + 1, numOfCoeff * sizeof(FIXP_DBL));
   for (i = 0; i < numOfCoeff; i++) {
     LONG sign = ((LONG)workBuffer[0] >> (DFRACT_BITS - 1));
     FIXP_DBL tmp = (FIXP_DBL)((LONG)workBuffer[0] ^ sign);

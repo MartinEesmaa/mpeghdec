@@ -175,7 +175,7 @@ static USHORT getKey(HANDLE_UI_PERSISTENCE_MANAGER hPersistence, const UCHAR* uu
     }
 
     /* stop if existing key found */
-    if (FDKmemcmp(keys[keyIdx].uuid, uuid, 16) == 0) break;
+    if (mpegh_FDKmemcmp(keys[keyIdx].uuid, uuid, 16) == 0) break;
 
     if (forWriting) {
       /* if this is the last key, delete it */
@@ -214,7 +214,7 @@ static void deleteKey(HANDLE_UI_PERSISTENCE_MANAGER hPersistence, const UCHAR* u
     if (keys[keyIdx].firstCmdIdx == INVALID_INDEX) return;
 
     /* stop if key found */
-    if (FDKmemcmp(keys[keyIdx].uuid, uuid, 16) == 0) break;
+    if (mpegh_FDKmemcmp(keys[keyIdx].uuid, uuid, 16) == 0) break;
 
     /* go to next key */
     prevKeyIdx = keyIdx;
@@ -332,14 +332,14 @@ static void updateMemory(HANDLE_UI_PERSISTENCE_MANAGER hPersistence) {
 HANDLE_UI_PERSISTENCE_MANAGER persistenceManagerCreate() {
   /* create persistence manager instance */
   HANDLE_UI_PERSISTENCE_MANAGER hPersistence =
-      (HANDLE_UI_PERSISTENCE_MANAGER)FDKcalloc(1, sizeof(UI_PERSISTENCE_MANAGER));
+      (HANDLE_UI_PERSISTENCE_MANAGER)mpegh_FDKcalloc(1, sizeof(UI_PERSISTENCE_MANAGER));
 
   return hPersistence;
 }
 
 /* delete instance */
 void persistenceManagerDelete(HANDLE_UI_PERSISTENCE_MANAGER hPersistence) {
-  FDKfree(hPersistence);
+  mpegh_FDKfree(hPersistence);
 }
 
 /* set memory */
@@ -414,7 +414,7 @@ INT persistenceManagerSetMemory(HANDLE_UI_PERSISTENCE_MANAGER hPersistence, void
   if ((*pVersionID != VERSION_ID) ||
       (*pCRC != calcCRC(persistenceMemory, persistenceMemorySize - sizeof(USHORT)))) {
     /* clear memory */
-    FDKmemset(persistenceMemory, 0xFF, persistenceMemorySize);
+    mpegh_FDKmemset(persistenceMemory, 0xFF, persistenceMemorySize);
 
     /* init keys */
     hPersistence->firstKeyIdx = 0;
@@ -527,7 +527,7 @@ void persistenceManagerSaveCommand(HANDLE_UI_PERSISTENCE_MANAGER hPersistence,
   /* get key */
   keyIdx = getKey(hPersistence, uiAction->uuid, 1);
 
-  FDKmemcpy(hPersistence->keys[keyIdx].uuid, uiAction->uuid, 16);
+  mpegh_FDKmemcpy(hPersistence->keys[keyIdx].uuid, uiAction->uuid, 16);
 
   /* get command index */
   cmdIdx = hPersistence->keys[keyIdx].firstCmdIdx;
@@ -645,7 +645,7 @@ UCHAR persistenceManagerGetCommand(HANDLE_UI_PERSISTENCE_MANAGER hPersistence, c
   /* restore UI action */
   command = &(hPersistence->commands[cmdIdx]);
 
-  FDKmemcpy(uiAction->uuid, hPersistence->keys[keyIdx].uuid, 16);
+  mpegh_FDKmemcpy(uiAction->uuid, hPersistence->keys[keyIdx].uuid, 16);
   uiAction->actionType = command->type;
   uiAction->presentFlags = 0;
 

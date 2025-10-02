@@ -123,7 +123,7 @@ typedef FDK_BITSTREAM* HANDLE_FDK_BITSTREAM;
 FDK_INLINE
 HANDLE_FDK_BITSTREAM FDKcreateBitStream(UCHAR* pBuffer, UINT bufSize,
                                         FDK_BS_CFG config = BS_READER) {
-  HANDLE_FDK_BITSTREAM hBitStream = (HANDLE_FDK_BITSTREAM)FDKcalloc(1, sizeof(FDK_BITSTREAM));
+  HANDLE_FDK_BITSTREAM hBitStream = (HANDLE_FDK_BITSTREAM)mpegh_FDKcalloc(1, sizeof(FDK_BITSTREAM));
   if (hBitStream == NULL) return NULL;
   FDK_InitBitBuffer(&hBitStream->hBitBuf, pBuffer, bufSize, 0);
 
@@ -175,7 +175,7 @@ FDK_INLINE void FDKresetBitbuffer(HANDLE_FDK_BITSTREAM hBitStream, FDK_BS_CFG co
 */
 FDK_INLINE void FDKdeleteBitStream(HANDLE_FDK_BITSTREAM hBitStream) {
   FDK_DeleteBitBuffer(&hBitStream->hBitBuf);
-  FDKfree(hBitStream);
+  mpegh_FDKfree(hBitStream);
 }
 
 /**

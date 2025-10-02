@@ -113,7 +113,7 @@ amm-info@iis.fraunhofer.de
  */
 #define FUNCTION_scaleValues_SGL
 SCALE_INLINE
-void scaleValues(FIXP_SGL* vector, /*!< Vector */
+void mpegh_scaleValues(FIXP_SGL* vector, /*!< Vector */
                  INT len,          /*!< Length */
                  INT scalefactor   /*!< Scalefactor */
 ) {
@@ -158,7 +158,7 @@ void scaleValues(FIXP_SGL* vector, /*!< Vector */
  */
 #define FUNCTION_scaleValues_DBL
 SCALE_INLINE
-void scaleValues(FIXP_DBL* vector, /*!< Vector */
+void mpegh_scaleValues(FIXP_DBL* vector, /*!< Vector */
                  INT len,          /*!< Length */
                  INT scalefactor   /*!< Scalefactor */
 ) {
@@ -205,7 +205,7 @@ void scaleValues(FIXP_DBL* vector, /*!< Vector */
  */
 #define FUNCTION_scaleValuesSaturate_DBL
 SCALE_INLINE
-void scaleValuesSaturate(FIXP_DBL* vector, /*!< Vector */
+void mpegh_scaleValuesSaturate(FIXP_DBL* vector, /*!< Vector */
                          INT len,          /*!< Length */
                          INT scalefactor   /*!< Scalefactor */
 ) {
@@ -235,7 +235,7 @@ void scaleValuesSaturate(FIXP_DBL* vector, /*!< Vector */
  */
 #define FUNCTION_scaleValuesSaturate_DBL_DBL
 SCALE_INLINE
-void scaleValuesSaturate(FIXP_DBL* dst,       /*!< Output */
+void mpegh_scaleValuesSaturate(FIXP_DBL* dst,       /*!< Output */
                          const FIXP_DBL* src, /*!< Input   */
                          INT len,             /*!< Length */
                          INT scalefactor      /*!< Scalefactor */
@@ -244,7 +244,7 @@ void scaleValuesSaturate(FIXP_DBL* dst,       /*!< Output */
 
   /* Return if scalefactor is Zero */
   if (scalefactor == 0) {
-    if (dst != src) FDKmemmove(dst, src, len * sizeof(FIXP_DBL));
+    if (dst != src) mpegh_FDKmemmove(dst, src, len * sizeof(FIXP_DBL));
     return;
   }
 
@@ -269,7 +269,7 @@ void scaleValuesSaturate(FIXP_DBL* dst,       /*!< Output */
  */
 #define FUNCTION_scaleValuesSaturate_SGL_DBL
 SCALE_INLINE
-void scaleValuesSaturate(FIXP_SGL* dst,       /*!< Output */
+void mpegh_scaleValuesSaturate(FIXP_SGL* dst,       /*!< Output */
                          const FIXP_DBL* src, /*!< Input   */
                          INT len,             /*!< Length */
                          INT scalefactor)     /*!< Scalefactor */
@@ -295,7 +295,7 @@ void scaleValuesSaturate(FIXP_SGL* dst,       /*!< Output */
  */
 #define FUNCTION_scaleValuesSaturate_SGL
 SCALE_INLINE
-void scaleValuesSaturate(FIXP_SGL* vector, /*!< Vector */
+void mpegh_scaleValuesSaturate(FIXP_SGL* vector, /*!< Vector */
                          INT len,          /*!< Length */
                          INT scalefactor   /*!< Scalefactor */
 ) {
@@ -325,7 +325,7 @@ void scaleValuesSaturate(FIXP_SGL* vector, /*!< Vector */
  */
 #define FUNCTION_scaleValuesSaturate_SGL_SGL
 SCALE_INLINE
-void scaleValuesSaturate(FIXP_SGL* dst,       /*!< Output */
+void mpegh_scaleValuesSaturate(FIXP_SGL* dst,       /*!< Output */
                          const FIXP_SGL* src, /*!< Input */
                          INT len,             /*!< Length */
                          INT scalefactor      /*!< Scalefactor */
@@ -334,7 +334,7 @@ void scaleValuesSaturate(FIXP_SGL* dst,       /*!< Output */
 
   /* Return if scalefactor is Zero */
   if (scalefactor == 0) {
-    if (dst != src) FDKmemmove(dst, src, len * sizeof(FIXP_SGL));
+    if (dst != src) mpegh_FDKmemmove(dst, src, len * sizeof(FIXP_SGL));
     return;
   }
 
@@ -360,7 +360,7 @@ void scaleValuesSaturate(FIXP_SGL* dst,       /*!< Output */
  */
 #define FUNCTION_scaleValues_DBLDBL
 SCALE_INLINE
-void scaleValues(FIXP_DBL* dst,       /*!< dst Vector */
+void mpegh_scaleValues(FIXP_DBL* dst,       /*!< dst Vector */
                  const FIXP_DBL* src, /*!< src Vector */
                  INT len,             /*!< Length */
                  INT scalefactor      /*!< Scalefactor */
@@ -369,7 +369,7 @@ void scaleValues(FIXP_DBL* dst,       /*!< dst Vector */
 
   /* Return if scalefactor is Zero */
   if (scalefactor == 0) {
-    if (dst != src) FDKmemmove(dst, src, len * sizeof(FIXP_DBL));
+    if (dst != src) mpegh_FDKmemmove(dst, src, len * sizeof(FIXP_DBL));
   } else {
     if (scalefactor > 0) {
       scalefactor = fixmin_I(scalefactor, (INT)DFRACT_BITS - 1);
@@ -413,7 +413,7 @@ void scaleValues(FIXP_DBL* dst,       /*!< dst Vector */
  */
 #define FUNCTION_scaleValues_PCMDBL
 SCALE_INLINE
-void scaleValues(FIXP_PCM* dst,       /*!< dst Vector */
+void mpegh_scaleValues(FIXP_PCM* dst,       /*!< dst Vector */
                  const FIXP_DBL* src, /*!< src Vector */
                  INT len,             /*!< Length */
                  INT scalefactor      /*!< Scalefactor */
@@ -466,7 +466,7 @@ void scaleValues(FIXP_PCM* dst,       /*!< dst Vector */
  */
 #define FUNCTION_scaleValues_SGLSGL
 SCALE_INLINE
-void scaleValues(FIXP_SGL* dst,       /*!< dst Vector */
+void mpegh_scaleValues(FIXP_SGL* dst,       /*!< dst Vector */
                  const FIXP_SGL* src, /*!< src Vector */
                  INT len,             /*!< Length */
                  INT scalefactor      /*!< Scalefactor */
@@ -475,7 +475,7 @@ void scaleValues(FIXP_SGL* dst,       /*!< dst Vector */
 
   /* Return if scalefactor is Zero */
   if (scalefactor == 0) {
-    if (dst != src) FDKmemmove(dst, src, len * sizeof(FIXP_DBL));
+    if (dst != src) mpegh_FDKmemmove(dst, src, len * sizeof(FIXP_DBL));
   } else {
     if (scalefactor > 0) {
       scalefactor = fixmin_I(scalefactor, (INT)DFRACT_BITS - 1);
@@ -514,7 +514,7 @@ void scaleValues(FIXP_SGL* dst,       /*!< dst Vector */
  */
 #define FUNCTION_scaleValuesWithFactor_DBL
 SCALE_INLINE
-void scaleValuesWithFactor(FIXP_DBL* vector, FIXP_DBL factor, INT len, INT scalefactor) {
+void mpegh_scaleValuesWithFactor(FIXP_DBL* vector, FIXP_DBL factor, INT len, INT scalefactor) {
   INT i;
 
   /* Compensate fMultDiv2 */
@@ -558,7 +558,7 @@ void scaleValuesWithFactor(FIXP_DBL* vector, FIXP_DBL factor, INT len, INT scale
 
 /*******************************************
 
-IMPORTANT NOTE for usage of getScalefactor()
+IMPORTANT NOTE for usage of mpegh_getScalefactor()
 
 If the input array contains negative values too, then these functions may sometimes return
 the actual maximum value minus 1, due to the nature of the applied algorithm.
@@ -576,7 +576,7 @@ So be careful with possible fractional -1 values that may lead to overflows when
  */
 #define FUNCTION_getScalefactorShort
 SCALE_INLINE
-INT getScalefactorShort(const SHORT* vector, /*!< Pointer to input vector */
+INT mpegh_getScalefactorShort(const SHORT* vector, /*!< Pointer to input vector */
                         INT len              /*!< Length of input vector */
 ) {
   INT i;
@@ -628,7 +628,7 @@ INT getScalefactorPCM(const INT_PCM* vector, /*!< Pointer to input vector */
  */
 #define FUNCTION_getScalefactorShort
 SCALE_INLINE
-INT getScalefactorShort(const SHORT* vector, /*!< Pointer to input vector */
+INT mpegh_getScalefactorShort(const SHORT* vector, /*!< Pointer to input vector */
                         INT len,             /*!< Length of input vector */
                         INT stride) {
   INT i;
@@ -662,7 +662,7 @@ INT getScalefactorShort(const SHORT* vector, /*!< Pointer to input vector */
  */
 #define FUNCTION_getScalefactor_DBL
 SCALE_INLINE
-INT getScalefactor(const FIXP_DBL* vector, /*!< Pointer to input vector */
+INT mpegh_getScalefactor(const FIXP_DBL* vector, /*!< Pointer to input vector */
                    INT len)                /*!< Length of input vector */
 {
   INT i;
@@ -680,7 +680,7 @@ INT getScalefactor(const FIXP_DBL* vector, /*!< Pointer to input vector */
 #ifndef FUNCTION_getScalefactor_SGL
 #define FUNCTION_getScalefactor_SGL
 SCALE_INLINE
-INT getScalefactor(const FIXP_SGL* vector, /*!< Pointer to input vector */
+INT mpegh_getScalefactor(const FIXP_SGL* vector, /*!< Pointer to input vector */
                    INT len)                /*!< Length of input vector */
 {
   INT i;

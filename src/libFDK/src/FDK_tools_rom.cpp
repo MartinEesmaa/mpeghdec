@@ -92,7 +92,7 @@ amm-info@iis.fraunhofer.de
 
 RAM_ALIGN
 LNK_SECTION_CONSTDATA
-const FIXP_STP SineTable512[] = {
+const FIXP_STP mpegh_SineTable512[] = {
     STCP(0x7fffffff, 0x00000000), STCP(0x7fffd886, 0x006487e3), STCP(0x7fff6216, 0x00c90f88),
     STCP(0x7ffe9cb2, 0x012d96b1), STCP(0x7ffd885a, 0x01921d20), STCP(0x7ffc250f, 0x01f6a297),
     STCP(0x7ffa72d1, 0x025b26d7), STCP(0x7ff871a2, 0x02bfa9a4), STCP(0x7ff62182, 0x03242abf),
@@ -183,7 +183,7 @@ const FIXP_STP SineTable512[] = {
 
 RAM_ALIGN
 LNK_SECTION_CONSTDATA
-const FIXP_STP SineTable1024[] = {
+const FIXP_STP mpegh_SineTable1024[] = {
     STCP(0x7fffffff, 0x00000000), STCP(0x7ffff621, 0x003243f5), STCP(0x7fffd886, 0x006487e3),
     STCP(0x7fffa72c, 0x0096cbc1), STCP(0x7fff6216, 0x00c90f88), STCP(0x7fff0943, 0x00fb5330),
     STCP(0x7ffe9cb2, 0x012d96b1), STCP(0x7ffe1c65, 0x015fda03), STCP(0x7ffd885a, 0x01921d20),
@@ -359,7 +359,7 @@ const FIXP_STP SineTable1024[] = {
 
 RAM_ALIGN
 LNK_SECTION_CONSTDATA
-const FIXP_WTP SineWindow128[] = {
+const FIXP_WTP mpegh_SineWindow128[] = {
     WTCP(0x7fff6216, 0x00c90f88), WTCP(0x7ffa72d1, 0x025b26d7), WTCP(0x7ff09478, 0x03ed26e6),
     WTCP(0x7fe1c76b, 0x057f0035), WTCP(0x7fce0c3e, 0x0710a345), WTCP(0x7fb563b3, 0x08a2009a),
     WTCP(0x7f97cebd, 0x0a3308bd), WTCP(0x7f754e80, 0x0bc3ac35), WTCP(0x7f4de451, 0x0d53db92),
@@ -386,7 +386,7 @@ const FIXP_WTP SineWindow128[] = {
 
 RAM_ALIGN
 LNK_SECTION_CONSTDATA
-const FIXP_WTP SineWindow256[] = {
+const FIXP_WTP mpegh_SineWindow256[] = {
     WTCP(0x7fffd886, 0x006487e3), WTCP(0x7ffe9cb2, 0x012d96b1), WTCP(0x7ffc250f, 0x01f6a297),
     WTCP(0x7ff871a2, 0x02bfa9a4), WTCP(0x7ff38274, 0x0388a9ea), WTCP(0x7fed5791, 0x0451a177),
     WTCP(0x7fe5f108, 0x051a8e5c), WTCP(0x7fdd4eec, 0x05e36ea9), WTCP(0x7fd37153, 0x06ac406f),
@@ -434,7 +434,7 @@ const FIXP_WTP SineWindow256[] = {
 
 RAM_ALIGN
 LNK_SECTION_CONSTDATA
-const FIXP_WTP SineWindow512[] = {
+const FIXP_WTP mpegh_SineWindow512[] = {
     WTCP(0x7ffff621, 0x003243f5), WTCP(0x7fffa72c, 0x0096cbc1), WTCP(0x7fff0943, 0x00fb5330),
     WTCP(0x7ffe1c65, 0x015fda03), WTCP(0x7ffce093, 0x01c45ffe), WTCP(0x7ffb55ce, 0x0228e4e2),
     WTCP(0x7ff97c18, 0x028d6870), WTCP(0x7ff75370, 0x02f1ea6c), WTCP(0x7ff4dbd9, 0x03566a96),
@@ -525,7 +525,7 @@ const FIXP_WTP SineWindow512[] = {
 
 RAM_ALIGN
 LNK_SECTION_CONSTDATA
-const FIXP_WTP SineWindow1024[] = {
+const FIXP_WTP mpegh_SineWindow1024[] = {
     WTCP(0x7ffffd88, 0x001921fb), WTCP(0x7fffe9cb, 0x004b65ee), WTCP(0x7fffc251, 0x007da9d4),
     WTCP(0x7fff8719, 0x00afeda8), WTCP(0x7fff3824, 0x00e23160), WTCP(0x7ffed572, 0x011474f6),
     WTCP(0x7ffe5f03, 0x0146b860), WTCP(0x7ffdd4d7, 0x0178fb99), WTCP(0x7ffd36ee, 0x01ab3e97),
@@ -717,7 +717,7 @@ const FIXP_WTP KBDWindow64[] = {
 
 RAM_ALIGN
 LNK_SECTION_CONSTDATA
-const FIXP_WTP KBDWindow128[] = {
+const FIXP_WTP mpegh_KBDWindow128[] = {
     WTCP(0x7ffffffe, 0x00016f63), WTCP(0x7ffffff1, 0x0003e382), WTCP(0x7fffffc7, 0x00078f64),
     WTCP(0x7fffff5d, 0x000cc323), WTCP(0x7ffffe76, 0x0013d9ed), WTCP(0x7ffffcaa, 0x001d3a9d),
     WTCP(0x7ffff953, 0x0029581f), WTCP(0x7ffff372, 0x0038b1bd), WTCP(0x7fffe98b, 0x004bd34d),
@@ -792,7 +792,7 @@ const FIXP_WTP KBDWindow256[] = {
 
 RAM_ALIGN
 LNK_SECTION_CONSTDATA
-const FIXP_WTP KBDWindow1024[] = {
+const FIXP_WTP mpegh_KBDWindow1024[] = {
     WTCP(0x7fffffa4, 0x0009962f), WTCP(0x7fffff39, 0x000e16fb), WTCP(0x7ffffebf, 0x0011ea65),
     WTCP(0x7ffffe34, 0x0015750e), WTCP(0x7ffffd96, 0x0018dc74), WTCP(0x7ffffce5, 0x001c332e),
     WTCP(0x7ffffc1f, 0x001f83f5), WTCP(0x7ffffb43, 0x0022d59a), WTCP(0x7ffffa4f, 0x00262cc2),
@@ -974,10 +974,10 @@ const FIXP_WTP KBDWindow1024[] = {
  * ][ceil(log2(length)) length 128    .. 1024 ] [1: 10ms raster          ][ceil(log2(length)) length
  * 120    ..  960 ] [2: 3/4 of radix 2 raster][ceil(log2(length)) length  96    ..  768 ]
  */
-const FIXP_WTP* const windowSlopes[2][4][10] = {
+const FIXP_WTP* const mpegh_windowSlopes[2][4][10] = {
     { /* Sine */
      {/* Radix 2 */
-      NULL, NULL, NULL, NULL, NULL, SineWindow128, SineWindow256, SineWindow512, SineWindow1024,
+      NULL, NULL, NULL, NULL, NULL, mpegh_SineWindow128, mpegh_SineWindow256, mpegh_SineWindow512, mpegh_SineWindow1024,
       NULL},
      {      /* 10ms raster */
       NULL, /* 3.25 */
@@ -1001,7 +1001,7 @@ const FIXP_WTP* const windowSlopes[2][4][10] = {
      }},
     { /* KBD */
      {/* Radix 2 */
-      KBDWindow64, KBDWindow128, KBDWindow256, SineWindow512, KBDWindow1024},
+      KBDWindow64, mpegh_KBDWindow128, KBDWindow256, mpegh_SineWindow512, mpegh_KBDWindow1024},
      {
          /* 10ms raster */
          NULL,
@@ -1014,7 +1014,7 @@ const FIXP_WTP* const windowSlopes[2][4][10] = {
       NULL, NULL, NULL, NULL, NULL},
      {NULL, NULL, NULL, NULL}}};
 
-const FIXP_WTP* FDKgetWindowSlope(int length, int shape) {
+const FIXP_WTP* mpegh_FDKgetWindowSlope(int length, int shape) {
   const FIXP_WTP* w = NULL;
   int raster, ld2_length;
 
@@ -1046,7 +1046,7 @@ const FIXP_WTP* FDKgetWindowSlope(int length, int shape) {
   }
 
   /* Look up table */
-  w = windowSlopes[shape & 1][raster][ld2_length];
+  w = mpegh_windowSlopes[shape & 1][raster][ld2_length];
 
   FDK_ASSERT(w != NULL);
 
@@ -1060,7 +1060,7 @@ const FIXP_WTP* FDKgetWindowSlope(int length, int shape) {
 /*! sin (3.14159265358979323 / (2*L) * n) , L=64*/
 LNK_SECTION_CONSTDATA
 RAM_ALIGN
-const FIXP_WTP sin_twiddle_L64[] = {
+const FIXP_WTP mpegh_sin_twiddle_L64[] = {
     WTCP(0x7fffffff, 0x00000000), WTCP(0x7ff62182, 0x03242abf), WTCP(0x7fd8878e, 0x0647d97c),
     WTCP(0x7fa736b4, 0x096a9049), WTCP(0x7f62368f, 0x0c8bd35e), WTCP(0x7f0991c4, 0x0fab272b),
     WTCP(0x7e9d55fc, 0x12c8106f), WTCP(0x7e1d93ea, 0x15e21445), WTCP(0x7d8a5f40, 0x18f8b83c),
@@ -1084,7 +1084,7 @@ const FIXP_WTP sin_twiddle_L64[] = {
     WTCP(0x0c8bd35e, 0x7f62368f), WTCP(0x096a9049, 0x7fa736b4), WTCP(0x0647d97c, 0x7fd8878e),
     WTCP(0x03242abf, 0x7ff62182)};
 
-const USHORT sqrt_tab[49] = {0x5a82, 0x5d4b, 0x6000, 0x62a1, 0x6531, 0x67b1, 0x6a21, 0x6c84, 0x6ed9,
+const USHORT mpegh_sqrt_tab[49] = {0x5a82, 0x5d4b, 0x6000, 0x62a1, 0x6531, 0x67b1, 0x6a21, 0x6c84, 0x6ed9,
                              0x7123, 0x7360, 0x7593, 0x77bb, 0x79da, 0x7bef, 0x7dfb, 0x8000, 0x81fc,
                              0x83f0, 0x85dd, 0x87c3, 0x89a3, 0x8b7c, 0x8d4e, 0x8f1b, 0x90e2, 0x92a4,
                              0x9460, 0x9617, 0x97ca, 0x9977, 0x9b20, 0x9cc4, 0x9e64, 0xa000, 0xa197,
@@ -1092,7 +1092,7 @@ const USHORT sqrt_tab[49] = {0x5a82, 0x5d4b, 0x6000, 0x62a1, 0x6531, 0x67b1, 0x6
                              0xb0b9, 0xb22b, 0xb399, 0xb504};
 
 LNK_SECTION_CONSTDATA_L1
-const FIXP_DBL invCount[80] = /* This could be 16-bit wide */
+const FIXP_DBL mpegh_invCount[80] = /* This could be 16-bit wide */
     {0x00000000, 0x7fffffff, 0x40000000, 0x2aaaaaab, 0x20000000, 0x1999999a, 0x15555555,
      0x12492492, 0x10000000, 0x0e38e38e, 0x0ccccccd, 0x0ba2e8ba, 0x0aaaaaab, 0x09d89d8a,
      0x09249249, 0x08888889, 0x08000000, 0x07878788, 0x071c71c7, 0x06bca1af, 0x06666666,
@@ -1326,7 +1326,7 @@ static const struct element_list node_usac_cpe_epc0 = {
 
 static const struct element_list node_usac_lfe_epc0 = {el_usac_lfe_epc0, {NULL, NULL}};
 
-const element_list_t* getBitstreamElementList(AUDIO_OBJECT_TYPE aot, SCHAR epConfig,
+const element_list_t* mpegh_getBitstreamElementList(AUDIO_OBJECT_TYPE aot, SCHAR epConfig,
                                               UCHAR nChannels, UCHAR layer, UINT elFlags) {
   switch (aot) {
     case AOT_MPEGH3DA:
@@ -1354,7 +1354,7 @@ const element_list_t* getBitstreamElementList(AUDIO_OBJECT_TYPE aot, SCHAR epCon
 /*           0x5A82799A = invSqrtNorm2 (0x4000.0000), exp=1        */
 
 LNK_SECTION_CONSTDATA_L1
-const FIXP_DBL invSqrtTab[SQRT_VALUES] = {
+const FIXP_DBL mpegh_invSqrtTab[SQRT_VALUES] = {
     0x5A827999, 0x5A287E03, 0x59CF8CBC, 0x5977A0AC, 0x5920B4DF, 0x58CAC480, 0x5875CADE, 0x5821C364,
     0x57CEA99D, 0x577C7930, 0x572B2DE0, 0x56DAC38E, 0x568B3632, 0x563C81E0, 0x55EEA2C4, 0x55A19522,
     0x55555555, 0x5509DFD0, 0x54BF311A, 0x547545D0, 0x542C1AA4, 0x53E3AC5B, 0x539BF7CD, 0x5354F9E7,

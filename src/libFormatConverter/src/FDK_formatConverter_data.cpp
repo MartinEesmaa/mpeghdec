@@ -165,13 +165,13 @@ int allocateFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
   INT status = 0;
   /* dmx mtx */
   fcInt->fcParams->dmxMtx =
-      (FIXP_DMX_H**)FDKcalloc(fcInt->numTotalInputChannels, sizeof *fcInt->fcParams->dmxMtx);
+      (FIXP_DMX_H**)mpegh_FDKcalloc(fcInt->numTotalInputChannels, sizeof *fcInt->fcParams->dmxMtx);
   if (fcInt->fcParams->dmxMtx == NULL) {
     return status = -1;
   }
   for (i = 0; i < fcInt->numTotalInputChannels; i++) {
     fcInt->fcParams->dmxMtx[i] =
-        (FIXP_DMX_H*)FDKcalloc(fcInt->numOutputChannels, sizeof *fcInt->fcParams->dmxMtx[i]);
+        (FIXP_DMX_H*)mpegh_FDKcalloc(fcInt->numOutputChannels, sizeof *fcInt->fcParams->dmxMtx[i]);
     if (fcInt->fcParams->dmxMtx[i] == NULL) {
       status = -1;
     }
@@ -179,7 +179,7 @@ int allocateFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
 
   /* dmx mtx sorted */
   fcInt->fcParams->dmxMtx_sorted =
-      (FIXP_DMX_H*)FDKcalloc(fcInt->numTotalInputChannels * fcInt->numOutputChannels,
+      (FIXP_DMX_H*)mpegh_FDKcalloc(fcInt->numTotalInputChannels * fcInt->numOutputChannels,
                              sizeof *fcInt->fcParams->dmxMtx_sorted);
   if (fcInt->fcParams->dmxMtx_sorted == NULL) {
     status = -1;
@@ -187,13 +187,13 @@ int allocateFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
 
   /* dmx mtx L */
   fcInt->fcParams->dmxMtxL =
-      (FIXP_DMX_H**)FDKcalloc(fcInt->numTotalInputChannels, sizeof *fcInt->fcParams->dmxMtxL);
+      (FIXP_DMX_H**)mpegh_FDKcalloc(fcInt->numTotalInputChannels, sizeof *fcInt->fcParams->dmxMtxL);
   if (fcInt->fcParams->dmxMtxL == NULL) {
     return -1;
   }
   for (i = 0; i < fcInt->numTotalInputChannels; i++) {
     fcInt->fcParams->dmxMtxL[i] =
-        (FIXP_DMX_H*)FDKcalloc(fcInt->numOutputChannels, sizeof *fcInt->fcParams->dmxMtxL[i]);
+        (FIXP_DMX_H*)mpegh_FDKcalloc(fcInt->numOutputChannels, sizeof *fcInt->fcParams->dmxMtxL[i]);
     if (fcInt->fcParams->dmxMtxL[i] == NULL) {
       return -1;
     }
@@ -201,7 +201,7 @@ int allocateFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
 
   /* dmx mtx L sorted */
   fcInt->fcParams->dmxMtxL_sorted =
-      (FIXP_DMX_H*)FDKcalloc(fcInt->numTotalInputChannels * fcInt->numOutputChannels,
+      (FIXP_DMX_H*)mpegh_FDKcalloc(fcInt->numTotalInputChannels * fcInt->numOutputChannels,
                              sizeof *fcInt->fcParams->dmxMtxL_sorted);
   if (fcInt->fcParams->dmxMtxL_sorted == NULL) {
     return -1;
@@ -209,13 +209,13 @@ int allocateFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
 
   /* dmx mtx 2 */
   fcInt->fcParams->dmxMtx2 =
-      (FIXP_DMX_H**)FDKcalloc(fcInt->numTotalInputChannels, sizeof *fcInt->fcParams->dmxMtx2);
+      (FIXP_DMX_H**)mpegh_FDKcalloc(fcInt->numTotalInputChannels, sizeof *fcInt->fcParams->dmxMtx2);
   if (fcInt->fcParams->dmxMtx2 == NULL) {
     return -1;
   }
   for (i = 0; i < fcInt->numTotalInputChannels; i++) {
     fcInt->fcParams->dmxMtx2[i] =
-        (FIXP_DMX_H*)FDKcalloc(fcInt->numOutputChannels, sizeof *fcInt->fcParams->dmxMtx2[i]);
+        (FIXP_DMX_H*)mpegh_FDKcalloc(fcInt->numOutputChannels, sizeof *fcInt->fcParams->dmxMtx2[i]);
     if (fcInt->fcParams->dmxMtx2[i] == NULL) {
       return -1;
     }
@@ -223,7 +223,7 @@ int allocateFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
 
   /* dmx mtx 2 sorted */
   fcInt->fcParams->dmxMtx2_sorted =
-      (FIXP_DMX_H*)FDKcalloc(fcInt->numTotalInputChannels * fcInt->numOutputChannels,
+      (FIXP_DMX_H*)mpegh_FDKcalloc(fcInt->numTotalInputChannels * fcInt->numOutputChannels,
                              sizeof *fcInt->fcParams->dmxMtx2_sorted);
   if (fcInt->fcParams->dmxMtx2_sorted == NULL) {
     return -1;
@@ -231,26 +231,26 @@ int allocateFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
 
   /* Eq index vector */
   fcInt->fcParams->eqIndexVec =
-      (INT**)FDKcalloc(fcInt->numTotalInputChannels, sizeof *fcInt->fcParams->eqIndexVec);
+      (INT**)mpegh_FDKcalloc(fcInt->numTotalInputChannels, sizeof *fcInt->fcParams->eqIndexVec);
   if (fcInt->fcParams->eqIndexVec == NULL) {
     return status = -1;
   }
   for (i = 0; i < fcInt->numTotalInputChannels; i++) {
     fcInt->fcParams->eqIndexVec[i] =
-        (INT*)FDKcalloc(fcInt->numOutputChannels, sizeof *fcInt->fcParams->eqIndexVec[i]);
+        (INT*)mpegh_FDKcalloc(fcInt->numOutputChannels, sizeof *fcInt->fcParams->eqIndexVec[i]);
     if (fcInt->fcParams->eqIndexVec[i] == NULL) {
       status = -1;
     }
   }
   /* Eq index vector 2 */
   fcInt->fcParams->eqIndexVec2 =
-      (INT**)FDKcalloc(fcInt->numTotalInputChannels, sizeof *fcInt->fcParams->eqIndexVec2);
+      (INT**)mpegh_FDKcalloc(fcInt->numTotalInputChannels, sizeof *fcInt->fcParams->eqIndexVec2);
   if (fcInt->fcParams->eqIndexVec2 == NULL) {
     return -1;
   }
   for (i = 0; i < fcInt->numTotalInputChannels; i++) {
     fcInt->fcParams->eqIndexVec2[i] =
-        (INT*)FDKcalloc(fcInt->numOutputChannels, sizeof *fcInt->fcParams->eqIndexVec2[i]);
+        (INT*)mpegh_FDKcalloc(fcInt->numOutputChannels, sizeof *fcInt->fcParams->eqIndexVec2[i]);
     if (fcInt->fcParams->eqIndexVec2[i] == NULL) {
       return -1;
     }
@@ -258,7 +258,7 @@ int allocateFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
 
   /* Eq index vector sorted */
   fcInt->fcParams->eqIndexVec_sorted =
-      (INT*)FDKcalloc(fcInt->numTotalInputChannels * fcInt->numOutputChannels,
+      (INT*)mpegh_FDKcalloc(fcInt->numTotalInputChannels * fcInt->numOutputChannels,
                       sizeof *fcInt->fcParams->eqIndexVec_sorted);
   if (fcInt->fcParams->eqIndexVec_sorted == NULL) {
     status = -1;
@@ -266,7 +266,7 @@ int allocateFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
 
   /* Eq index vector sorted 2 */
   fcInt->fcParams->eqIndexVec2_sorted =
-      (INT*)FDKcalloc(fcInt->numTotalInputChannels * fcInt->numOutputChannels,
+      (INT*)mpegh_FDKcalloc(fcInt->numTotalInputChannels * fcInt->numOutputChannels,
                       sizeof *fcInt->fcParams->eqIndexVec2_sorted);
   if (fcInt->fcParams->eqIndexVec2_sorted == NULL) {
     return -1;
@@ -274,7 +274,7 @@ int allocateFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
 
   /* internal structure */
   fcInt->fcParams->formatConverterParams_internal =
-      (converter_pr_t*)FDKcalloc(1, sizeof *fcInt->fcParams->formatConverterParams_internal);
+      (converter_pr_t*)mpegh_FDKcalloc(1, sizeof *fcInt->fcParams->formatConverterParams_internal);
   if (fcInt->fcParams->formatConverterParams_internal == NULL) {
     status = -1;
   }
@@ -290,7 +290,7 @@ int allocateFormatConverterEQs(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
   /* eqGains */
   if (fcInt->eqGains[0] == NULL) {
     for (INT i = 0; i < (INT)numInputChannels; i++) {
-      fcInt->eqGains[i] = (FIXP_EQ_H*)FDKcalloc(STFT_ERB_BANDS, sizeof *fcInt->eqGains[i]);
+      fcInt->eqGains[i] = (FIXP_EQ_H*)mpegh_FDKcalloc(STFT_ERB_BANDS, sizeof *fcInt->eqGains[i]);
       if (fcInt->eqGains[i] == NULL) {
         return -1;
       }
@@ -312,16 +312,16 @@ void freeFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
       /*
       if( fcInt->fcParams->dmxMtx[i] != NULL && fcInt->fcParams->dmxMtxIsSet )
       {*/
-      FDKfree(fcInt->fcParams->dmxMtx[i]);
+      mpegh_FDKfree(fcInt->fcParams->dmxMtx[i]);
       /*}*/
     }
   }
-  FDKfree(fcInt->fcParams->dmxMtx);
+  mpegh_FDKfree(fcInt->fcParams->dmxMtx);
   fcInt->fcParams->dmxMtx = NULL;
 
   /* dmx mtx sorted */
 
-  FDKfree(fcInt->fcParams->dmxMtx_sorted);
+  mpegh_FDKfree(fcInt->fcParams->dmxMtx_sorted);
   fcInt->fcParams->dmxMtx_sorted = NULL;
 
   /* dmx mtx L */
@@ -331,16 +331,16 @@ void freeFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
       /*
       if( fcInt->fcParams->dmxMtxL[i] != NULL && fcInt->fcParams->dmxMtxLIsSet )
       {*/
-      FDKfree(fcInt->fcParams->dmxMtxL[i]);
+      mpegh_FDKfree(fcInt->fcParams->dmxMtxL[i]);
       /*}*/
     }
   }
-  FDKfree(fcInt->fcParams->dmxMtxL);
+  mpegh_FDKfree(fcInt->fcParams->dmxMtxL);
   fcInt->fcParams->dmxMtxL = NULL;
 
   /* dmx mtx L sorted */
 
-  FDKfree(fcInt->fcParams->dmxMtxL_sorted);
+  mpegh_FDKfree(fcInt->fcParams->dmxMtxL_sorted);
   fcInt->fcParams->dmxMtxL_sorted = NULL;
 
   /* dmx mtx 2 */
@@ -349,53 +349,53 @@ void freeFormatConverterParams(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
       /*
       if( fcInt->fcParams->dmxMtx2[i] != NULL && fcInt->fcParams->dmxMtx2IsSet )
       {*/
-      FDKfree(fcInt->fcParams->dmxMtx2[i]);
+      mpegh_FDKfree(fcInt->fcParams->dmxMtx2[i]);
       /*}*/
     }
   }
-  FDKfree(fcInt->fcParams->dmxMtx2);
+  mpegh_FDKfree(fcInt->fcParams->dmxMtx2);
   fcInt->fcParams->dmxMtx2 = NULL;
 
   /* dmx mtx 2 sorted */
 
-  FDKfree(fcInt->fcParams->dmxMtx2_sorted);
+  mpegh_FDKfree(fcInt->fcParams->dmxMtx2_sorted);
   fcInt->fcParams->dmxMtx2_sorted = NULL;
 
   /* eqIndexVec */
   if (fcInt->fcParams->eqIndexVec != NULL) {
     for (i = 0; i < fcInt->numTotalInputChannels; i++) {
-      FDKfree(fcInt->fcParams->eqIndexVec[i]);
+      mpegh_FDKfree(fcInt->fcParams->eqIndexVec[i]);
     }
   }
-  FDKfree(fcInt->fcParams->eqIndexVec);
+  mpegh_FDKfree(fcInt->fcParams->eqIndexVec);
   fcInt->fcParams->eqIndexVec = NULL;
   /* eqIndexVec sorted */
 
-  FDKfree(fcInt->fcParams->eqIndexVec_sorted);
+  mpegh_FDKfree(fcInt->fcParams->eqIndexVec_sorted);
 
   /* eqIndexVec 2 */
   if (fcInt->fcParams->eqIndexVec2 != NULL) {
     for (i = 0; i < fcInt->numTotalInputChannels; i++) {
-      FDKfree(fcInt->fcParams->eqIndexVec2[i]);
+      mpegh_FDKfree(fcInt->fcParams->eqIndexVec2[i]);
     }
   }
-  FDKfree(fcInt->fcParams->eqIndexVec2);
+  mpegh_FDKfree(fcInt->fcParams->eqIndexVec2);
   fcInt->fcParams->eqIndexVec2 = NULL; /* eqIndexVec sorted */
 
-  FDKfree(fcInt->fcParams->eqIndexVec2_sorted);
+  mpegh_FDKfree(fcInt->fcParams->eqIndexVec2_sorted);
 
   fcInt->fcParams->eqIndexVec2_sorted = NULL;
 
   /* eqGains */
   for (i = 0; i < FDK_FORMAT_CONVERTER_MAX_INPUT_CHANNELS; i++) {
     if (fcInt->eqGains[i] != NULL) {
-      FDKfree(fcInt->eqGains[i]);
+      mpegh_FDKfree(fcInt->eqGains[i]);
     }
   }
 
   /* internal structure */
   if (fcInt->fcParams->formatConverterParams_internal != NULL) {
-    FDKfree(fcInt->fcParams->formatConverterParams_internal);
+    mpegh_FDKfree(fcInt->fcParams->formatConverterParams_internal);
     fcInt->fcParams->formatConverterParams_internal = NULL;
   }
 }

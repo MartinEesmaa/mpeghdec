@@ -838,7 +838,7 @@ static void gVBAPRenderer_Spread_internal_normalizeVector(FIXP_DBL* vector, int 
   FIXP_DBL denom, nrg = 0, tmp;
 
   int shift = 32 - fNormz((FIXP_DBL)(vectorLength - 1));
-  int headroom = getScalefactor(vector, vectorLength);
+  int headroom = mpegh_getScalefactor(vector, vectorLength);
 
   for (n = 0; n < vectorLength; n++) {
     tmp = vector[n] << headroom;
@@ -980,7 +980,7 @@ static void gVBAPRenderer_Spread_renderSpread(HANDLE_GVBAPRENDERER phgVBAPRender
 
   oamSample.spreadAngle = oamSample.spreadHeight = oamSample.spreadDepth = (FIXP_DBL)0;
   oamSample.gain = FL2FXCONST_DBL(1.0 / 8);
-  FDKmemset(outputGainArray, 0, phgVBAPRenderer->numChannels * sizeof(FIXP_DBL));
+  mpegh_FDKmemset(outputGainArray, 0, phgVBAPRenderer->numChannels * sizeof(FIXP_DBL));
 
   /* calculate VBAP gains (assuming spread = 0 for implemented MDAP spread, no downmixing of ghost
    * speakers, gain factor set to 1.0 because gain factor will be applied after spread gains have
@@ -1198,7 +1198,7 @@ int gVBAPRenderer_Open(HANDLE_GVBAPRENDERER* phgVBAPRenderer, int numObjects, in
     return -1;
   }
 
-  tmp = (HANDLE_GVBAPRENDERER)FDKcalloc(1, sizeof(GVBAPRENDERER));
+  tmp = (HANDLE_GVBAPRENDERER)mpegh_FDKcalloc(1, sizeof(GVBAPRENDERER));
   if (!tmp) {
     return -2; /* could not allocate memory */
   }
@@ -1209,8 +1209,8 @@ int gVBAPRenderer_Open(HANDLE_GVBAPRENDERER* phgVBAPRenderer, int numObjects, in
   *phgVBAPRenderer = tmp;
 
   /* allocate memory for speakerlist and fill it with values and save the mapping order */
-  (*phgVBAPRenderer)->speakerSetup.speakerList = (SPEAKER*)FDKmalloc(outChannels * sizeof(SPEAKER));
-  (*phgVBAPRenderer)->speakerSetup.mapping = (int*)FDKmalloc(outChannels * sizeof(int));
+  (*phgVBAPRenderer)->speakerSetup.speakerList = (SPEAKER*)mpegh_FDKmalloc(outChannels * sizeof(SPEAKER));
+  (*phgVBAPRenderer)->speakerSetup.mapping = (int*)mpegh_FDKmalloc(outChannels * sizeof(int));
 
   if ((*phgVBAPRenderer)->speakerSetup.speakerList == NULL ||
       (*phgVBAPRenderer)->speakerSetup.mapping == NULL) {
@@ -1293,14 +1293,14 @@ int gVBAPRenderer_Open(HANDLE_GVBAPRENDERER* phgVBAPRenderer, int numObjects, in
        numLFE)) /* if no downmixMatrix exists then free memory and set pointer to NULL */
   {
     if ((*phgVBAPRenderer)->downmixMatrix != NULL) {
-      fdkFreeMatrix2D((void**)(*phgVBAPRenderer)->downmixMatrix);
+      mpegh_fdkFreeMatrix2D((void**)(*phgVBAPRenderer)->downmixMatrix);
       (*phgVBAPRenderer)->downmixMatrix = NULL;
     }
   }
 
   /* allocate memory for speakerTriplet and fill it with values */
   if (((*phgVBAPRenderer)->speakerSetup.speakerTriplet =
-           (SPEAKERTRIPLET*)FDKmalloc(tL->size * sizeof(SPEAKERTRIPLET))) == NULL) {
+           (SPEAKERTRIPLET*)mpegh_FDKmalloc(tL->size * sizeof(SPEAKERTRIPLET))) == NULL) {
     return -2; /* could not allocate memory */
   }
 
@@ -1341,29 +1341,29 @@ int gVBAPRenderer_Open(HANDLE_GVBAPRENDERER* phgVBAPRenderer, int numObjects, in
   /* Alocate memory for gain cache. Length is number of real speakers including LFE + number of
    * ghosts */
   (*phgVBAPRenderer)->gainCache =
-      (FIXP_DBL*)FDKmalloc((outChannels + numGhosts - numLFE) * sizeof(FIXP_DBL));
+      (FIXP_DBL*)mpegh_FDKmalloc((outChannels + numGhosts - numLFE) * sizeof(FIXP_DBL));
 
   /* Alocate memory for start and end gains. Length is number of real speakers including LFE */
-  (*phgVBAPRenderer)->startGains = (FIXP_DBL**)fdkCallocMatrix2D(
+  (*phgVBAPRenderer)->startGains = (FIXP_DBL**)mpegh_fdkCallocMatrix2D(
       numObjects, (*phgVBAPRenderer)->numChannels,
       sizeof(FIXP_DBL)); /* Dim: objects x (number of output channels) */
-  (*phgVBAPRenderer)->endGains = (FIXP_DBL**)fdkCallocMatrix2D(
+  (*phgVBAPRenderer)->endGains = (FIXP_DBL**)mpegh_fdkCallocMatrix2D(
       numObjects, (*phgVBAPRenderer)->numChannels,
       sizeof(FIXP_DBL)); /* Dim: objects x (number of output channels) */
 
-  (*phgVBAPRenderer)->stepState = (FIXP_DBL**)fdkCallocMatrix2D(
+  (*phgVBAPRenderer)->stepState = (FIXP_DBL**)mpegh_fdkCallocMatrix2D(
       numObjects, (*phgVBAPRenderer)->numChannels,
       sizeof(FIXP_DBL)); /* Dim: objects x (number of output channels) */
-  (*phgVBAPRenderer)->scaleState = (FIXP_DBL**)fdkCallocMatrix2D(
+  (*phgVBAPRenderer)->scaleState = (FIXP_DBL**)mpegh_fdkCallocMatrix2D(
       numObjects, (*phgVBAPRenderer)->numChannels,
       sizeof(FIXP_DBL)); /* Dim: objects x (number of output channels) */
 
   (*phgVBAPRenderer)->startGainsMax =
-      (FIXP_DBL*)FDKmalloc((*phgVBAPRenderer)->numChannels * sizeof(FIXP_DBL));
+      (FIXP_DBL*)mpegh_FDKmalloc((*phgVBAPRenderer)->numChannels * sizeof(FIXP_DBL));
   (*phgVBAPRenderer)->prevGainsMax =
-      (FIXP_DBL*)FDKmalloc((*phgVBAPRenderer)->numChannels * sizeof(FIXP_DBL));
+      (FIXP_DBL*)mpegh_FDKmalloc((*phgVBAPRenderer)->numChannels * sizeof(FIXP_DBL));
   (*phgVBAPRenderer)->OAM_parsed_data =
-      (INT*)FDKcalloc((*phgVBAPRenderer)->numObjects * OAM_NUMBER_MAX_COMPONENTS, sizeof(INT));
+      (INT*)mpegh_FDKcalloc((*phgVBAPRenderer)->numObjects * OAM_NUMBER_MAX_COMPONENTS, sizeof(INT));
   if (((*phgVBAPRenderer)->gainCache == NULL) || ((*phgVBAPRenderer)->startGains == NULL) ||
       ((*phgVBAPRenderer)->endGains == NULL) || ((*phgVBAPRenderer)->stepState == NULL) ||
       ((*phgVBAPRenderer)->scaleState == NULL) || ((*phgVBAPRenderer)->startGainsMax == NULL) ||
@@ -1395,14 +1395,14 @@ int gVBAPRenderer_Open(HANDLE_GVBAPRENDERER* phgVBAPRenderer, int numObjects, in
     }
 
     (*phgVBAPRenderer)->spread_gainArray =
-        (FIXP_DBL*)FDKcalloc(spread_numInvolvedLS, sizeof(FIXP_DBL));
+        (FIXP_DBL*)mpegh_FDKcalloc(spread_numInvolvedLS, sizeof(FIXP_DBL));
     if ((*phgVBAPRenderer)->spread_gainArray == NULL) {
       return -2;
     }
 
     for (i = 0; i < GVBAP_SPREAD_NUM_VSO; i++) {
       (*phgVBAPRenderer)->spread_gainsVSO[i] =
-          (FIXP_DBL*)FDKcalloc(spread_numInvolvedLS, sizeof(FIXP_DBL));
+          (FIXP_DBL*)mpegh_FDKcalloc(spread_numInvolvedLS, sizeof(FIXP_DBL));
       if ((*phgVBAPRenderer)->spread_gainsVSO[i] == NULL) {
         return -2;
       }
@@ -1453,13 +1453,13 @@ int gVBAPRenderer_Open(HANDLE_GVBAPRENDERER* phgVBAPRenderer, int numObjects, in
   }
 
   /* Alocate memory for OAM samples */
-  ((*phgVBAPRenderer)->oamSamples = (OAM_SAMPLE**)FDKcalloc(numOamFrames, sizeof(OAM_SAMPLE*)));
+  ((*phgVBAPRenderer)->oamSamples = (OAM_SAMPLE**)mpegh_FDKcalloc(numOamFrames, sizeof(OAM_SAMPLE*)));
 
   if (!((*phgVBAPRenderer)->oamSamples)) {
     return -2; /* could not allocate memory */
   }
   if (((*phgVBAPRenderer)->oamSamples[0] =
-           (OAM_SAMPLE*)FDKmalloc(numOamFrames * numObjects * sizeof(OAM_SAMPLE))) == NULL) {
+           (OAM_SAMPLE*)mpegh_FDKmalloc(numOamFrames * numObjects * sizeof(OAM_SAMPLE))) == NULL) {
     return -2; /* could not allocate memory */
   }
   for (i = 1; i < numOamFrames; i++) {
@@ -1484,12 +1484,12 @@ int gVBAPRenderer_Open(HANDLE_GVBAPRENDERER* phgVBAPRenderer, int numObjects, in
 
   /* CONCEALMENT */
   if (((*phgVBAPRenderer)->oamSamplesValid =
-           (OAM_SAMPLE**)FDKcalloc(numOamFrames, sizeof(OAM_SAMPLE*))) == NULL) {
+           (OAM_SAMPLE**)mpegh_FDKcalloc(numOamFrames, sizeof(OAM_SAMPLE*))) == NULL) {
     return -2; /* could not allocate memory */
   }
 
   if (((*phgVBAPRenderer)->oamSamplesValid[0] =
-           (OAM_SAMPLE*)FDKmalloc(numOamFrames * numObjects * sizeof(OAM_SAMPLE))) == NULL) {
+           (OAM_SAMPLE*)mpegh_FDKmalloc(numOamFrames * numObjects * sizeof(OAM_SAMPLE))) == NULL) {
     return -2; /* could not allocate memory */
   }
   for (i = 1; i < numOamFrames; i++) {
@@ -1677,7 +1677,7 @@ int gVBAPRenderer_RenderFrame_Time(HANDLE_GVBAPRENDERER RESTRICT hgVBAPRenderer,
 
       mappedChannel = hgVBAPRenderer->speakerSetup.mapping[channel];
       C_AALLOC_SCRATCH_START(outputCache, FIXP_DBL, GVBAPRENDERER_MAX_FRAMELENGTH)
-      FDKmemclear(outputCache, length * sizeof(FIXP_DBL));
+      mpegh_FDKmemclear(outputCache, length * sizeof(FIXP_DBL));
 
       tmp = fMax(hgVBAPRenderer->startGainsMax[channel], endGainsMax[channel]);
       maxGain = fMax(tmp, hgVBAPRenderer->prevGainsMax[channel]);
@@ -1783,16 +1783,16 @@ int gVBAPRenderer_RenderFrame_Time(HANDLE_GVBAPRENDERER RESTRICT hgVBAPRenderer,
 #endif
 #ifdef DEBUG_gVBAPRenderer_RenderFrame_Time_func1
         INT stop_clock = FDKclock();
-        FDKprintf("gVBAPRenderer_RenderFrame_Time_func1: %d  length=%d  s=%d  s1=%d\n",
+        mpegh_FDKprintf("gVBAPRenderer_RenderFrame_Time_func1: %d  length=%d  s=%d  s1=%d\n",
                   stop_clock - start_clock, length, s, s1);
         for (int sample = 0; sample < length; sample += 4) {
-          FDKprintf("0x%08X 0x%08X 0x%08X 0x%08X smp=%d 0x%08X 0x%08X 0x%08X 0x%08X\n",
+          mpegh_FDKprintf("0x%08X 0x%08X 0x%08X 0x%08X smp=%d 0x%08X 0x%08X 0x%08X 0x%08X\n",
                     outputCache[sample + 0], outputCache[sample + 1], outputCache[sample + 2],
                     outputCache[sample + 3], sample, pIn[sample + 0], pIn[sample + 1],
                     pIn[sample + 2], pIn[sample + 3]);
         }
-        FDKprintf("scale: 0x%08X\n", hgVBAPRenderer->scaleState[object][channel]);
-        FDKprintf("step:  0x%08X\n", hgVBAPRenderer->stepState[object][channel]);
+        mpegh_FDKprintf("scale: 0x%08X\n", hgVBAPRenderer->scaleState[object][channel]);
+        mpegh_FDKprintf("step:  0x%08X\n", hgVBAPRenderer->stepState[object][channel]);
         ;
 #endif
       }
@@ -1822,9 +1822,9 @@ int gVBAPRenderer_RenderFrame_Time(HANDLE_GVBAPRENDERER RESTRICT hgVBAPRenderer,
 #endif
 #ifdef DEBUG_gVBAPRenderer_RenderFrame_Time_func2
       INT stop_clock = FDKclock();
-      FDKprintf("gVBAPRenderer_RenderFrame_Time_func2: %d  s2=%d\n", stop_clock - start_clock, s2);
+      mpegh_FDKprintf("gVBAPRenderer_RenderFrame_Time_func2: %d  s2=%d\n", stop_clock - start_clock, s2);
       for (int sample = 0; sample < length; sample += 4) {
-        FDKprintf("0x%08X 0x%08X 0x%08X 0x%08X smp=%d 0x%08X 0x%08X 0x%08X 0x%08X\n",
+        mpegh_FDKprintf("0x%08X 0x%08X 0x%08X 0x%08X smp=%d 0x%08X 0x%08X 0x%08X 0x%08X\n",
                   pOut[sample + 0], pOut[sample + 1], pOut[sample + 2], pOut[sample + 3], sample,
                   outputCache[sample + 0], outputCache[sample + 1], outputCache[sample + 2],
                   outputCache[sample + 3]);
@@ -1842,63 +1842,63 @@ int gVBAPRenderer_RenderFrame_Time(HANDLE_GVBAPRENDERER RESTRICT hgVBAPRenderer,
 
 int gVBAPRenderer_Close(HANDLE_GVBAPRENDERER hgVBAPRenderer) {
   /* free start and end gain memory */
-  fdkFreeMatrix2D((void**)hgVBAPRenderer->startGains);
-  fdkFreeMatrix2D((void**)hgVBAPRenderer->endGains);
+  mpegh_fdkFreeMatrix2D((void**)hgVBAPRenderer->startGains);
+  mpegh_fdkFreeMatrix2D((void**)hgVBAPRenderer->endGains);
 
-  fdkFreeMatrix2D((void**)hgVBAPRenderer->stepState);
-  fdkFreeMatrix2D((void**)hgVBAPRenderer->scaleState);
+  mpegh_fdkFreeMatrix2D((void**)hgVBAPRenderer->stepState);
+  mpegh_fdkFreeMatrix2D((void**)hgVBAPRenderer->scaleState);
 
   /* free maximum start gain memory */
-  FDKfree(hgVBAPRenderer->startGainsMax);
+  mpegh_FDKfree(hgVBAPRenderer->startGainsMax);
 
   /* free maximum previous gain memory */
-  FDKfree(hgVBAPRenderer->prevGainsMax);
+  mpegh_FDKfree(hgVBAPRenderer->prevGainsMax);
 
   /* free OAM parsed data */
-  FDKfree(hgVBAPRenderer->OAM_parsed_data);
+  mpegh_FDKfree(hgVBAPRenderer->OAM_parsed_data);
 
   /* free gain cache */
-  FDKfree(hgVBAPRenderer->gainCache);
+  mpegh_FDKfree(hgVBAPRenderer->gainCache);
 
   /* free speaker triplet */
-  FDKfree(hgVBAPRenderer->speakerSetup.speakerTriplet);
+  mpegh_FDKfree(hgVBAPRenderer->speakerSetup.speakerTriplet);
 
   /* free speaker list */
-  FDKfree(hgVBAPRenderer->speakerSetup.speakerList);
+  mpegh_FDKfree(hgVBAPRenderer->speakerSetup.speakerList);
 
   /* free speaker mapping array */
-  FDKfree(hgVBAPRenderer->speakerSetup.mapping);
+  mpegh_FDKfree(hgVBAPRenderer->speakerSetup.mapping);
 
   /* free downmixMatrix */
   if (hgVBAPRenderer->downmixMatrix != NULL) {
-    fdkFreeMatrix2D((void**)hgVBAPRenderer->downmixMatrix);
+    mpegh_fdkFreeMatrix2D((void**)hgVBAPRenderer->downmixMatrix);
     hgVBAPRenderer->downmixMatrix = NULL;
   }
 
   if (hgVBAPRenderer->oamSamples) {
     if (hgVBAPRenderer->oamSamples[0]) {
-      FDKfree(hgVBAPRenderer->oamSamples[0]);
+      mpegh_FDKfree(hgVBAPRenderer->oamSamples[0]);
     }
-    FDKfree(hgVBAPRenderer->oamSamples);
+    mpegh_FDKfree(hgVBAPRenderer->oamSamples);
   }
   if (hgVBAPRenderer->oamSamplesValid) {
     if (hgVBAPRenderer->oamSamplesValid[0]) {
-      FDKfree(hgVBAPRenderer->oamSamplesValid[0]);
+      mpegh_FDKfree(hgVBAPRenderer->oamSamplesValid[0]);
     }
-    FDKfree(hgVBAPRenderer->oamSamplesValid);
+    mpegh_FDKfree(hgVBAPRenderer->oamSamplesValid);
   }
 
   for (int i = 0; i < GVBAP_SPREAD_NUM_VSO; i++) {
     if (hgVBAPRenderer->spread_gainsVSO[i] != NULL) {
-      FDKfree(hgVBAPRenderer->spread_gainsVSO[i]);
+      mpegh_FDKfree(hgVBAPRenderer->spread_gainsVSO[i]);
     }
   }
   if (hgVBAPRenderer->spread_gainArray != NULL) {
-    FDKfree(hgVBAPRenderer->spread_gainArray);
+    mpegh_FDKfree(hgVBAPRenderer->spread_gainArray);
   }
 
   /* free VBAP handle */
-  FDKfree(hgVBAPRenderer);
+  mpegh_FDKfree(hgVBAPRenderer);
 
   return 0;
 }

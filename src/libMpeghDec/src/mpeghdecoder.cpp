@@ -202,13 +202,13 @@ HANDLE_MPEGH_DECODER_CONTEXT mpeghdecoder_init(int32_t cicpSetup) {
     return NULL;
   }
 
-  MPEGH_DECODER_CONTEXT* ctx = (MPEGH_DECODER_CONTEXT*)FDKcalloc(1, sizeof(MPEGH_DECODER_CONTEXT));
+  MPEGH_DECODER_CONTEXT* ctx = (MPEGH_DECODER_CONTEXT*)mpegh_FDKcalloc(1, sizeof(MPEGH_DECODER_CONTEXT));
   if (ctx == NULL) {
     goto bail;
   }
 
   ctx->maxDecoderOutputSamples = numOutChannels * MAX_NUM_FRAME_SAMPLES;
-  ctx->tmpSamples = (INT_PCM*)FDKcalloc(ctx->maxDecoderOutputSamples, sizeof(INT_PCM));
+  ctx->tmpSamples = (INT_PCM*)mpegh_FDKcalloc(ctx->maxDecoderOutputSamples, sizeof(INT_PCM));
   if (ctx->tmpSamples == NULL) {
     goto bail;
   }
@@ -304,16 +304,16 @@ MPEGH_DECODER_ERROR mpeghdecoder_setMhaConfig(HANDLE_MPEGH_DECODER_CONTEXT hCtx,
     return MPEGH_DEC_UNSUPPORTED_PARAM;
   }
   if (hCtx->mhaConfig != NULL) {
-    FDKfree(hCtx->mhaConfig);
+    mpegh_FDKfree(hCtx->mhaConfig);
     hCtx->mhaConfig = NULL;
   }
   MPEGH_DECODER_ERROR retval = MPEGH_DEC_OK;
   hCtx->mhaConfigLength = configSize;
-  hCtx->mhaConfig = (uint8_t*)FDKcalloc(hCtx->mhaConfigLength, sizeof(uint8_t));
+  hCtx->mhaConfig = (uint8_t*)mpegh_FDKcalloc(hCtx->mhaConfigLength, sizeof(uint8_t));
   if (hCtx->mhaConfig == NULL) {
     return MPEGH_DEC_OUT_OF_MEMORY;
   }
-  FDKmemcpy(hCtx->mhaConfig, config, configSize * sizeof(uint8_t));
+  mpegh_FDKmemcpy(hCtx->mhaConfig, config, configSize * sizeof(uint8_t));
 
   retval = restartDecoder(hCtx);
   return retval;
@@ -325,12 +325,12 @@ void mpeghdecoder_destroy(HANDLE_MPEGH_DECODER_CONTEXT hCtx) {
   }
 
   if (hCtx->mhaConfig != NULL) {
-    FDKfree(hCtx->mhaConfig);
+    mpegh_FDKfree(hCtx->mhaConfig);
     hCtx->mhaConfig = NULL;
   }
 
   if (hCtx->tmpSamples != NULL) {
-    FDKfree(hCtx->tmpSamples);
+    mpegh_FDKfree(hCtx->tmpSamples);
     hCtx->tmpSamples = NULL;
   }
 
@@ -350,7 +350,7 @@ void mpeghdecoder_destroy(HANDLE_MPEGH_DECODER_CONTEXT hCtx) {
   deque_free(&hCtx->fadeoutIdxQueue);
   deque_free(&hCtx->fadeinIdxQueue);
 
-  FDKfree(hCtx);
+  mpegh_FDKfree(hCtx);
   hCtx = NULL;
 }
 

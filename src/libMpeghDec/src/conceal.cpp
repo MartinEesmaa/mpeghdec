@@ -261,7 +261,7 @@ void CConcealment_InitChannelData(CConcealmentInfo* pConcealChannelInfo,
                                   AACDEC_RENDER_MODE initRenderMode, int samplesPerFrame) {
   int i;
   pConcealChannelInfo->TDNoiseSeed = 0;
-  FDKmemclear(pConcealChannelInfo->TDNoiseStates, sizeof(pConcealChannelInfo->TDNoiseStates));
+  mpegh_FDKmemclear(pConcealChannelInfo->TDNoiseStates, sizeof(pConcealChannelInfo->TDNoiseStates));
   pConcealChannelInfo->TDNoiseCoef[0] = FL2FXCONST_SGL(0.05f);
   pConcealChannelInfo->TDNoiseCoef[1] = FL2FXCONST_SGL(0.5f);
   pConcealChannelInfo->TDNoiseCoef[2] = FL2FXCONST_SGL(0.45f);
@@ -276,7 +276,7 @@ void CConcealment_InitChannelData(CConcealmentInfo* pConcealChannelInfo,
 
   pConcealChannelInfo->concealState = ConcealState_Ok;
 
-  FDKmemclear(pConcealChannelInfo->spectralCoefficient, 1024 * sizeof(FIXP_CNCL));
+  mpegh_FDKmemclear(pConcealChannelInfo->spectralCoefficient, 1024 * sizeof(FIXP_CNCL));
 
   for (i = 0; i < 8; i++) {
     pConcealChannelInfo->specScale[i] = 0;
@@ -484,7 +484,7 @@ void CConcealment_Store(CConcealmentInfo* hConcealmentInfo,
     SHORT* pSpecScale = pAacDecoderChannelInfo->specScale;
 
     /* store new scale factors */
-    FDKmemcpy(hConcealmentInfo->specScale, pSpecScale, 8 * sizeof(SHORT));
+    mpegh_FDKmemcpy(hConcealmentInfo->specScale, pSpecScale, 8 * sizeof(SHORT));
 
     C_ALLOC_ALIGNED_CHECK(pSpectralCoefficient);
     C_ALLOC_ALIGNED_CHECK(hConcealmentInfo->spectralCoefficient);
@@ -492,7 +492,7 @@ void CConcealment_Store(CConcealmentInfo* hConcealmentInfo,
     if (hConcealmentInfo->pConcealParams->method < ConcealMethodInter) {
       /* store new spectral bins */
 #if (CNCL_FRACT_BITS == DFRACT_BITS)
-      FDKmemcpy(hConcealmentInfo->spectralCoefficient, pSpectralCoefficient,
+      mpegh_FDKmemcpy(hConcealmentInfo->spectralCoefficient, pSpectralCoefficient,
                 1024 * sizeof(FIXP_CNCL));
 #else
       FIXP_CNCL* RESTRICT pCncl = &hConcealmentInfo->spectralCoefficient[1024 - 1];
@@ -512,7 +512,7 @@ void CConcealment_Store(CConcealmentInfo* hConcealmentInfo,
     hConcealmentInfo->windowSequence = GetWindowSequence(pIcsInfo);
     hConcealmentInfo->windowShape = GetWindowShape(pIcsInfo);
     hConcealmentInfo->lastWindowGroups = GetWindowGroups(pIcsInfo);
-    FDKmemcpy(hConcealmentInfo->lastWindowGroupLength, GetWindowGroupLengthTable(pIcsInfo),
+    mpegh_FDKmemcpy(hConcealmentInfo->lastWindowGroupLength, GetWindowGroupLengthTable(pIcsInfo),
               sizeof(UCHAR) * 8);
     hConcealmentInfo->lastWinGrpLen =
         *(GetWindowGroupLengthTable(pIcsInfo) + GetWindowGroups(pIcsInfo) - 1);
@@ -573,7 +573,7 @@ int CConcealment_Apply(CConcealmentInfo* hConcealmentInfo,
         case ConcealMethodMute:
           if (!frameOk) {
             /* Mute spectral data in case of errors */
-            FDKmemclear(pAacDecoderChannelInfo->pSpectralCoefficient,
+            mpegh_FDKmemclear(pAacDecoderChannelInfo->pSpectralCoefficient,
                         samplesPerFrame * sizeof(FIXP_DBL));
             /* Set last window shape */
             pAacDecoderChannelInfo->icsInfo.WindowShape = hConcealmentInfo->windowShape;
@@ -604,11 +604,11 @@ int CConcealment_Apply(CConcealmentInfo* hConcealmentInfo,
 
       if (hConcealmentInfo->concealState != ConcealState_Mute) {
         /* restore scale factors */
-        FDKmemcpy(pSpecScale, hConcealmentInfo->specScale, 8 * sizeof(SHORT));
+        mpegh_FDKmemcpy(pSpecScale, hConcealmentInfo->specScale, 8 * sizeof(SHORT));
 
         /* restore spectral bins */
 #if (CNCL_FRACT_BITS == DFRACT_BITS)
-        FDKmemcpy(pSpectralCoefficient, hConcealmentInfo->spectralCoefficient,
+        mpegh_FDKmemcpy(pSpectralCoefficient, hConcealmentInfo->spectralCoefficient,
                   1024 * sizeof(FIXP_DBL));
 #else
         for (i = 1024; i != 0; i--) {
@@ -617,10 +617,10 @@ int CConcealment_Apply(CConcealmentInfo* hConcealmentInfo,
 #endif
       } else {
         /* clear scale factors */
-        FDKmemclear(pSpecScale, 8 * sizeof(SHORT));
+        mpegh_FDKmemclear(pSpecScale, 8 * sizeof(SHORT));
 
         /* clear buffer */
-        FDKmemclear(pSpectralCoefficient, 1024 * sizeof(FIXP_CNCL));
+        mpegh_FDKmemclear(pSpectralCoefficient, 1024 * sizeof(FIXP_CNCL));
       }
     }
   }
@@ -676,8 +676,8 @@ static int CConcealment_ApplyNoise(CConcealmentInfo* pConcealmentInfo,
       pConcealmentInfo->winGrpOffset[1] = 0;
 
       /* mute spectral data */
-      FDKmemclear(pSpectralCoefficient, samplesPerFrame * sizeof(FIXP_DBL));
-      FDKmemclear(pConcealmentInfo->spectralCoefficient, samplesPerFrame * sizeof(FIXP_DBL));
+      mpegh_FDKmemclear(pSpectralCoefficient, samplesPerFrame * sizeof(FIXP_DBL));
+      mpegh_FDKmemclear(pConcealmentInfo->spectralCoefficient, samplesPerFrame * sizeof(FIXP_DBL));
 
       appliedProcessing = 1;
     } break;
@@ -1050,7 +1050,7 @@ static int CConcealment_ApplyFadeOut(int mode, CConcealmentInfo* pConcealmentInf
     if (mode == 1) {
       /* mute if attIdx gets large enaugh */
       if (attIdx > pConcealmentInfo->pConcealParams->numFadeOutFrames) {
-        FDKmemclear(pCncl, sizeof(FIXP_DBL) * windowLen);
+        mpegh_FDKmemclear(pCncl, sizeof(FIXP_DBL) * windowLen);
       }
 
       /* restore frequency coefficients from buffer - attenuation is done later */

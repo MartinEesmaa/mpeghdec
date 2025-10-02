@@ -93,7 +93,7 @@ amm-info@iis.fraunhofer.de
 
 #include "common_fix.h"
 
-void FDK_interleave(const FIXP_DBL* RESTRICT pIn, LONG* RESTRICT pOut, const UINT channels,
+void MPEGH_interleave(const FIXP_DBL* RESTRICT pIn, LONG* RESTRICT pOut, const UINT channels,
                     const UINT frameSize, const UINT length);
 
 #endif /* !defined(PCM_UTILS_H) */

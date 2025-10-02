@@ -186,17 +186,17 @@ void asiReset(AUDIO_SCENE_INFO* asi) {
   ASI_DESCRIPTIONS* pDescriptions_old = asi->pDescriptions;
 
   for (i = 0; i < ASI_MAX_PREF_DESCR_LANGUAGES; i++) {
-    FDKstrncpy(prefDescrLanguages_old[i], asi->prefDescrLanguages[i], 3);
+    mpegh_FDKstrncpy(prefDescrLanguages_old[i], asi->prefDescrLanguages[i], 3);
   }
 
-  FDKmemclear(asi, sizeof(AUDIO_SCENE_INFO));
+  mpegh_FDKmemclear(asi, sizeof(AUDIO_SCENE_INFO));
 
-  if (pDescriptions_old) FDKmemclear(pDescriptions_old, sizeof(ASI_DESCRIPTIONS));
+  if (pDescriptions_old) mpegh_FDKmemclear(pDescriptions_old, sizeof(ASI_DESCRIPTIONS));
   asi->pDescriptions = pDescriptions_old;
 
   asi->activeDmxId = activeDmxId_old;
   for (i = 0; i < ASI_MAX_PREF_DESCR_LANGUAGES; i++) {
-    FDKstrncpy(asi->prefDescrLanguages[i], prefDescrLanguages_old[i], 3);
+    mpegh_FDKstrncpy(asi->prefDescrLanguages[i], prefDescrLanguages_old[i], 3);
   }
   for (i = 0; i < TPDEC_MAX_TRACKS; i++) {
     asi->metaDataElementIDmaxAvail[i] = -1;
@@ -604,7 +604,7 @@ void asiMapISO639_2_T2B_and_tolower(char* buf) {
   for (int i = 0; i < NUM_SPECIAL_LANG_CODES; i++) {
     if ((buf[0] == langCodes[i][1][0]) && (buf[1] == langCodes[i][1][1]) &&
         (buf[2] == langCodes[i][1][2])) {
-      FDKmemcpy(buf, langCodes[i][0], 3);
+      mpegh_FDKmemcpy(buf, langCodes[i][0], 3);
       return;
     }
   }
@@ -661,10 +661,10 @@ static TRANSPORTDEC_ERROR mae_Description(int type, AUDIO_SCENE_INFO* asi,
       for (currPrio = 0; currPrio < ASI_MAX_PREF_DESCR_LANGUAGES; currPrio++) {
 #ifndef ASI_MAX_DESCRIPTION_LANGUAGES
         if (descr->language[0] &&
-            (FDKstrncmp(descr->language, asi->prefDescrLanguages[currPrio], 3) == 0)) {
+            (mpegh_FDKstrncmp(descr->language, asi->prefDescrLanguages[currPrio], 3) == 0)) {
 #else
         if (descr->language[descr->prefLangIdx][0] &&
-            (FDKstrncmp(descr->language[descr->prefLangIdx], asi->prefDescrLanguages[currPrio],
+            (mpegh_FDKstrncmp(descr->language[descr->prefLangIdx], asi->prefDescrLanguages[currPrio],
                         3) == 0)) {
 #endif
           break;
@@ -692,7 +692,7 @@ static TRANSPORTDEC_ERROR mae_Description(int type, AUDIO_SCENE_INFO* asi,
       /* get priority of language */
       if (descr) {
         for (prio = 0; prio < ASI_MAX_PREF_DESCR_LANGUAGES; prio++) {
-          if (language[0] && (FDKstrncmp(language, asi->prefDescrLanguages[prio], 3) == 0)) {
+          if (language[0] && (mpegh_FDKstrncmp(language, asi->prefDescrLanguages[prio], 3) == 0)) {
             break;
           }
         }
@@ -700,10 +700,10 @@ static TRANSPORTDEC_ERROR mae_Description(int type, AUDIO_SCENE_INFO* asi,
           prio += i; /* if not in preferred list select first transmitted */
         if (prio == ASI_MAX_PREF_DESCR_LANGUAGES) {
 #ifndef ASI_MAX_DESCRIPTION_LANGUAGES
-          if (descr && descr->present && (FDKstrncmp(language, descr->language, 3) != 0)) {
+          if (descr && descr->present && (mpegh_FDKstrncmp(language, descr->language, 3) != 0)) {
 #else
           if (descr && descr->present &&
-              (FDKstrncmp(language, descr->language[descr->prefLangIdx], 3) != 0)) {
+              (mpegh_FDKstrncmp(language, descr->language[descr->prefLangIdx], 3) != 0)) {
 #endif
             prio++;
           }

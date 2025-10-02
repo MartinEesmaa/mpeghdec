@@ -92,7 +92,7 @@ amm-info@iis.fraunhofer.de
 #include "genericStds.h"
 
 int deque_alloc(deque* q, unsigned int length, unsigned int block_size) {
-  q->data = (void*)FDKcalloc(length, block_size);
+  q->data = (void*)mpegh_FDKcalloc(length, block_size);
   if (q->data == NULL) {
     return -1;
   }
@@ -108,7 +108,7 @@ int deque_alloc(deque* q, unsigned int length, unsigned int block_size) {
 
 void deque_free(deque* q) {
   if (q->data != NULL) {
-    FDKfree(q->data);
+    mpegh_FDKfree(q->data);
     q->data = NULL;
   }
   deque_clear(q);
@@ -119,7 +119,7 @@ int deque_push_back(deque* q, void* data) {
     return -1;
   }
 
-  FDKmemcpy((unsigned char*)q->data + q->last * q->block_size, data, q->block_size);
+  mpegh_FDKmemcpy((unsigned char*)q->data + q->last * q->block_size, data, q->block_size);
   q->last = (q->last + 1) % q->max;
   q->size++;
   if (q->size == q->max) {
@@ -145,7 +145,7 @@ int deque_bulk_push_back(deque* q, void* data, unsigned int numData) {
       left = 0;
     }
     void* writePos = (unsigned char*)q->data + q->last * q->block_size;
-    FDKmemcpy(writePos, data, toCopy * q->block_size);
+    mpegh_FDKmemcpy(writePos, data, toCopy * q->block_size);
   } else {
     left = numData;
   }
@@ -153,7 +153,7 @@ int deque_bulk_push_back(deque* q, void* data, unsigned int numData) {
   if (left > 0) {
     unsigned char* tmpData = (unsigned char*)data + (numData - left) * q->block_size;
     ;
-    FDKmemcpy((unsigned char*)q->data, tmpData, left * q->block_size);
+    mpegh_FDKmemcpy((unsigned char*)q->data, tmpData, left * q->block_size);
   }
   q->last = (q->last + numData) % q->max;
   q->size += numData;
@@ -180,13 +180,13 @@ int deque_bulk_push_back_zeros(deque* q, unsigned int numZeros) {
       left = 0;
     }
     void* writePos = (unsigned char*)q->data + q->last * q->block_size;
-    FDKmemset(writePos, 0, toCopy * q->block_size);
+    mpegh_FDKmemset(writePos, 0, toCopy * q->block_size);
   } else {
     left = numZeros;
   }
 
   if (left > 0) {
-    FDKmemset((unsigned char*)q->data, 0, left * q->block_size);
+    mpegh_FDKmemset((unsigned char*)q->data, 0, left * q->block_size);
   }
   q->last = (q->last + numZeros) % q->max;
   q->size += numZeros;
@@ -235,12 +235,12 @@ int deque_bulk_pop_front_copy(deque* q, void* destination, unsigned int numData)
   void* dest = (unsigned char*)destination;
   if (q->first + numData >= q->max) {
     unsigned int toCopy = q->max - q->first;
-    FDKmemcpy(dest, data, toCopy * q->block_size);
+    mpegh_FDKmemcpy(dest, data, toCopy * q->block_size);
     left -= toCopy;
     data = (unsigned char*)q->data;
     dest = (unsigned char*)destination + toCopy * q->block_size;
   }
-  FDKmemcpy(dest, data, left * q->block_size);
+  mpegh_FDKmemcpy(dest, data, left * q->block_size);
   q->first = (q->first + numData) % q->max;
   q->size -= numData;
   q->full = false;

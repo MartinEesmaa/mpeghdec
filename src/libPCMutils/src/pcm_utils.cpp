@@ -95,7 +95,7 @@ amm-info@iis.fraunhofer.de
 #endif
 
 #ifndef FUNCTION_FDK_interleave_DBL_LONG
-void FDK_interleave(const FIXP_DBL* RESTRICT pIn, LONG* RESTRICT pOut, const UINT channels,
+void MPEGH_interleave(const FIXP_DBL* RESTRICT pIn, LONG* RESTRICT pOut, const UINT channels,
                     const UINT frameSize, const UINT length) {
   for (UINT ch = 0; ch < channels; ch++) {
     const FIXP_DBL* In = &pIn[ch * frameSize];

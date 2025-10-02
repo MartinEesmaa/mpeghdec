@@ -118,7 +118,7 @@ static UINT nextPow2(UINT x) {
 LINKSPEC_H HANDLE_MPEGH_UI_MANAGER mpegh_UI_Manager_Open(void) {
   HANDLE_MPEGH_UI_MANAGER self;
 
-  self = (HANDLE_MPEGH_UI_MANAGER)FDKcalloc(1, sizeof(MPEGH_UI_MANAGER));
+  self = (HANDLE_MPEGH_UI_MANAGER)mpegh_FDKcalloc(1, sizeof(MPEGH_UI_MANAGER));
 
   if (self) {
     if (UI_Manager_Create(&self->hUiManager, 1) != UI_MANAGER_OK) {
@@ -139,7 +139,7 @@ LINKSPEC_H void mpegh_UI_Manager_Close(HANDLE_MPEGH_UI_MANAGER self) {
     UI_Manager_Delete(&self->hUiManager);
   }
 
-  FDKfree(self);
+  mpegh_FDKfree(self);
 }
 
 /* get XML state */
@@ -595,7 +595,7 @@ LINKSPEC_H MPEGH_UI_ERROR mpegh_UI_UpdateMHAS(HANDLE_MPEGH_UI_MANAGER self, UCHA
   if (*mhasLength + nBytes > mhasBufferLength) return MPEGH_UI_BUFFER_TOO_SMALL;
 
   /* prepare writing of packets */
-  FDKmemmove(mhasBuffer + self->insertOffset + nBytes, mhasBuffer + self->insertOffset,
+  mpegh_FDKmemmove(mhasBuffer + self->insertOffset + nBytes, mhasBuffer + self->insertOffset,
              *mhasLength - self->insertOffset);
   FDKinitBitStream(hBs, mhasBuffer + self->insertOffset, nextPow2(nBytes), 0, BS_WRITER);
 

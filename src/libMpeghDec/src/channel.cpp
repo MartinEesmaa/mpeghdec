@@ -204,8 +204,8 @@ void CChannelElement_Decode(
         UCHAR* TNF_maskR =
             (UCHAR*)pAacDecoderChannelInfo[0]->pComStaticData->pWorkBufferCore1->mdctOutTemp + 512 +
             1024;
-        FDKmemclear(TNF_maskL, 1024);
-        FDKmemclear(TNF_maskR, 1024);
+        mpegh_FDKmemclear(TNF_maskL, 1024);
+        mpegh_FDKmemclear(TNF_maskR, 1024);
 
         CIgf_apply_stereo(
             &(pAacDecoderStaticChannelInfo[L]->IGF_StaticData),
@@ -275,10 +275,10 @@ void CChannelElement_Decode(
     } /* CommonWindow */
     else {
       if (elFlags & AC_EL_USAC_CP_POSSIBLE) {
-        FDKmemclear(pAacDecoderStaticChannelInfo[L]
+        mpegh_FDKmemclear(pAacDecoderStaticChannelInfo[L]
                         ->pCpeStaticData->jointStereoPersistentData.alpha_q_re_prev,
                     JointStereoMaximumGroups * JointStereoMaximumBands * sizeof(SHORT));
-        FDKmemclear(pAacDecoderStaticChannelInfo[L]
+        mpegh_FDKmemclear(pAacDecoderStaticChannelInfo[L]
                         ->pCpeStaticData->jointStereoPersistentData.alpha_q_im_prev,
                     JointStereoMaximumGroups * JointStereoMaximumBands * sizeof(SHORT));
       }
@@ -309,8 +309,8 @@ void CChannelElement_Decode(
         UCHAR* TNF_maskR =
             (UCHAR*)pAacDecoderChannelInfo[0]->pComStaticData->pWorkBufferCore1->mdctOutTemp + 512 +
             1024;
-        FDKmemclear(TNF_maskL, 1024);
-        FDKmemclear(TNF_maskR, 1024);
+        mpegh_FDKmemclear(TNF_maskL, 1024);
+        mpegh_FDKmemclear(TNF_maskR, 1024);
 
         CIgf_apply_stereo(
             &(pAacDecoderStaticChannelInfo[L]->IGF_StaticData),
@@ -469,7 +469,7 @@ AAC_DECODER_ERROR CChannelElement_Read(HANDLE_FDK_BITSTREAM hBs,
   FDK_ASSERT((numberOfChannels == 1) || (numberOfChannels == 2));
 
   /* Get channel element sequence table */
-  list = getBitstreamElementList(aot, epConfig, numberOfChannels, 0, elFlags);
+  list = mpegh_getBitstreamElementList(aot, epConfig, numberOfChannels, 0, elFlags);
   if (list == NULL) {
     error = AAC_DEC_UNSUPPORTED_FORMAT;
     goto bail;
@@ -646,8 +646,8 @@ AAC_DECODER_ERROR CChannelElement_Read(HANDLE_FDK_BITSTREAM hBs,
             CCplxPredictionData* cPD =
                 pAacDecoderChannelInfo[0]->pComStaticData->cplxPredictionData;
             for (group = 0; group < 8; group++) {
-              FDKmemclear(&cPD->alpha_q_re[group][max_sfb_ste], runs * sizeof(SHORT));
-              FDKmemclear(&cPD->alpha_q_im[group][max_sfb_ste], runs * sizeof(SHORT));
+              mpegh_FDKmemclear(&cPD->alpha_q_re[group][max_sfb_ste], runs * sizeof(SHORT));
+              mpegh_FDKmemclear(&cPD->alpha_q_im[group][max_sfb_ste], runs * sizeof(SHORT));
             }
           }
         }
@@ -667,7 +667,7 @@ AAC_DECODER_ERROR CChannelElement_Read(HANDLE_FDK_BITSTREAM hBs,
               break;
             }
           } else if (ch == 1) {
-            FDKmemcpy(pAacDecoderStaticChannelInfo[1]->ltp_param,
+            mpegh_FDKmemcpy(pAacDecoderStaticChannelInfo[1]->ltp_param,
                       pAacDecoderStaticChannelInfo[0]->ltp_param,
                       sizeof(pAacDecoderStaticChannelInfo[0]->ltp_param));
           }
@@ -860,7 +860,7 @@ AAC_DECODER_ERROR CChannelElement_Read(HANDLE_FDK_BITSTREAM hBs,
         pAacDecoderChannelInfo[ch]->renderMode == AACDEC_RENDER_ELDFB) {
       /* Copy lower part of coded spectrum for later use in FD Prediction */
       FIXP_DBL quantSpecCurr[172];
-      FDKmemcpy(quantSpecCurr, pAacDecoderChannelInfo[ch]->pSpectralCoefficient,
+      mpegh_FDKmemcpy(quantSpecCurr, pAacDecoderChannelInfo[ch]->pSpectralCoefficient,
                 172 * sizeof(quantSpecCurr[0]));
 
       /* IGF Stereo Filling start/stop */
@@ -907,7 +907,7 @@ AAC_DECODER_ERROR CChannelElement_Read(HANDLE_FDK_BITSTREAM hBs,
 
       /* Shows which bands are empty. */
       UCHAR* band_is_noise = pAacDecoderChannelInfo[ch]->pDynData->band_is_noise;
-      FDKmemset(band_is_noise, (UCHAR)1, sizeof(UCHAR) * (8 * 16));
+      mpegh_FDKmemset(band_is_noise, (UCHAR)1, sizeof(UCHAR) * (8 * 16));
 
       error = CBlock_InverseQuantizeSpectralData(pAacDecoderChannelInfo[ch], pSamplingRateInfo,
                                                  band_is_noise, 1);
@@ -978,9 +978,9 @@ AAC_DECODER_ERROR CChannelElement_Read(HANDLE_FDK_BITSTREAM hBs,
              * fill it again in "IGF_StereoFillingPrepare" */
             FIXP_DBL* dmx_prev_modified =
                 pAacDecoderChannelInfo[0]->pComStaticData->pWorkBufferCore1->mdctOutTemp;
-            FDKmemclear(dmx_prev_modified, 1024 * sizeof(LONG));
+            mpegh_FDKmemclear(dmx_prev_modified, 1024 * sizeof(LONG));
             SHORT dmx_prev_modified_exp[64];
-            FDKmemclear(dmx_prev_modified_exp, 64 * sizeof(SHORT));
+            mpegh_FDKmemclear(dmx_prev_modified_exp, 64 * sizeof(SHORT));
 
             /* We calculate the previous downmix for the fully noise-filled bands only and put it in
              * "dmx_prev_modified" */
@@ -1084,10 +1084,10 @@ AAC_DECODER_ERROR CChannelElement_Read(HANDLE_FDK_BITSTREAM hBs,
               SHORT* p2_tile_spectrum_exp = iisIGFDecLibAccessSourceSpectrum_exponent(
                   &pAacDecoderStaticChannelInfo[ch]->IGF_StaticData, tileIdx, 0);
 
-              FDKmemcpy(p2_tile_spectrum, pAacDecoderChannelInfo[ch]->pSpectralCoefficient,
+              mpegh_FDKmemcpy(p2_tile_spectrum, pAacDecoderChannelInfo[ch]->pSpectralCoefficient,
                         sizeof(FIXP_DBL) * sfb_offset[sfb_max_num_bins_copied]);
 
-              FDKmemcpy(p2_tile_spectrum_exp, pAacDecoderChannelInfo[ch]->pDynData->aSfbScale,
+              mpegh_FDKmemcpy(p2_tile_spectrum_exp, pAacDecoderChannelInfo[ch]->pDynData->aSfbScale,
                         sizeof(SHORT) * sfb_max_num_bins_copied);
             }
           }

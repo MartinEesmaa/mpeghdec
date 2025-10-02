@@ -343,10 +343,10 @@ typedef LONG INT_PCM;
 
 /* Alignment macros for libSYS heap implementation */
 #define ALIGNMENT_EXTRES (ALIGNMENT_DEFAULT)
-/* aligned size required for FDKcalloc() / FDKmalloc() */
+/* aligned size required for mpegh_FDKcalloc() / mpegh_FDKmalloc() */
 #define ALGN_SIZE_EXTRES(a) \
   ((a) + (((INT)ALIGNMENT_EXTRES - ((INT)(a) & (ALIGNMENT_EXTRES - 1))) & (ALIGNMENT_EXTRES - 1)))
-/* aligned size required for FDKaalloc() */
+/* aligned size required for mpegh_FDKaalloc() */
 #define A_ALGN_SIZE_EXTRES(a) (ALGN_SIZE_EXTRES((a) + ALIGNMENT_DEFAULT + sizeof(void*)))
 
 /*!

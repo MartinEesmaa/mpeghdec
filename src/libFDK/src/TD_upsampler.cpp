@@ -339,7 +339,7 @@ static FIXP_DBL TD_applyFilter(FIXP_DBL sampleIn, const filter* sosData, FIXP_DB
 
 short TD_upsampler_init(TD_FAC_UPSAMPLE facUpsample, FIXP_DBL* states) {
   int delay = 0;
-  FDKmemclear(states, TD_STATES_MEM_SIZE * sizeof(FIXP_DBL));
+  mpegh_FDKmemclear(states, TD_STATES_MEM_SIZE * sizeof(FIXP_DBL));
 
   switch (facUpsample) {
     case TD_FAC_UPSAMPLE_1_1:
@@ -371,7 +371,7 @@ short TD_upsampler(TD_FAC_UPSAMPLE facUpsample, const FIXP_DBL* sigIn,
 
   switch (facUpsample) {
     case TD_FAC_UPSAMPLE_1_1: /* copy values from input to output as they are */
-      if (sigIn_ptr != sigOut) FDKmemmove(sigOut, sigIn, lenIn * sizeof(FIXP_DBL));
+      if (sigIn_ptr != sigOut) mpegh_FDKmemmove(sigOut, sigIn, lenIn * sizeof(FIXP_DBL));
       lenOut = lenIn;
       break;
 

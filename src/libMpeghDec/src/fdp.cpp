@@ -171,8 +171,8 @@ void FDP_DecodeBins(CAacDecoderChannelInfo* pAacDecoderChannelInfo,
 
   /* if indepFlag==1 -> reset FDP history */
   if (flags & AC_INDEP) {
-    FDKmemclear(quantSpecPrev1, 160 * sizeof(quantSpecPrev1[0]));
-    FDKmemclear(quantSpecPrev2, 160 * sizeof(quantSpecPrev2[0]));
+    mpegh_FDKmemclear(quantSpecPrev1, 160 * sizeof(quantSpecPrev1[0]));
+    mpegh_FDKmemclear(quantSpecPrev2, 160 * sizeof(quantSpecPrev2[0]));
   }
 
   if (!isTcx && (bEightShortSequence || (sfbNumActive <= 0))) { /* no FD predictor */
@@ -265,12 +265,12 @@ void FDP_DecodeBins(CAacDecoderChannelInfo* pAacDecoderChannelInfo,
 
         /* We calculate the number of missing (non-available) headroom which would happen in fdp_int
          * after being scaled */
-        int fdp_scale = getScalefactor(p2fdp, width);
+        int fdp_scale = mpegh_getScalefactor(p2fdp, width);
         int fdp_shift = 40 - pAacDecoderChannelInfo->pDynData->aSfbScale[sfb];
         fdp_scale = fdp_scale - fdp_shift;
 
         /* Find the headroom of the signal */
-        int output_scale = getScalefactor(p2output, width);
+        int output_scale = mpegh_getScalefactor(p2output, width);
 
         /* Find the minimum of the headroom of the signal and the missing fdp headroom */
         int diffMin = fMin(fdp_scale, output_scale);

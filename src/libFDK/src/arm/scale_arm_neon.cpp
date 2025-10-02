@@ -200,7 +200,7 @@ FDK_ASM_ROUTINE_END()
 
 #ifdef FUNCTION_scaleValuesSaturate_DBL
 LNK_SECTION_CODE_L1
-SCALE_INLINE void scaleValuesSaturate(
+SCALE_INLINE void mpegh_scaleValuesSaturate(
                   FIXP_DBL *dst,
                   INT len,
             const INT scaleFactor)    /* positive means: shift left */
@@ -209,7 +209,7 @@ SCALE_INLINE void scaleValuesSaturate(
 }
 
 LNK_SECTION_CODE_L1
-SCALE_INLINE void scaleValuesSaturate(
+SCALE_INLINE void mpegh_scaleValuesSaturate(
   FIXP_DBL *dst,
   const FIXP_DBL *src,
   INT len,
@@ -335,7 +335,7 @@ FDK_label(scaleValues_func1_loop_8x_end)
   FDK_return()
 FDK_ASM_ROUTINE_END()
 
-void scaleValues(
+void mpegh_scaleValues(
         FIXP_DBL *dst,
   const FIXP_DBL *src,
         INT  len,
@@ -345,7 +345,7 @@ void scaleValues(
 }
 
 #ifdef FUNCTION_scaleValues_DBL
-void scaleValues(
+void mpegh_scaleValues(
         FIXP_DBL *dst,
         INT  len,
         INT scalefactor)
@@ -443,7 +443,7 @@ FDK_label(scaleValuesSaturate_loop_8x_end)
   FDK_return()
 FDK_ASM_ROUTINE_END()
 
-void scaleValuesSaturate(
+void mpegh_scaleValuesSaturate(
         FIXP_SGL *dst,
         const FIXP_DBL *src,
         INT  len,
@@ -633,7 +633,7 @@ FDK_label(getScalefactor_DBL_8x_end)
   FDK_return()
 FDK_ASM_ROUTINE_RETURN(INT)
 
-INT getScalefactor(const FIXP_DBL *vector, INT len)
+INT mpegh_getScalefactor(const FIXP_DBL *vector, INT len)
 {
    return getScalefactorDBL_neon(vector, len);
 }
@@ -714,7 +714,7 @@ FDK_label(getScalefactor_SGL_8x_end)
   FDK_return()
 FDK_ASM_ROUTINE_RETURN()
 
-INT getScalefactor(const FIXP_SGL *vector, INT len)
+INT mpegh_getScalefactor(const FIXP_SGL *vector, INT len)
 {
    return getScalefactorSGL_neon(vector, len);
 }

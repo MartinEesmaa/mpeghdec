@@ -111,7 +111,7 @@ void iisIGFSCFDecLibInit(IGFSCFDEC_PRIVATE_DATA* hPrivateData, INT scfCountLongB
     scfCountTCX = scfCountShortBlock;
   }
 
-  FDKmemclear(hPrivateData, size);
+  mpegh_FDKmemclear(hPrivateData, size);
 
   /* init ptrs to qBuffers, this avoids allocating each buffer seperate: */
   hPrivateData->prevLB = &hPrivateData->prevBuffer[0];
@@ -557,10 +557,10 @@ void iisIGFSCFDecoderReset(
                                             no instance created */
 ) {
   /* reset of coder */
-  FDKmemset(hPrivateData->prevLB, 0, sizeof(SCHAR) * hPrivateData->scfCountLongBlock);
-  FDKmemset(hPrivateData->prevSB, 0, sizeof(SCHAR) * hPrivateData->scfCountShortBlock);
-  FDKmemset(hPrivateData->prevTCXmedium, 0, sizeof(SCHAR) * hPrivateData->scfCountTCXBlock);
-  FDKmemset(hPrivateData->prevTCXlong, 0, sizeof(SCHAR) * hPrivateData->scfCountTCXBlock);
+  mpegh_FDKmemset(hPrivateData->prevLB, 0, sizeof(SCHAR) * hPrivateData->scfCountLongBlock);
+  mpegh_FDKmemset(hPrivateData->prevSB, 0, sizeof(SCHAR) * hPrivateData->scfCountShortBlock);
+  mpegh_FDKmemset(hPrivateData->prevTCXmedium, 0, sizeof(SCHAR) * hPrivateData->scfCountTCXBlock);
+  mpegh_FDKmemset(hPrivateData->prevTCXlong, 0, sizeof(SCHAR) * hPrivateData->scfCountTCXBlock);
   hPrivateData->t = 0;
   hPrivateData->prevDLB = 0;
   hPrivateData->prevDSB = 0;
@@ -602,7 +602,7 @@ void iisIGFSCFDecoderDecode(
                         sfeReducePrecisionEnabled);
       /* advancing history: */
       hPrivateData->prevDLB = hPrivateData->prevLB[0];
-      FDKmemmove(hPrivateData->prevLB, sfe, sizeof(SCHAR) * hPrivateData->scfCountLongBlock);
+      mpegh_FDKmemmove(hPrivateData->prevLB, sfe, sizeof(SCHAR) * hPrivateData->scfCountLongBlock);
 
       if (sfeReducePrecisionEnabled) {
         INT tt;
@@ -640,7 +640,7 @@ void iisIGFSCFDecoderDecode(
                           sfeReducePrecisionEnabled);
         /* advancing history: */
         hPrivateData->prevDSB = hPrivateData->prevSB[0];
-        FDKmemmove(hPrivateData->prevSB, sfe, sizeof(SCHAR) * hPrivateData->scfCountShortBlock);
+        mpegh_FDKmemmove(hPrivateData->prevSB, sfe, sizeof(SCHAR) * hPrivateData->scfCountShortBlock);
 
         if (sfeReducePrecisionEnabled) {
           INT tt;

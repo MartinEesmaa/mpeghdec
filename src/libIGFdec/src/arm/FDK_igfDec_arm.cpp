@@ -636,7 +636,7 @@ void iisIGFDecLibInjectSourceSpectrumTCX_func2(
 #ifdef FUNCTION_DotProduct_func1
 FDK_ASM_ROUTINE_START(FIXP_DBL, DotProduct_func1,
  (  const FIXP_DBL *Input,   /* r0: Input   */
-    INT shift,               /* r1: shift=getScalefactor(Input,length)   */
+    INT shift,               /* r1: shift=mpegh_getScalefactor(Input,length)   */
     INT loop_shift,          /* r1: loop_shift */
     INT length))             /* r2: length  */
 

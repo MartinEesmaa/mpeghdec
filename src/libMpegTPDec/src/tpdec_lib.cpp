@@ -234,7 +234,7 @@ TRANSPORTDEC_ERROR transportDec_OutOfBandConfig(HANDLE_TRANSPORTDEC hTp, UCHAR* 
   if (length > 1024) {
     return TRANSPORTDEC_UNSUPPORTED_FORMAT;
   }
-  FDKmemcpy(tmpConf, conf, length);
+  mpegh_FDKmemcpy(tmpConf, conf, length);
   FDKinitBitStream(hBs, tmpConf, 1024, length << 3, BS_READER);
 
   for (i = 0; i < 2; i++) {
@@ -263,13 +263,13 @@ TRANSPORTDEC_ERROR transportDec_OutOfBandConfig(HANDLE_TRANSPORTDEC hTp, UCHAR* 
         }
 
         if (configMode & AC_CM_DET_CFG_CHANGE) {
-          if (FDKmemcmp(hTp->ctrlCFGChange[layer].Mpegh3daConfig, conf, length) != 0) {
+          if (mpegh_FDKmemcmp(hTp->ctrlCFGChange[layer].Mpegh3daConfig, conf, length) != 0) {
             hTp->asc[layer].AacConfigChanged |= 1;
           }
         }
 
         hTp->ctrlCFGChange[layer].Mpegh3daConfigLen = length;
-        FDKmemcpy(hTp->ctrlCFGChange[layer].Mpegh3daConfig, conf, length);
+        mpegh_FDKmemcpy(hTp->ctrlCFGChange[layer].Mpegh3daConfig, conf, length);
         break;
       default:
         err = TRANSPORTDEC_UNSUPPORTED_FORMAT;
@@ -326,7 +326,7 @@ TRANSPORTDEC_ERROR transportDec_InBandConfig(HANDLE_TRANSPORTDEC hTp, UCHAR* new
         }
         if (hTp->ctrlCFGChange[layer].Mpegh3daConfigLen == newConfigLength) {
           if (0 ==
-              FDKmemcmp(newConfig, hTp->ctrlCFGChange[layer].Mpegh3daConfig, newConfigLength)) {
+              mpegh_FDKmemcmp(newConfig, hTp->ctrlCFGChange[layer].Mpegh3daConfig, newConfigLength)) {
             *configChanged = 0;
             return err;
           }
@@ -448,7 +448,7 @@ TRANSPORTDEC_ERROR transportDec_InBandConfig(HANDLE_TRANSPORTDEC hTp, UCHAR* new
     if (err == TRANSPORTDEC_OK) {
       if (hTp->asc->m_aot == AOT_MPEGH3DA) {
         hTp->ctrlCFGChange[layer].Mpegh3daConfigLen = newConfigLength;
-        FDKmemcpy(hTp->ctrlCFGChange[layer].Mpegh3daConfig, newConfig, newConfigLength);
+        mpegh_FDKmemcpy(hTp->ctrlCFGChange[layer].Mpegh3daConfig, newConfig, newConfigLength);
       }
     } else {
       hTp->numberOfRawDataBlocks = 0;
@@ -1606,7 +1606,7 @@ static TRANSPORTDEC_ERROR synchronization(HANDLE_TRANSPORTDEC hTp, INT* pHeaderB
           rawDataBlockLengthFirstFrame = rawDataBlockLength;
           headerBitsFirstFrame = headerBits;
           errFirstFrame = err;
-          FDKmemcpy(contextFirstFrame, &hTp->parser, sizeof(transportdec_parser_t));
+          mpegh_FDKmemcpy(contextFirstFrame, &hTp->parser, sizeof(transportdec_parser_t));
         }
 
         /* Break when config was found or it is not possible anymore to find a config */
@@ -1635,7 +1635,7 @@ static TRANSPORTDEC_ERROR synchronization(HANDLE_TRANSPORTDEC hTp, INT* pHeaderB
   /* Restore context in case of ECD frame traversal */
   if (startPosFirstFrame != -1 && (fConfigFound || err != TRANSPORTDEC_OK)) {
     FDKpushBiDirectional(hBs, FDKgetValidBits(hBs) - startPosFirstFrame);
-    FDKmemcpy(&hTp->parser, contextFirstFrame, sizeof(transportdec_parser_t));
+    mpegh_FDKmemcpy(&hTp->parser, contextFirstFrame, sizeof(transportdec_parser_t));
     hTp->numberOfRawDataBlocks = numRawDataBlocksFirstFrame;
     hTp->globalFramePos = globalFramePosFirstFrame;
     rawDataBlockLength = rawDataBlockLengthFirstFrame;

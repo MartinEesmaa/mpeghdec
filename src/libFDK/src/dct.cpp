@@ -123,9 +123,9 @@ void dct_getTables(const FIXP_WTP** ptwiddle, const FIXP_STP** sin_twiddle, int*
   /* Extract sort of "eigenvalue" (the 4 left most bits) of length. */
   switch ((length) >> (ld2_length - 1)) {
     case 0x4: /* radix 2 */
-      *sin_twiddle = SineTable1024;
+      *sin_twiddle = mpegh_SineTable1024;
       *sin_step = 1 << (10 - ld2_length);
-      twiddle = windowSlopes[0][0][ld2_length - 1];
+      twiddle = mpegh_windowSlopes[0][0][ld2_length - 1];
       break;
     default:
       *sin_twiddle = NULL;

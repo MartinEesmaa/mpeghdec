@@ -492,7 +492,7 @@ drcDec_readUniDrcGain(HANDLE_FDK_BITSTREAM hBs, DRC_COEFFICIENTS_UNI_DRC* pCoef,
     _readDrcGainSequence(hBs, gainSet, frameSize, timeDeltaMin, &tmpNNodes, tmpNodes);
 
     hUniDrcGain->nNodes[startIndexGainSequence + seq] = tmpNNodes;
-    FDKmemcpy(hUniDrcGain->gainNode[startIndexGainSequence + seq], tmpNodes,
+    mpegh_FDKmemcpy(hUniDrcGain->gainNode[startIndexGainSequence + seq], tmpNodes,
               fMin(tmpNNodes, (UCHAR)32) * sizeof(GAIN_NODE));
   }
 
@@ -677,7 +677,7 @@ static DRC_ERROR _readDrcCoefficientsUniDrc(HANDLE_FDK_BITSTREAM hBs, const int 
     pCoef->gainSetCount = fMin(gainSetCount, 48);
     for (i = 0; i < gainSetCount; i++) {
       GAIN_SET tmpGset;
-      FDKmemclear(&tmpGset, sizeof(GAIN_SET));
+      mpegh_FDKmemclear(&tmpGset, sizeof(GAIN_SET));
       err = _readGainSet(hBs, version, &gainSequenceIndex, &tmpGset);
       if (err) return err;
       gainSequenceCount += tmpGset.bandCount;
@@ -739,7 +739,7 @@ static DRC_ERROR _mergeSubstreamDrcCoefficients(DRC_COEFFICIENTS_UNI_DRC* pCoefS
       pCoefSubstream->gainSet[gs].gainSequenceIndex[b] += startIndexGainSequence;
     }
     if (!*pDiff)
-      *pDiff |= (FDKmemcmp(&pCoefSubstream->gainSet[gs], &pCoef->gainSet[startIndexGainSet + gs],
+      *pDiff |= (mpegh_FDKmemcmp(&pCoefSubstream->gainSet[gs], &pCoef->gainSet[startIndexGainSet + gs],
                            sizeof(GAIN_SET)) != 0);
     pCoef->gainSet[startIndexGainSet + gs] = pCoefSubstream->gainSet[gs];
   }
@@ -1061,7 +1061,7 @@ static DRC_ERROR _mergeSubstreamDrcInstructions(DRC_INSTRUCTIONS_UNI_DRC* pInstS
       /* insert the duckingModificationForChannel elements of this substream, starting from
        * startIndexChannel */
       if (!*pDiff)
-        *pDiff |= (FDKmemcmp(&pInstSubstream->duckingModificationForChannel[c],
+        *pDiff |= (mpegh_FDKmemcmp(&pInstSubstream->duckingModificationForChannel[c],
                              &pInst->duckingModificationForChannel[startIndexChannel + c],
                              sizeof(DUCKING_MODIFICATION)) != 0);
       pInst->duckingModificationForChannel[startIndexChannel + c] =
@@ -1076,7 +1076,7 @@ static DRC_ERROR _mergeSubstreamDrcInstructions(DRC_INSTRUCTIONS_UNI_DRC* pInstS
        * startIndexChannelGroup */
       for (b = 0; b < 4; b++) {
         if (!*pDiff)
-          *pDiff |= (FDKmemcmp(pInstSubstream->gainModificationForChannelGroup[cg],
+          *pDiff |= (mpegh_FDKmemcmp(pInstSubstream->gainModificationForChannelGroup[cg],
                                pInst->gainModificationForChannelGroup[startIndexChannelGroup + cg],
                                4 * sizeof(GAIN_MODIFICATION)) != 0);
         pInst->gainModificationForChannelGroup[startIndexChannelGroup + cg][b] =
@@ -1144,7 +1144,7 @@ drcDec_readMpegh3daUniDrcConfig(HANDLE_FDK_BITSTREAM hBs, HANDLE_UNI_DRC_CONFIG 
   DRC_ERROR err = DE_OK;
   int i, j, diff = 0, uniDrcConfigExtPresent;
   CHANNEL_LAYOUT tmpChan;
-  FDKmemclear(&tmpChan, sizeof(CHANNEL_LAYOUT));
+  mpegh_FDKmemclear(&tmpChan, sizeof(CHANNEL_LAYOUT));
   if (hUniDrcConfig == NULL) return DE_NOT_OK;
   if (hLoudnessInfoSet == NULL) return DE_NOT_OK;
   if (subStreamIndex >= 4) return DE_OK;
@@ -1175,14 +1175,14 @@ drcDec_readMpegh3daUniDrcConfig(HANDLE_FDK_BITSTREAM hBs, HANDLE_UNI_DRC_CONFIG 
   }
 
   if (!diff)
-    diff |= (FDKmemcmp(&tmpChan, &hUniDrcConfig->channelLayout, sizeof(CHANNEL_LAYOUT)) != 0);
+    diff |= (mpegh_FDKmemcmp(&tmpChan, &hUniDrcConfig->channelLayout, sizeof(CHANNEL_LAYOUT)) != 0);
   hUniDrcConfig->channelLayout = tmpChan;
 
   hUniDrcConfig->drcCoefficientsUniDrcCount =
       fMin(hUniDrcConfig->drcCoefficientsUniDrcCountV0[0], (UCHAR)2);
   for (i = 0; i < hUniDrcConfig->drcCoefficientsUniDrcCountV0[subStreamIndex]; i++) {
     DRC_COEFFICIENTS_UNI_DRC* tmpCoef = (DRC_COEFFICIENTS_UNI_DRC*)hUniDrcConfig->p_scratch;
-    FDKmemclear(tmpCoef, sizeof(DRC_COEFFICIENTS_UNI_DRC));
+    mpegh_FDKmemclear(tmpCoef, sizeof(DRC_COEFFICIENTS_UNI_DRC));
 
     err = _readDrcCoefficientsUniDrc(hBs, 0, tmpCoef);
     if (err) return err;
@@ -1209,7 +1209,7 @@ drcDec_readMpegh3daUniDrcConfig(HANDLE_FDK_BITSTREAM hBs, HANDLE_UNI_DRC_CONFIG 
   for (i = 0; i < hUniDrcConfig->drcInstructionsUniDrcCountV0[subStreamIndex]; i++) {
     DRC_INSTRUCTIONS_UNI_DRC* tmpInst = (DRC_INSTRUCTIONS_UNI_DRC*)hUniDrcConfig->p_scratch;
 
-    FDKmemclear(tmpInst, sizeof(DRC_INSTRUCTIONS_UNI_DRC));
+    mpegh_FDKmemclear(tmpInst, sizeof(DRC_INSTRUCTIONS_UNI_DRC));
     tmpInst->drcInstructionsType = FDKreadBits(hBs, 1);
     if (tmpInst->drcInstructionsType != 0) {
       tmpInst->drcInstructionsType = FDKreadBits(hBs, 1) + 2;
@@ -1371,7 +1371,7 @@ static DRC_ERROR _readLoudnessInfo(HANDLE_FDK_BITSTREAM hBs, const int version,
   loudnessInfo->measurementCount = fMin(measurementCount, 16);
   for (i = 0; i < measurementCount; i++) {
     LOUDNESS_MEASUREMENT tmpMeas;
-    FDKmemclear(&tmpMeas, sizeof(LOUDNESS_MEASUREMENT));
+    mpegh_FDKmemclear(&tmpMeas, sizeof(LOUDNESS_MEASUREMENT));
     err = _readLoudnessMeasurement(hBs, &tmpMeas);
     if (err) return err;
     if (i >= 16) continue;
@@ -1433,7 +1433,7 @@ drcDec_readMpegh3daLoudnessInfoSet(HANDLE_FDK_BITSTREAM hBs,
       (UCHAR)fMin(startIndex + hLoudnessInfoSet->loudnessInfoCountV0[subStreamIndex], 32);
   for (i = 0; i < hLoudnessInfoSet->loudnessInfoCountV0[subStreamIndex]; i++) {
     LOUDNESS_INFO tmpLoud;
-    FDKmemclear(&tmpLoud, sizeof(LOUDNESS_INFO));
+    mpegh_FDKmemclear(&tmpLoud, sizeof(LOUDNESS_INFO));
     tmpLoud.loudnessInfoType = FDKreadBits(hBs, 2);
     if ((tmpLoud.loudnessInfoType == 1) || (tmpLoud.loudnessInfoType == 2)) {
       tmpLoud.mae_groupID = FDKreadBits(hBs, 7);
@@ -1447,7 +1447,7 @@ drcDec_readMpegh3daLoudnessInfoSet(HANDLE_FDK_BITSTREAM hBs,
 
     /* insert the loudnessInfo element of this substream, starting from startIndex */
     if (!diff)
-      diff |= (FDKmemcmp(&tmpLoud, &(hLoudnessInfoSet->loudnessInfo[startIndex + i]),
+      diff |= (mpegh_FDKmemcmp(&tmpLoud, &(hLoudnessInfoSet->loudnessInfo[startIndex + i]),
                          sizeof(LOUDNESS_INFO)) != 0);
     hLoudnessInfoSet->loudnessInfo[startIndex + i] = tmpLoud;
   }
@@ -1470,14 +1470,14 @@ drcDec_readMpegh3daLoudnessInfoSet(HANDLE_FDK_BITSTREAM hBs,
       (UCHAR)fMin(startIndex + hLoudnessInfoSet->loudnessInfoAlbumCountV0[subStreamIndex], 32);
   for (i = 0; i < hLoudnessInfoSet->loudnessInfoAlbumCountV0[subStreamIndex]; i++) {
     LOUDNESS_INFO tmpLoud;
-    FDKmemclear(&tmpLoud, sizeof(LOUDNESS_INFO));
+    mpegh_FDKmemclear(&tmpLoud, sizeof(LOUDNESS_INFO));
     err = _readLoudnessInfo(hBs, 0, &tmpLoud);
     if (err) return err;
     if (startIndex + i >= 32) continue;
 
     /* insert the loudnessInfoAlbum element of this substream, starting from startIndex */
     if (!diff)
-      diff |= (FDKmemcmp(&tmpLoud, &(hLoudnessInfoSet->loudnessInfoAlbum[startIndex + i]),
+      diff |= (mpegh_FDKmemcmp(&tmpLoud, &(hLoudnessInfoSet->loudnessInfoAlbum[startIndex + i]),
                          sizeof(LOUDNESS_INFO)) != 0);
     hLoudnessInfoSet->loudnessInfoAlbum[startIndex + i] = tmpLoud;
   }

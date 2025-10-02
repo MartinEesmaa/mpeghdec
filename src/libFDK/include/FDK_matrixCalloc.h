@@ -94,12 +94,12 @@ amm-info@iis.fraunhofer.de
 #include "machine_type.h"
 #include "genericStds.h"
 
-void* fdkCallocMatrix1D(UINT dim1, UINT size);
-void* fdkCallocMatrix1D_aligned(UINT dim1, UINT size);
+void* mpegh_fdkCallocMatrix1D(UINT dim1, UINT size);
+void* mpegh_fdkCallocMatrix1D_aligned(UINT dim1, UINT size);
 void fdkFreeMatrix1D(void* p);
-void fdkFreeMatrix1D_aligned(void* p);
+void mpegh_fdkFreeMatrix1D_aligned(void* p);
 
-void** fdkCallocMatrix2D(UINT dim1, UINT dim2, UINT size);
-void fdkFreeMatrix2D(void** p);
+void** mpegh_fdkCallocMatrix2D(UINT dim1, UINT dim2, UINT size);
+void mpegh_fdkFreeMatrix2D(void** p);
 
 #endif /* FDK_MATRIXCALLOC_H */

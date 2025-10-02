@@ -216,7 +216,7 @@ prepareDrcGain(HANDLE_DRC_GAIN_DECODER hGainDec, HANDLE_UNI_DRC_GAIN hUniDrcGain
   int b, g, gainElementIndex;
   DRC_GAIN_BUFFERS* drcGainBuffers = &(hGainDec->drcGainBuffers);
   NODE_MODIFICATION nodeMod;
-  FDKmemclear(&nodeMod, sizeof(NODE_MODIFICATION));
+  mpegh_FDKmemclear(&nodeMod, sizeof(NODE_MODIFICATION));
   ACTIVE_DRC* pActiveDrc = &(hGainDec->activeDrc[activeDrcLocation][activeDrcIndex]);
   DRC_INSTRUCTIONS_UNI_DRC* pInst = &pActiveDrc->drcInst;
   if (pInst == NULL) return DE_NOT_OK;

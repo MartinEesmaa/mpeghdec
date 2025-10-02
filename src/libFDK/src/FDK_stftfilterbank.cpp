@@ -126,7 +126,7 @@ int StftFilterbank_Open(const STFT_FILTERBANK_CONFIG* stftFilterbankConfig,
   stftFilterbankConfig_local.fftSize = stftFilterbankConfig->fftSize;
 
   /* no errors, allocate struct */
-  if ((stft_filterbank = (STFT_FILTERBANK*)FDKcalloc(1, sizeof(STFT_FILTERBANK))) == NULL) {
+  if ((stft_filterbank = (STFT_FILTERBANK*)mpegh_FDKcalloc(1, sizeof(STFT_FILTERBANK))) == NULL) {
     return STFT_ERR_MEM_ERROR;
   } else {
     /* copy validated config to internal struct */
@@ -160,34 +160,34 @@ void StftFilterbank_Process(FIXP_DBL* RESTRICT inputBuffer, FIXP_DBL* RESTRICT o
   if (h_stft_filterbank->stftFilterbankConfig.stftFilterbankMode ==
       STFT_FILTERBANK_MODE_TIME_TO_FREQ) {
     if (STFT_headroom != 0) {
-      scaleValues(inputBuffer, h_stft_filterbank->stftFilterbankConfig.frameSize, STFT_headroom);
-      scaleValues(h_stft_filterbank->prevAudioInput,
+      mpegh_scaleValues(inputBuffer, h_stft_filterbank->stftFilterbankConfig.frameSize, STFT_headroom);
+      mpegh_scaleValues(h_stft_filterbank->prevAudioInput,
                   h_stft_filterbank->stftFilterbankConfig.frameSize, STFT_headroom);
     }
 
     processAnalysisSTFT(inputBuffer, outputBuffer, h_stft_filterbank);
 
     if (STFT_headroom != 0) {
-      scaleValues(h_stft_filterbank->prevAudioInput,
+      mpegh_scaleValues(h_stft_filterbank->prevAudioInput,
                   h_stft_filterbank->stftFilterbankConfig.frameSize, -STFT_headroom);
     }
   } else {
     /* make sure we have one bit headroom for FFT */
-    if (getScalefactor(inputBuffer, h_stft_filterbank->stftFilterbankConfig.fftSize) == 0) {
-      scaleValues(inputBuffer, h_stft_filterbank->stftFilterbankConfig.fftSize, -1);
+    if (mpegh_getScalefactor(inputBuffer, h_stft_filterbank->stftFilterbankConfig.fftSize) == 0) {
+      mpegh_scaleValues(inputBuffer, h_stft_filterbank->stftFilterbankConfig.fftSize, -1);
       STFT_headroom--;
     }
     if (STFT_headroom != 0) {
-      scaleValues(h_stft_filterbank->prevAudioInput,
+      mpegh_scaleValues(h_stft_filterbank->prevAudioInput,
                   h_stft_filterbank->stftFilterbankConfig.frameSize, STFT_headroom);
-      scaleValues(outputBuffer, h_stft_filterbank->stftFilterbankConfig.frameSize, STFT_headroom);
+      mpegh_scaleValues(outputBuffer, h_stft_filterbank->stftFilterbankConfig.frameSize, STFT_headroom);
     }
 
     processSynthesisSTFT(inputBuffer, outputBuffer, h_stft_filterbank);
 
     if (STFT_headroom != 0) {
-      scaleValues(outputBuffer, h_stft_filterbank->stftFilterbankConfig.frameSize, -STFT_headroom);
-      scaleValues(h_stft_filterbank->prevAudioInput,
+      mpegh_scaleValues(outputBuffer, h_stft_filterbank->stftFilterbankConfig.frameSize, -STFT_headroom);
+      mpegh_scaleValues(h_stft_filterbank->prevAudioInput,
                   h_stft_filterbank->stftFilterbankConfig.frameSize, -STFT_headroom);
     }
   }
@@ -199,7 +199,7 @@ int StftFilterbank_Close(HANDLE_STFT_FILTERBANK* ph_stft_filterbank) {
   if (ph_stft_filterbank != NULL && *ph_stft_filterbank != NULL) {
     freeStftFilterbankData(*ph_stft_filterbank);
 
-    FDKfree(*ph_stft_filterbank);
+    mpegh_FDKfree(*ph_stft_filterbank);
     *ph_stft_filterbank = NULL;
   }
   return 0;

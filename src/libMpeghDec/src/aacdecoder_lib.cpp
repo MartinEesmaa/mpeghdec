@@ -327,9 +327,9 @@ static INT aacDecoder_TruncationMsgCallback(void* handle, INT nTruncSamples, INT
     /* The truncation segment list is required to be ordered. Reorder in case required. */
     if (q < (TRUNC_QUEUE_SIZE - 1) &&
         (self->truncateStartOffset[q + 1] > 0 || self->truncateStopOffset[q + 1] > 0)) {
-      FDKmemmove(self->truncateStartOffset + q, self->truncateStartOffset + q + 1,
+      mpegh_FDKmemmove(self->truncateStartOffset + q, self->truncateStartOffset + q + 1,
                  sizeof(SHORT) * (TRUNC_QUEUE_SIZE - q - 1));
-      FDKmemmove(self->truncateStopOffset + q, self->truncateStopOffset + q + 1,
+      mpegh_FDKmemmove(self->truncateStopOffset + q, self->truncateStopOffset + q + 1,
                  sizeof(SHORT) * (TRUNC_QUEUE_SIZE - q - 1));
       self->truncateStartOffset[TRUNC_QUEUE_SIZE - 1] = -128;
       self->truncateStopOffset[TRUNC_QUEUE_SIZE - 1] = -128;
@@ -430,7 +430,7 @@ static INT aacDecoder_ParseDmxMatrixCallback(void* handle, HANDLE_FDK_BITSTREAM 
    * CAacDecoder_InitRenderer() */
   FDK_DOWNMIX_GROUPS_MATRIX_SET* groupsDownmixMatrixSet =
       (FDK_DOWNMIX_GROUPS_MATRIX_SET*)hAacDecoder->pTimeData2;
-  FDKmemclear(groupsDownmixMatrixSet, sizeof(FDK_DOWNMIX_GROUPS_MATRIX_SET));
+  mpegh_FDKmemclear(groupsDownmixMatrixSet, sizeof(FDK_DOWNMIX_GROUPS_MATRIX_SET));
 
   err = DownmixMatrixSet(hBs, groupsDownmixMatrixSet, targetLayout, downmixConfigType,
                          &(hAacDecoder->downmixId), hUniDrcDecoder);
@@ -584,7 +584,7 @@ static INT aacDecoder_EarconSetBSCallback(void* handle, HANDLE_FDK_BITSTREAM bs)
       return 0;
     }
     if (diff) {
-      FDKmemclear(EarconDataPointer, sizeof(FIXP_SGL) * diff * numPcmSignalsInFrame);
+      mpegh_FDKmemclear(EarconDataPointer, sizeof(FIXP_SGL) * diff * numPcmSignalsInFrame);
     }
 
     /*Increase the accumulated frame size*/
@@ -607,7 +607,7 @@ static INT aacDecoder_EarconSetBSCallback(void* handle, HANDLE_FDK_BITSTREAM bs)
       return 0;
     }
     FIXP_SGL* EarconDataPointer = &hAacDecoder->earconDecoder.EarconData[WriteIndex];
-    FDKmemclear(EarconDataPointer, sizeof(FIXP_SGL) * FillSize);
+    mpegh_FDKmemclear(EarconDataPointer, sizeof(FIXP_SGL) * FillSize);
 
     /*Increase the accumulated frame size*/
     hAacDecoder->earconDecoder.AccumulatedFrameSize += FillSize;
@@ -1473,7 +1473,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
               for (ch = 0; ch < transportNumChannels; ch++) {
                 STFT_headroom =
                     fMin(STFT_headroom,
-                         getScalefactor(&(pTimeData2[(transportStartChannel + ch) *
+                         mpegh_getScalefactor(&(pTimeData2[(transportStartChannel + ch) *
                                                          (self->streamInfo.frameSize + 256) +
                                                      i * self->stftFrameSize + 256]),
                                         self->stftFrameSize));
@@ -1504,7 +1504,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
 
                 /* clear output buffer first, as StftFilterbank_Process accumulates its output
                  * signal to the buffer */
-                FDKmemclear(
+                mpegh_FDKmemclear(
                     &(pTimeData2[(transportStartChannel + ch) * (self->streamInfo.frameSize + 256) +
                                  i * self->stftFrameSize + 256]),
                     self->stftFrameSize * sizeof(FIXP_DBL));
@@ -1526,10 +1526,10 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
           /* Compensate STFT delay in object and HOA signal path in case of time domain DRC. */
           if (processTimeDomainDrc) {
             for (int ch = 0; ch < transportNumChannels; ch++) {
-              FDKmemcpy(
+              mpegh_FDKmemcpy(
                   pTimeData2 + (transportStartChannel + ch) * (self->streamInfo.frameSize + 256),
                   self->delayBuffer[transportStartChannel + ch], sizeof(PCM_DEC) * 256);
-              FDKmemcpy(self->delayBuffer[transportStartChannel + ch],
+              mpegh_FDKmemcpy(self->delayBuffer[transportStartChannel + ch],
                         pTimeData2 +
                             (transportStartChannel + ch) * (self->streamInfo.frameSize + 256) +
                             self->streamInfo.frameSize,
@@ -1550,7 +1550,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
 
       /* Clear output buffer, were each renderer will mix its output into. */
       if ((self->flags[0] & AC_MPEGH3DA) && (self->targetLayout_config > -1)) {
-        FDKmemclear(self->workBufferCore2, (self->streamInfo.numChannels) *
+        mpegh_FDKmemclear(self->workBufferCore2, (self->streamInfo.numChannels) *
                                                (self->streamInfo.frameSize) * sizeof(FIXP_DBL));
       }
 
@@ -1675,7 +1675,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
 
         /* Copy delayed samples from delay buffer to time buffer */
         if (self->mpegH_rendered_delay.delay) {
-          FDKmemcpy(pTimeData2 + newFrameSize * ch,
+          mpegh_FDKmemcpy(pTimeData2 + newFrameSize * ch,
                     &self->mpegH_rendered_delay.delay_line[self->mpegH_rendered_delay.delay * ch],
                     self->mpegH_rendered_delay.delay * sizeof(FIXP_DBL));
         }
@@ -1688,7 +1688,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
 
         /* Copy hang over samples from the time buffer to the delay buffer */
         if (ovSamples) {
-          FDKmemcpy(&self->mpegH_rendered_delay.delay_line[self->mpegH_rendered_delay.delay * ch],
+          mpegh_FDKmemcpy(&self->mpegH_rendered_delay.delay_line[self->mpegH_rendered_delay.delay * ch],
                     pTimeData2 + newFrameSize * ch + newFrameSize, ovSamples * sizeof(FIXP_DBL));
         }
 
@@ -1781,7 +1781,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
             l = fMin(frameSizeRemaining, (INT)self->truncateStartOffset[q] + 128) - truncStart;
 
             for (ch = 0; ch < self->streamInfo.numChannels; ch++) {
-              FDKmemcpy(self->crossfadeMem + 128 * ch + truncStart - self->truncateStartOffset[q],
+              mpegh_FDKmemcpy(self->crossfadeMem + 128 * ch + truncStart - self->truncateStartOffset[q],
                         pTimeData2 + self->streamInfo.frameSize * ch + truncStart,
                         l * sizeof(PCM_DEC));
             }
@@ -1838,7 +1838,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
               if (truncStop < frameSizeRemaining) {
                 /* Truncate first samples [0..truncStop-1]: move remaining to start at 0 for each
                  * channel */
-                FDKmemmove(pTimeData2 + self->streamInfo.frameSize * ch,
+                mpegh_FDKmemmove(pTimeData2 + self->streamInfo.frameSize * ch,
                            pTimeData2 + self->streamInfo.frameSize * ch + truncStop,
                            truncateFrameSizeCurrent * sizeof(PCM_DEC));
               }
@@ -1887,7 +1887,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
     } else {
       {
         for (int ii = 0; ii < self->streamInfo.aacNumChannels; ii++) {
-          FDKmemmove(pTimeData3 + ii * (self->streamInfo.frameSize),
+          mpegh_FDKmemmove(pTimeData3 + ii * (self->streamInfo.frameSize),
                      pTimeData2 + ii * (self->streamInfo.aacSamplesPerFrame + 256) + 256,
                      self->streamInfo.frameSize * sizeof(PCM_AAC));
         }
@@ -1901,7 +1901,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
     if (!((self->flags[0] & AC_MPEGH3DA) && (self->targetLayout_config >= 0) &&
           (self->streamInfo.numChannels > 0))) {
       if ((INT)PCM_OUT_HEADROOM != timeDataHeadroom) {
-        scaleValues(pTimeData2, (PCM_DEC*)pTimeData3,
+        mpegh_scaleValues(pTimeData2, (PCM_DEC*)pTimeData3,
                     self->streamInfo.frameSize * self->streamInfo.numChannels,
                     -(PCM_OUT_HEADROOM - timeDataHeadroom));
       }
@@ -1991,7 +1991,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
 
     /* applyLimiter requests for interleaved data and doesn't support in-place processing */
     /* Interleave output buffer */
-    FDK_interleave(pTimeData2, pInterleaveBuffer, self->streamInfo.numChannels, blockLength,
+    MPEGH_interleave(pTimeData2, pInterleaveBuffer, self->streamInfo.numChannels, blockLength,
                    self->streamInfo.frameSize);
 
     if (truncateFrameSize != -1) {
@@ -2035,7 +2035,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
               self->discardSamplesAtStartCnt -= self->streamInfo.frameSize;
               self->streamInfo.frameSize = 0;
             } else {
-              FDKmemmove(pTimeData,
+              mpegh_FDKmemmove(pTimeData,
                          &pTimeData[self->discardSamplesAtStartCnt * self->streamInfo.numChannels],
                          (self->streamInfo.frameSize - self->discardSamplesAtStartCnt) *
                              self->streamInfo.numChannels * sizeof(INT_PCM));
@@ -2052,7 +2052,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame(HANDLE_AACDECODER self, IN
         self->streamInfo.outputDelay += pcmLimiter_GetDelay(self->hLimiter);
       }
     } else {
-      scaleValuesSaturate(pTimeData, (PCM_DEC*)pInterleaveBuffer,
+      mpegh_scaleValuesSaturate(pTimeData, (PCM_DEC*)pInterleaveBuffer,
                           self->streamInfo.frameSize * self->streamInfo.numChannels,
                           pcmLimiterScale);
     }

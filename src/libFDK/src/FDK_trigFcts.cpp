@@ -94,7 +94,7 @@ amm-info@iis.fraunhofer.de
 
 #include "FDK_tools_rom.h"
 
-FIXP_DBL fixp_cos(FIXP_DBL x, int scale) {
+FIXP_DBL mpegh_fixp_cos(FIXP_DBL x, int scale) {
   FIXP_DBL residual, error, sine, cosine;
 
   residual = fixp_sin_cos_residual_inline(x, scale, &sine, &cosine);
@@ -108,7 +108,7 @@ FIXP_DBL fixp_cos(FIXP_DBL x, int scale) {
 #endif
 }
 
-FIXP_DBL fixp_sin(FIXP_DBL x, int scale) {
+FIXP_DBL mpegh_fixp_sin(FIXP_DBL x, int scale) {
   FIXP_DBL residual, error, sine, cosine;
 
   residual = fixp_sin_cos_residual_inline(x, scale, &sine, &cosine);
@@ -121,7 +121,7 @@ FIXP_DBL fixp_sin(FIXP_DBL x, int scale) {
 #endif
 }
 
-void fixp_cos_sin(FIXP_DBL x, int scale, FIXP_DBL* cos, FIXP_DBL* sin) {
+void mpegh_fixp_cos_sin(FIXP_DBL x, int scale, FIXP_DBL* cos, FIXP_DBL* sin) {
   FIXP_DBL residual, error0, error1, sine, cosine;
 
   residual = fixp_sin_cos_residual_inline(x, scale, &sine, &cosine);

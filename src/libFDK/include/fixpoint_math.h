@@ -132,7 +132,7 @@ static const FIXP_SGL ldCoeff[MAX_LD_PRECISION] = {
 #define SQRT_BITS_MASK 0x7f
 #define SQRT_FRACT_BITS_MASK 0x007FFFFF
 
-extern const FIXP_DBL invSqrtTab[SQRT_VALUES];
+extern const FIXP_DBL mpegh_invSqrtTab[SQRT_VALUES];
 
 /*
  * Hardware specific implementations
@@ -242,7 +242,7 @@ FDK_INLINE FIXP_DBL CalcInvLdData(const FIXP_DBL x) {
 void InitLdInt();
 FIXP_DBL CalcLdInt(INT i);
 
-extern const USHORT sqrt_tab[49];
+extern const USHORT mpegh_sqrt_tab[49];
 
 inline FIXP_DBL sqrtFixp_lookup(FIXP_DBL x) {
   UINT y = (INT)x;
@@ -254,7 +254,7 @@ inline FIXP_DBL sqrtFixp_lookup(FIXP_DBL x) {
     UINT idx = (y >> 26) - 16;
     USHORT frac = (y >> 10) & 0xffff;
     USHORT nfrac = 0xffff ^ frac;
-    t = (UINT)nfrac * sqrt_tab[idx] + (UINT)frac * sqrt_tab[idx + 1];
+    t = (UINT)nfrac * mpegh_sqrt_tab[idx] + (UINT)frac * mpegh_sqrt_tab[idx + 1];
     t = t >> (zeros >> 1);
   }
   return t;
@@ -282,7 +282,7 @@ inline FIXP_DBL sqrtFixp_lookup(FIXP_DBL x, INT* x_e) {
   UINT idx = (y >> 26) - 16;
   USHORT frac = (y >> 10) & 0xffff;
   USHORT nfrac = 0xffff ^ frac;
-  UINT t = (UINT)nfrac * sqrt_tab[idx] + (UINT)frac * sqrt_tab[idx + 1];
+  UINT t = (UINT)nfrac * mpegh_sqrt_tab[idx] + (UINT)frac * mpegh_sqrt_tab[idx + 1];
 
   /* Write back exponent */
   *x_e = e >> 1;
@@ -327,15 +327,15 @@ static FDK_FORCEINLINE FIXP_DBL invSqrtNorm2(FIXP_DBL op, INT* shift) {
 #if defined(INVSQRTNORM2_LINEAR_INTERPOLATE)
   INT index = (INT)(val >> (DFRACT_BITS - 1 - (SQRT_BITS + 1))) & SQRT_BITS_MASK;
   FIXP_DBL Fract = (FIXP_DBL)(((INT)val & SQRT_FRACT_BITS_MASK) << (SQRT_BITS + 1));
-  FIXP_DBL diff = invSqrtTab[index + 1] - invSqrtTab[index];
-  reg1 = invSqrtTab[index] + (fMultDiv2(diff, Fract) << 1);
+  FIXP_DBL diff = mpegh_invSqrtTab[index + 1] - mpegh_invSqrtTab[index];
+  reg1 = mpegh_invSqrtTab[index] + (fMultDiv2(diff, Fract) << 1);
 #if defined(INVSQRTNORM2_LINEAR_INTERPOLATE_HQ)
   /* reg1 = t[i] + (t[i+1]-t[i])*fract ... already computed ...
                                        + (1-fract)fract*(t[i+2]-t[i+1])/2 */
   if (Fract != (FIXP_DBL)0) {
     /* fract = fract * (1 - fract) */
     Fract = fMultDiv2(Fract, (FIXP_DBL)((ULONG)0x80000000 - (LONG)Fract)) << 1;
-    diff = diff - (invSqrtTab[index + 2] - invSqrtTab[index + 1]);
+    diff = diff - (mpegh_invSqrtTab[index + 2] - mpegh_invSqrtTab[index + 1]);
     reg1 = fMultAddDiv2(reg1, Fract, diff);
   }
 #endif /* INVSQRTNORM2_LINEAR_INTERPOLATE_HQ */
@@ -919,7 +919,7 @@ FIXP_DBL fixp_round(FIXP_DBL f_inp, INT sf);
 
 ****************************************************************************/
 
-extern const FIXP_DBL invCount[80];
+extern const FIXP_DBL mpegh_invCount[80];
 
 LNK_SECTION_INITCODE
 inline void InitInvInt(void) {}
@@ -931,7 +931,7 @@ inline void InitInvInt(void) {}
  * \param FIXP_DBL representation of 1/intValue
  */
 inline FIXP_DBL GetInvInt(int intValue) {
-  return invCount[fMin(fMax(intValue, 0), 80 - 1)];
+  return mpegh_invCount[fMin(fMax(intValue, 0), 80 - 1)];
 }
 
 #endif /* FIXPOINT_MATH_H */

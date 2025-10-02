@@ -1005,8 +1005,8 @@ AAC_DECODER_ERROR FDK_mpeghUiInitialize(HANDLE_AACDECODER self) {
   self->uiStatusValid = 0;
   self->drcStatusValid = 0;
   self->uiSignalChanged = 0;
-  FDKmemclear(&self->uiStatus, sizeof(self->uiStatus));
-  FDKmemclear(&self->uiStatusNext, sizeof(self->uiStatusNext));
+  mpegh_FDKmemclear(&self->uiStatus, sizeof(self->uiStatus));
+  mpegh_FDKmemclear(&self->uiStatusNext, sizeof(self->uiStatusNext));
   updateOnOffFlags(self);
 
   tpErr =
@@ -1066,7 +1066,7 @@ void updateOnOffFlags(HANDLE_AACDECODER self) {
   }
 
   /* clear skipped signals flags */
-  FDKmemclear(self->signalSkipped, TP_MPEGH_MAX_SIGNAL_GROUPS * sizeof(UCHAR));
+  mpegh_FDKmemclear(self->signalSkipped, TP_MPEGH_MAX_SIGNAL_GROUPS * sizeof(UCHAR));
 
   /* check if element skipping active */
   if (!self->useElementSkipping || !(self->flags[0] & AC_MPEGH3DA) ||
@@ -1134,11 +1134,11 @@ AAC_DECODER_ERROR applyUserInteractivity(HANDLE_AACDECODER self, PCM_DEC* pTimeD
   UCHAR maeIDobjGrp[((28) * 2)], maeIDobjIdx[((28) * 2)], objGrp;
   int grp, valid = 0, ch, streamIndex = 0;
 
-  FDKmemclear(channelGain, sizeof(channelGain));
-  FDKmemset(maeIDobjGrp, 255, ((28) * 2));
-  FDKmemclear(maeIDobjIdx, sizeof(maeIDobjIdx));
-  FDKmemclear(maeIDstartCh, sizeof(maeIDstartCh));
-  FDKmemclear(maeIDstopCh, sizeof(maeIDstopCh));
+  mpegh_FDKmemclear(channelGain, sizeof(channelGain));
+  mpegh_FDKmemset(maeIDobjGrp, 255, ((28) * 2));
+  mpegh_FDKmemclear(maeIDobjIdx, sizeof(maeIDobjIdx));
+  mpegh_FDKmemclear(maeIDstartCh, sizeof(maeIDstartCh));
+  mpegh_FDKmemclear(maeIDstopCh, sizeof(maeIDstopCh));
 
   /* generate lookup tables */
   objGrp = 0;

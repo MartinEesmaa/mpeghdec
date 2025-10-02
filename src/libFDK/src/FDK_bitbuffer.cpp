@@ -104,7 +104,7 @@ const UINT BitMask[32 + 1] = {0x0,        0x1,        0x3,       0x7,       0xf,
 void FDK_CreateBitBuffer(HANDLE_FDK_BITBUF* hBitBuf, UCHAR* pBuffer, UINT bufSize) {
   FDK_InitBitBuffer(*hBitBuf, pBuffer, bufSize, 0);
 
-  FDKmemclear((*hBitBuf)->Buffer, bufSize * sizeof(UCHAR));
+  mpegh_FDKmemclear((*hBitBuf)->Buffer, bufSize * sizeof(UCHAR));
 }
 
 void FDK_DeleteBitBuffer(HANDLE_FDK_BITBUF hBitBuf) {
@@ -357,7 +357,7 @@ void FDK_Feed(HANDLE_FDK_BITBUF hBitBuf, const UCHAR* RESTRICT inputBuffer, cons
     bToRead = fMin(bToRead, noOfBytes);  //(bToRead < noOfBytes) ? bToRead : noOfBytes ;
 
     /* copy 'bToRead' bytes from 'ptr' to inputbuffer */
-    FDKmemcpy(&hBitBuf->Buffer[hBitBuf->ReadOffset], inputBuffer, bToRead * sizeof(UCHAR));
+    mpegh_FDKmemcpy(&hBitBuf->Buffer[hBitBuf->ReadOffset], inputBuffer, bToRead * sizeof(UCHAR));
 
     /* add noOfBits to number of valid bits in buffer */
     hBitBuf->ValidBits += (INT)(bToRead << 3);
@@ -434,7 +434,7 @@ void FDK_Fetch(HANDLE_FDK_BITBUF hBitBuf, UCHAR* outBuf, UINT* writeBytes) {
     bToWrite = fMin(bToWrite, noOfBytes);  //(bToWrite < noOfBytes) ? bToWrite : noOfBytes ;
 
     /* copy 'bToWrite' bytes from bitbuffer to outputbuffer */
-    FDKmemcpy(outputBuffer, &hBitBuf->Buffer[hBitBuf->WriteOffset], bToWrite * sizeof(UCHAR));
+    mpegh_FDKmemcpy(outputBuffer, &hBitBuf->Buffer[hBitBuf->WriteOffset], bToWrite * sizeof(UCHAR));
 
     /* sub noOfBits from number of valid bits in buffer */
     hBitBuf->ValidBits -= bToWrite << 3;

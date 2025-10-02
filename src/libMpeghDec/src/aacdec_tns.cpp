@@ -107,9 +107,9 @@ amm-info@iis.fraunhofer.de
   \return  none
 */
 void CTns_Reset(CTnsData* pTnsData) {
-  /* Note: the following FDKmemclear should not be required. */
-  FDKmemclear(pTnsData->Filter, TNS_MAX_WINDOWS * TNS_MAXIMUM_FILTERS * sizeof(CFilter));
-  FDKmemclear(pTnsData->NumberOfFilters, TNS_MAX_WINDOWS * sizeof(UCHAR));
+  /* Note: the following mpegh_FDKmemclear should not be required. */
+  mpegh_FDKmemclear(pTnsData->Filter, TNS_MAX_WINDOWS * TNS_MAXIMUM_FILTERS * sizeof(CFilter));
+  mpegh_FDKmemclear(pTnsData->NumberOfFilters, TNS_MAX_WINDOWS * sizeof(UCHAR));
   pTnsData->DataPresent = 0;
   pTnsData->Active = 0;
 }
@@ -338,13 +338,13 @@ void CTns_Apply(CTnsData* RESTRICT pTnsData, /*!< pointer to aac decoder info */
           if (size) {
             C_ALLOC_SCRATCH_START(state, FIXP_DBL, TNS_MAXIMUM_ORDER)
 
-            FDKmemclear(state, TNS_MAXIMUM_ORDER * sizeof(FIXP_DBL));
+            mpegh_FDKmemclear(state, TNS_MAXIMUM_ORDER * sizeof(FIXP_DBL));
 #ifdef LPC_SYNTHESIS_IIR
             lpcCoeff_e = CLpc_ParcorToLpc(coeff, lpcCoeff_m, filter->Order, temp);
             CLpc_Synthesis(pSpectrum + start, size, filter->Direction, lpcCoeff_m, lpcCoeff_e,
                            filter->Order, state, &synStateIndex);
 #else
-            CLpc_SynthesisLattice(pSpectrum + start, size, 0, 0, filter->Direction, coeff,
+            mpegh_CLpc_SynthesisLattice(pSpectrum + start, size, 0, 0, filter->Direction, coeff,
                                   filter->Order, state);
 #endif
 

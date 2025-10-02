@@ -375,7 +375,7 @@ static void selectAudioLang(HANDLE_UI_MANAGER hUiManager, UI_STATE* pUiState = N
 
         /* get language priority of member */
         for (prio = 0; prio < NUM_PREF_LANGUAGES; prio++) {
-          if (FDKstrncmp(pGroup->contentData.contentLanguage,
+          if (mpegh_FDKstrncmp(pGroup->contentData.contentLanguage,
                          &pUiState->prefAudioLanguages[prio][0], 3) == 0)
             break;
         }
@@ -1343,11 +1343,11 @@ static void persistenceRestore(HANDLE_UI_MANAGER hUiManager) {
 
 /* create instance */
 INT UI_Manager_Create(HANDLE_UI_MANAGER* phUiManager, INT storeAsiDescriptions) {
-  *phUiManager = (HANDLE_UI_MANAGER)FDKcalloc(1, sizeof(UI_MANAGER));
+  *phUiManager = (HANDLE_UI_MANAGER)mpegh_FDKcalloc(1, sizeof(UI_MANAGER));
   if (*phUiManager == NULL) return UI_MANAGER_OUT_OF_MEMORY;
 
   if (storeAsiDescriptions) {
-    (*phUiManager)->asi.pDescriptions = (ASI_DESCRIPTIONS*)FDKcalloc(1, sizeof(ASI_DESCRIPTIONS));
+    (*phUiManager)->asi.pDescriptions = (ASI_DESCRIPTIONS*)mpegh_FDKcalloc(1, sizeof(ASI_DESCRIPTIONS));
   }
   (*phUiManager)->asi.activeDmxId = INVALID_ID;
   (*phUiManager)->uiState.targetLoudness = UI_MANAGER_USE_DEFAULT_TARGET_LOUDNESS;
@@ -1628,8 +1628,8 @@ INT UI_Manager_Delete(HANDLE_UI_MANAGER* phUiManager) {
   if (*phUiManager && (*phUiManager)->hPersistence)
     persistenceManagerDelete((*phUiManager)->hPersistence);
 
-  if (*phUiManager && (*phUiManager)->asi.pDescriptions) FDKfree((*phUiManager)->asi.pDescriptions);
-  FDKfree(*phUiManager);
+  if (*phUiManager && (*phUiManager)->asi.pDescriptions) mpegh_FDKfree((*phUiManager)->asi.pDescriptions);
+  mpegh_FDKfree(*phUiManager);
   *phUiManager = NULL;
 
   return UI_MANAGER_OK;

@@ -3224,11 +3224,11 @@ void FDK_check_s16_overflow(FIXP_DBL value)
 {
   if (value > (FIXP_DBL) 0x7FFF)
   {
-    FDKprintf("Error: 16-bit overflow: 0x%016X\n", value);
+    mpegh_FDKprintf("Error: 16-bit overflow: 0x%016X\n", value);
   }
   else if (value < (FIXP_DBL) 0x8000)
   {
-    FDKprintf("Error: 16-bit underflow: 0x%016X\n", value);
+    mpegh_FDKprintf("Error: 16-bit underflow: 0x%016X\n", value);
   }
 }
 
@@ -3237,11 +3237,11 @@ void FDK_check_s32_overflow(INT64 value)
 {
   if (value > (INT64) 0x7FFFFFFF)
   {
-    FDKprintf("Error: 32-bit overflow: 0x%016X\n", value);
+    mpegh_FDKprintf("Error: 32-bit overflow: 0x%016X\n", value);
   }
   else if (-value > (INT64) 2147483648 /* 0x8000.000 */)
   {
-    FDKprintf("Error: 32-bit underflow: 0x%016X\n", value);
+    mpegh_FDKprintf("Error: 32-bit underflow: 0x%016X\n", value);
   }
 }
 
@@ -3269,15 +3269,15 @@ void A64_check_move_immediate_sp(float immediate)
    if ( (imm > 31.f) || ((imm - (int) imm) != 0.f) )
    {
      /*  Mantissa exceeds */
-     FDKprintf("Error in float immediate mantissa: %f = %f *2^%d\n", immediate, imm, exponent);
+     mpegh_FDKprintf("Error in float immediate mantissa: %f = %f *2^%d\n", immediate, imm, exponent);
    }
    else if ( (exponent > 0) || (exponent < -7) )
    {
      /* Exponent exceeds */
-     FDKprintf("Error in float immediate exponent: %f = %f *2^%d\n", immediate, imm, exponent);
+     mpegh_FDKprintf("Error in float immediate exponent: %f = %f *2^%d\n", immediate, imm, exponent);
    }
    else
-     FDKprintf("Success in float immediate check: %f = %f *2^%d\n", immediate, imm, exponent);
+     mpegh_FDKprintf("Success in float immediate check: %f = %f *2^%d\n", immediate, imm, exponent);
 }
 
 void A64_check_move_immediate(int size, int datatype, int sign, INT64 immediate)
@@ -3298,28 +3298,28 @@ void A64_check_move_immediate(int size, int datatype, int sign, INT64 immediate)
     if (datatype == 8)
     {
       if (sign == -1)
-        FDKprintf ("Error in MVN instruction: I8 datatype not available\n");
+        mpegh_FDKprintf ("Error in MVN instruction: I8 datatype not available\n");
 
       else if (byte1 | byte2 | byte3 | byte4 | byte5 | byte6 | byte7)
       {
-        FDKprintf ("Error in 8-bit immediate: 0x%016X - upper bytes must be 0x00\n", immediate);
+        mpegh_FDKprintf ("Error in 8-bit immediate: 0x%016X - upper bytes must be 0x00\n", immediate);
       }
     }
     else if (datatype == 16)
     {
       if (byte2 | byte3 | byte4 | byte5 | byte6 | byte7)
       {
-        FDKprintf ("Error in 16-bit immediate: 0x%016X - upper bits (>16) must be unique\n", immediate);
+        mpegh_FDKprintf ("Error in 16-bit immediate: 0x%016X - upper bits (>16) must be unique\n", immediate);
       }
       else
       {
         if ((sign == 1) && !( (byte0 == 0x00) || (byte1 == 0x00) ))
         {
-          FDKprintf ("Error in 16-bit immediate: 0x%016X - one of the lower 2 bytes must be 0x00\n", immediate);
+          mpegh_FDKprintf ("Error in 16-bit immediate: 0x%016X - one of the lower 2 bytes must be 0x00\n", immediate);
         }
         else if ((sign == -1) && !( (byte0 == 0xFF) || (byte1 == 0xFF) ))
         {
-          FDKprintf ("Error in 16-bit immediate: 0x%016X - one of the lower 2 bytes must be 0xFF\n", immediate);
+          mpegh_FDKprintf ("Error in 16-bit immediate: 0x%016X - one of the lower 2 bytes must be 0xFF\n", immediate);
         }
       }
     }
@@ -3327,11 +3327,11 @@ void A64_check_move_immediate(int size, int datatype, int sign, INT64 immediate)
     {
       if ( (sign == 1) && ((byte4 | byte5 | byte6 | byte7) != 0x00) )
       {
-        FDKprintf ("Error in 32-bit immediate: 0x%016X - upper 4 bytes must be 0x00\n", immediate);
+        mpegh_FDKprintf ("Error in 32-bit immediate: 0x%016X - upper 4 bytes must be 0x00\n", immediate);
       }
       else if ( (sign == -1) && !( ((byte4 & byte5 & byte6 & byte7) != 0xFF) || ((byte4 | byte5 | byte6 | byte7) != 0x00)) )
       {
-        FDKprintf ("Error in 32-bit immediate: 0x%016X - upper 4 bytes must be 0xFF/0x00\n", immediate);
+        mpegh_FDKprintf ("Error in 32-bit immediate: 0x%016X - upper 4 bytes must be 0xFF/0x00\n", immediate);
       }
       if (sign == 1)
       {
@@ -3340,7 +3340,7 @@ void A64_check_move_immediate(int size, int datatype, int sign, INT64 immediate)
               (byte2 && !(byte0 | byte1 | byte3))   || (byte3 && !(byte0 | byte1 | byte2)) ||
               ((byte0 == 0xFF) && !(byte2 | byte3)) || (((byte0 & byte1) == 0xFF) && !byte3)))
         {
-          FDKprintf ("Error in 32-bit immediate: 0x%016X - upper fillbytes must be 0x00, lower fillbytes must be 0x00/0xFF\n", immediate);
+          mpegh_FDKprintf ("Error in 32-bit immediate: 0x%016X - upper fillbytes must be 0x00, lower fillbytes must be 0x00/0xFF\n", immediate);
         }
       }
       else
@@ -3350,21 +3350,21 @@ void A64_check_move_immediate(int size, int datatype, int sign, INT64 immediate)
               ((byte2 != 0xFF) && ((byte1 & byte0 & byte3) == 0xFF)) || ((byte3 != 0xFF) && ((byte1 & byte2 & byte0) == 0xFF)) ||
               (!byte0 && ((byte2 & byte3) == 0xFF)) || (!(byte0 | byte1) && (byte3 == 0xFF)) ) )
         {
-          FDKprintf ("Error in 32-bit immediate: 0x%016X - upper fillbytes must be 0xFF, lower fillbytes must be 0xFF/0x00\n", immediate);
+          mpegh_FDKprintf ("Error in 32-bit immediate: 0x%016X - upper fillbytes must be 0xFF, lower fillbytes must be 0xFF/0x00\n", immediate);
         }
       }
     }
     else if (datatype == 64)
     {
       if (sign == -1)
-        FDKprintf ("Error in MVN instruction: I64 datatype not available\n");
+        mpegh_FDKprintf ("Error in MVN instruction: I64 datatype not available\n");
       // all bytes must match either 0x00 or 0xFF
       else if (!(( (byte0 == 0x00) || (byte0 == 0xFF) ) || ( (byte1 == 0x00) || (byte1 == 0xFF) ) ||
                  ( (byte2 == 0x00) || (byte2 == 0xFF) ) || ( (byte3 == 0x00) || (byte3 == 0xFF) ) ||
                  ( (byte4 == 0x00) || (byte4 == 0xFF) ) || ( (byte5 == 0x00) || (byte5 == 0xFF) ) ||
                  ( (byte6 == 0x00) || (byte6 == 0xFF) ) || ( (byte7 == 0x00) || (byte7 == 0xFF) ) ))
       {
-        FDKprintf ("Error in 64-bit immediate: 0x%16X - any byte must be either 0x00/0xFF\n", immediate);
+        mpegh_FDKprintf ("Error in 64-bit immediate: 0x%16X - any byte must be either 0x00/0xFF\n", immediate);
       }
     }
   }
@@ -3470,7 +3470,7 @@ static inline void __A64_mvni_i32_lsl(int size, A64_S *dst, INT64 imm, int lsl)
       }
     }
     else
-       FDKprintf ("Error in MVNI instruction: LSL operand (%d) must be in range [0,8,16,24]\n", lsl);
+       mpegh_FDKprintf ("Error in MVNI instruction: LSL operand (%d) must be in range [0,8,16,24]\n", lsl);
 }
 static inline void __A64_mvni_i32_msl(int size, A64_S *dst, INT64 imm, int msl)
 {
@@ -3484,7 +3484,7 @@ static inline void __A64_mvni_i32_msl(int size, A64_S *dst, INT64 imm, int msl)
       }
     }
     else
-       FDKprintf ("Error in MVNI instruction: MSL operand (%d) must be in range [8,16]\n", msl);
+       mpegh_FDKprintf ("Error in MVNI instruction: MSL operand (%d) must be in range [8,16]\n", msl);
 }
 
 /* MOVI Vn.<T>, #uimm8  <T> is 8B or 16B */

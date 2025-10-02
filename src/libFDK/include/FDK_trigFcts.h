@@ -95,15 +95,15 @@ amm-info@iis.fraunhofer.de
 
 #include "FDK_tools_rom.h"
 
-FIXP_DBL fixp_cos(FIXP_DBL x, int scale);
-FIXP_DBL fixp_sin(FIXP_DBL x, int scale);
-void fixp_cos_sin(FIXP_DBL x, int scale, FIXP_DBL* cos, FIXP_DBL* sin);
+FIXP_DBL mpegh_fixp_cos(FIXP_DBL x, int scale);
+FIXP_DBL mpegh_fixp_sin(FIXP_DBL x, int scale);
+void mpegh_fixp_cos_sin(FIXP_DBL x, int scale, FIXP_DBL* cos, FIXP_DBL* sin);
 
 #define FIXP_COS_SIN
 
 #include "FDK_tools_rom.h"
 
-#define SINETAB SineTable512
+#define SINETAB mpegh_SineTable512
 #define LD 9
 
 #ifndef FUNCTION_inline_fixp_cos_sin

@@ -85,7 +85,7 @@ amm-info@iis.fraunhofer.de
    Author(s):   Arthur Tritthart, Fabian Bauer
 
    Description: Arm /Arm Neon Versions for
-                - FDK_interleave
+                - MPEGH_interleave
 
 *******************************************************************************/
 
@@ -262,7 +262,7 @@ FDK_label(FDK_interleave_DBL_LONG_end)
   FDK_ASM_ROUTINE_END()
 
 
-void FDK_interleave(
+void MPEGH_interleave(
       const FIXP_DBL  *RESTRICT pIn,
             LONG      *RESTRICT pOut,
             UINT                channels,

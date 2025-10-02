@@ -387,7 +387,7 @@ struct s_drcdec_selection_process {
 DRCDEC_SELECTION_PROCESS_RETURN
 drcDec_SelectionProcess_Create(HANDLE_DRC_SELECTION_PROCESS* phInstance) {
   HANDLE_DRC_SELECTION_PROCESS hInstance;
-  hInstance = (HANDLE_DRC_SELECTION_PROCESS)FDKcalloc(1, sizeof(struct s_drcdec_selection_process));
+  hInstance = (HANDLE_DRC_SELECTION_PROCESS)mpegh_FDKcalloc(1, sizeof(struct s_drcdec_selection_process));
 
   if (!hInstance) return DRCDEC_SELECTION_PROCESS_OUTOFMEMORY;
 
@@ -635,7 +635,7 @@ DRCDEC_SELECTION_PROCESS_RETURN
 drcDec_SelectionProcess_Delete(HANDLE_DRC_SELECTION_PROCESS* phInstance) {
   if (phInstance == NULL || *phInstance == NULL) return DRCDEC_SELECTION_PROCESS_INVALID_HANDLE;
 
-  FDKfree(*phInstance);
+  mpegh_FDKfree(*phInstance);
   *phInstance = NULL;
   return DRCDEC_SELECTION_PROCESS_NO_ERROR;
 }
@@ -1977,7 +1977,7 @@ static DRCDEC_SELECTION_PROCESS_RETURN _generateVirtualDrcSets(HANDLE_SEL_PROC_I
     return DRCDEC_SELECTION_PROCESS_NOT_OK;
   }
 
-  FDKmemset(pDrcInstruction, 0, sizeof(DRC_INSTRUCTIONS_UNI_DRC));
+  mpegh_FDKmemset(pDrcInstruction, 0, sizeof(DRC_INSTRUCTIONS_UNI_DRC));
 
   pDrcInstruction->drcSetId = indexVirtual;
   index++;
@@ -1992,7 +1992,7 @@ static DRCDEC_SELECTION_PROCESS_RETURN _generateVirtualDrcSets(HANDLE_SEL_PROC_I
 
   for (i = 1; i < nMixes; i++) {
     pDrcInstruction = &(hUniDrcConfig->drcInstructionsUniDrc[index]);
-    FDKmemset(pDrcInstruction, 0, sizeof(DRC_INSTRUCTIONS_UNI_DRC));
+    mpegh_FDKmemset(pDrcInstruction, 0, sizeof(DRC_INSTRUCTIONS_UNI_DRC));
     pDrcInstruction->drcSetId = indexVirtual;
     pDrcInstruction->downmixId[0] = hUniDrcConfig->downmixInstructions[i - 1].downmixId;
     pDrcInstruction->downmixIdCount = 1;
@@ -2368,7 +2368,7 @@ static DRCDEC_SELECTION_PROCESS_RETURN _drcSetRequestSelection(
 static DRCDEC_SELECTION_DATA* _drcdec_selection_addNew(DRCDEC_SELECTION* pSelection) {
   if (pSelection->numData < (32 + 1)) {
     DRCDEC_SELECTION_DATA* pData = &(pSelection->data[pSelection->numData]);
-    FDKmemset(pData, 0, sizeof(DRCDEC_SELECTION_DATA));
+    mpegh_FDKmemset(pData, 0, sizeof(DRCDEC_SELECTION_DATA));
     pSelection->numData++;
 
     return pData;
@@ -2381,7 +2381,7 @@ static DRCDEC_SELECTION_DATA* _drcdec_selection_add(DRCDEC_SELECTION* pSelection
                                                     DRCDEC_SELECTION_DATA* pDataIn) {
   if (pSelection->numData < (32 + 1)) {
     DRCDEC_SELECTION_DATA* pData = &(pSelection->data[pSelection->numData]);
-    FDKmemcpy(pData, pDataIn, sizeof(DRCDEC_SELECTION_DATA));
+    mpegh_FDKmemcpy(pData, pDataIn, sizeof(DRCDEC_SELECTION_DATA));
     pSelection->numData++;
     return pData;
   } else {

@@ -98,9 +98,9 @@ amm-info@iis.fraunhofer.de
 #include "arm/mdct_arm.cpp"
 #endif
 
-void mdct_init(H_MDCT hMdct, FIXP_DBL* overlap, INT overlapBufferSize) {
+void mpegh_mdct_init(H_MDCT hMdct, FIXP_DBL* overlap, INT overlapBufferSize) {
   hMdct->overlap.freq = overlap;
-  // FDKmemclear(overlap, overlapBufferSize*sizeof(FIXP_DBL));
+  // mpegh_FDKmemclear(overlap, overlapBufferSize*sizeof(FIXP_DBL));
   hMdct->prev_fr = 0;
   hMdct->prev_nr = 0;
   hMdct->prev_tl = 0;
@@ -247,7 +247,7 @@ INT mdct_block(H_MDCT hMdct, const INT_PCM* RESTRICT timeData, const INT noInSam
   return nSpec * tl;
 }
 
-void imdct_gain(FIXP_DBL* pGain_m, int* pGain_e, int tl) {
+void mpegh_imdct_gain(FIXP_DBL* pGain_m, int* pGain_e, int tl) {
   FIXP_DBL gain_m = *pGain_m;
   int gain_e = *pGain_e;
   int log2_tl;
@@ -299,7 +299,7 @@ void imdct_gain(FIXP_DBL* pGain_m, int* pGain_e, int tl) {
   *pGain_e = gain_e;
 }
 
-INT imdct_drain(H_MDCT hMdct, FIXP_DBL* output, INT nrSamplesRoom) {
+INT mpegh_imdct_drain(H_MDCT hMdct, FIXP_DBL* output, INT nrSamplesRoom) {
   int buffered_samples = 0;
 
   if (nrSamplesRoom > 0) {
@@ -308,21 +308,21 @@ INT imdct_drain(H_MDCT hMdct, FIXP_DBL* output, INT nrSamplesRoom) {
     FDK_ASSERT(buffered_samples <= nrSamplesRoom);
 
     if (buffered_samples > 0) {
-      FDKmemcpy(output, hMdct->overlap.time, buffered_samples * sizeof(FIXP_DBL));
+      mpegh_FDKmemcpy(output, hMdct->overlap.time, buffered_samples * sizeof(FIXP_DBL));
       hMdct->ov_offset = 0;
     }
   }
   return buffered_samples;
 }
 
-INT imdct_copy_ov_and_nr(H_MDCT hMdct, FIXP_DBL* pTimeData, INT nrSamples) {
+INT mpegh_imdct_copy_ov_and_nr(H_MDCT hMdct, FIXP_DBL* pTimeData, INT nrSamples) {
   FIXP_DBL* pOvl;
   int nt, nf, i;
 
   nt = fMin(hMdct->ov_offset, nrSamples);
   nrSamples -= nt;
   nf = fMin(hMdct->prev_nr, nrSamples);
-  FDKmemcpy(pTimeData, hMdct->overlap.time, nt * sizeof(FIXP_DBL));
+  mpegh_FDKmemcpy(pTimeData, hMdct->overlap.time, nt * sizeof(FIXP_DBL));
   pTimeData += nt;
 
   pOvl = hMdct->overlap.freq + hMdct->ov_size - 1;
@@ -354,7 +354,7 @@ INT imdct_copy_full(H_MDCT hMdct, FIXP_DBL* pTimeData, INT nrSamples) {
   nf2 = fMin(hMdct->prev_tl >> 1, nrSamples);
   nrSamples -= nf2;
 
-  FDKmemcpy(pTimeData, hMdct->overlap.time, nt * sizeof(FIXP_DBL));
+  mpegh_FDKmemcpy(pTimeData, hMdct->overlap.time, nt * sizeof(FIXP_DBL));
   pTimeData += nt;
 
   pOvl = hMdct->overlap.freq + hMdct->ov_size - 1;
@@ -372,7 +372,7 @@ INT imdct_copy_full(H_MDCT hMdct, FIXP_DBL* pTimeData, INT nrSamples) {
   return (nt + nf + nf2);
 }
 
-void imdct_adapt_parameters(H_MDCT hMdct, int* pfl, int* pnl, int tl, const FIXP_WTP* wls,
+void mpegh_imdct_adapt_parameters(H_MDCT hMdct, int* pfl, int* pnl, int tl, const FIXP_WTP* wls,
                             int noOutSamples) {
   int fl = *pfl, nl = *pnl;
   int window_diff, use_current = 0, use_previous = 0;
@@ -456,7 +456,7 @@ respective segments with the appropriate window functions.
 
 Once we have obtained the C and D segments the overlap buffer is emptied and the current buffer is
 sent in it, so that the E and F segments are available for decoding in the next algorithm pass.*/
-INT imlt_block(H_MDCT hMdct, FIXP_DBL* output, FIXP_DBL* spectrum, const SHORT scalefactor[],
+INT mpegh_imlt_block(H_MDCT hMdct, FIXP_DBL* output, FIXP_DBL* spectrum, const SHORT scalefactor[],
                const INT nSpec, const INT noOutSamples, const INT tl, const FIXP_WTP* wls, INT fl,
                const FIXP_WTP* wrs, const INT fr, FIXP_DBL gain, int flags) {
   FIXP_DBL* pOvl;
@@ -470,11 +470,11 @@ INT imlt_block(H_MDCT hMdct, FIXP_DBL* output, FIXP_DBL* spectrum, const SHORT s
   nl = (tl - fl) >> 1;
 
   /* Include 2/N IMDCT gain into gain factor and exponent. */
-  imdct_gain(&gain, &transform_gain_e, tl);
+  mpegh_imdct_gain(&gain, &transform_gain_e, tl);
 
   /* Detect FRprevious / FL mismatches and override parameters accordingly */
   if (hMdct->prev_fr != fl) {
-    imdct_adapt_parameters(hMdct, &fl, &nl, tl, wls, noOutSamples);
+    mpegh_imdct_adapt_parameters(hMdct, &fl, &nl, tl, wls, noOutSamples);
   }
 
   pOvl = hMdct->overlap.freq + hMdct->ov_size - 1;
@@ -495,7 +495,7 @@ INT imlt_block(H_MDCT hMdct, FIXP_DBL* output, FIXP_DBL* spectrum, const SHORT s
 
     /* Detect FRprevious / FL mismatches and override parameters accordingly */
     if (hMdct->prev_fr != fl) {
-      imdct_adapt_parameters(hMdct, &fl, &nl, tl, wls, noOutSamples);
+      mpegh_imdct_adapt_parameters(hMdct, &fl, &nl, tl, wls, noOutSamples);
     }
 
     specShiftScale = transform_gain_e;
@@ -537,7 +537,7 @@ INT imlt_block(H_MDCT hMdct, FIXP_DBL* output, FIXP_DBL* spectrum, const SHORT s
     }
     {
       int loc_scale = fixmin_I(scalefactor[w] + specShiftScale, (INT)DFRACT_BITS - 1);
-      scaleValuesSaturate(pSpec, tl, loc_scale);
+      mpegh_scaleValuesSaturate(pSpec, tl, loc_scale);
     }
 
     if (noOutSamples <= nrSamples) {
@@ -713,7 +713,7 @@ INT imlt_block(H_MDCT hMdct, FIXP_DBL* output, FIXP_DBL* spectrum, const SHORT s
   /* Save overlap */
 
   pOvl = hMdct->overlap.freq + hMdct->ov_size - tl / 2;
-  FDKmemcpy(pOvl, &spectrum[(nSpec - 1) * tl], (tl / 2) * sizeof(FIXP_DBL));
+  mpegh_FDKmemcpy(pOvl, &spectrum[(nSpec - 1) * tl], (tl / 2) * sizeof(FIXP_DBL));
 
   return nrSamples;
 }

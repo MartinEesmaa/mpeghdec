@@ -703,7 +703,7 @@ static ARITH_CODING_ERROR decode2(HANDLE_FDK_BITSTREAM bbuf, UCHAR* RESTRICT c_p
     }
   }
 
-  FDKmemset(&c_prev[i], 1, sizeof(c_prev[0]) * (nt - i));
+  mpegh_FDKmemset(&c_prev[i], 1, sizeof(c_prev[0]) * (nt - i));
 
   return ErrorStatus;
 }
@@ -726,11 +726,11 @@ ARITH_CODING_ERROR CArco_DecodeArithData(CArcoData* pArcoData, HANDLE_FDK_BITSTR
     return ARITH_CODER_ERROR;
   }
 
-  FDKmemclear(mdctSpectrum, lg_max * sizeof(FIXP_DBL));
+  mpegh_FDKmemclear(mdctSpectrum, lg_max * sizeof(FIXP_DBL));
 
   /* arith_map_context */
   if (arith_reset_flag) {
-    FDKmemclear(pArcoData->c_prev, sizeof(pArcoData->c_prev[0]) * ((lg_max / 2) + 4));
+    mpegh_FDKmemclear(pArcoData->c_prev, sizeof(pArcoData->c_prev[0]) * ((lg_max / 2) + 4));
   } else {
     if (lg_max != pArcoData->m_numberLinesPrev) {
       if (pArcoData->m_numberLinesPrev == 0) {
@@ -749,7 +749,7 @@ ARITH_CODING_ERROR CArco_DecodeArithData(CArcoData* pArcoData, HANDLE_FDK_BITSTR
   if (lg > 0) {
     ErrorStatus = decode2(hBs, pArcoData->c_prev + 2, mdctSpectrum, lg >> 1, lg_max >> 1);
   } else {
-    FDKmemset(&pArcoData->c_prev[2], 1, sizeof(pArcoData->c_prev[2]) * (lg_max >> 1));
+    mpegh_FDKmemset(&pArcoData->c_prev[2], 1, sizeof(pArcoData->c_prev[2]) * (lg_max >> 1));
   }
 
   if ((INT)FDKgetValidBits(hBs) < 0) {

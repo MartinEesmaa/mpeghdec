@@ -314,7 +314,7 @@ void addVirtualToActiveDrc(HANDLE_DRC_GAIN_DECODER hGainDec) {
     if (!virtualDrcActive) {
       /* add a virtual DRC set */
       pInst = &hGainDec->activeDrc[l][hGainDec->nActiveDrcs[l]].drcInst;
-      FDKmemclear(pInst, sizeof(DRC_INSTRUCTIONS_UNI_DRC));
+      mpegh_FDKmemclear(pInst, sizeof(DRC_INSTRUCTIONS_UNI_DRC));
       pInst->drcSetId = -1;
 
       if (l == 0) {

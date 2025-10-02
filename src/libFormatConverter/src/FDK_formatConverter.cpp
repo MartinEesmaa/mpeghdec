@@ -263,12 +263,12 @@ INT formatConverterOpen(const IIS_FORMATCONVERTER_MODE formatConverterMode,
   /**************************************************************************************/
   /* allocation */
 
-  fcInt->fcParams = (HANDLE_FORMAT_CONVERTER_PARAMS)FDKcalloc(1, sizeof *fcInt->fcParams);
+  fcInt->fcParams = (HANDLE_FORMAT_CONVERTER_PARAMS)mpegh_FDKcalloc(1, sizeof *fcInt->fcParams);
   if (fcInt->fcParams == NULL) {
     status = 1;
     goto bail;
   }
-  fcInt->fcState = (HANDLE_FORMAT_CONVERTER_STATE)FDKcalloc(1, sizeof *fcInt->fcState);
+  fcInt->fcState = (HANDLE_FORMAT_CONVERTER_STATE)mpegh_FDKcalloc(1, sizeof *fcInt->fcState);
   if (fcInt->fcState == NULL) {
     status = 1;
     goto bail;
@@ -324,9 +324,9 @@ INT formatConverterOpen(const IIS_FORMATCONVERTER_MODE formatConverterMode,
   /* on error clean up so far allocated structs and return */
   if (status == 1) {
   bail:
-    FDKfree(fcInt->fcParams);
+    mpegh_FDKfree(fcInt->fcParams);
     fcInt->fcParams = NULL;
-    FDKfree(fcInt->fcState);
+    mpegh_FDKfree(fcInt->fcState);
     fcInt->fcState = NULL;
     return 1;
   }
@@ -390,12 +390,12 @@ void formatConverterClose(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
   if (fcInt->fcState != NULL) {
     /* free buffers */
     freeFormatConverterState(fcInt);
-    FDKfree(fcInt->fcState);
+    mpegh_FDKfree(fcInt->fcState);
     fcInt->fcState = NULL;
   }
   if (fcInt->fcParams != NULL) {
     freeFormatConverterParams(fcInt);
-    FDKfree(fcInt->fcParams);
+    mpegh_FDKfree(fcInt->fcParams);
     fcInt->fcParams = NULL;
   }
 }

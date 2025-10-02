@@ -158,19 +158,19 @@ INT irfft(const UINT fftLength, FIXP_DBL* const pBuffer, const UINT bufferSize,
 void getSineTab(const UINT length, const FIXP_STP** ppSineTab, UINT* pStep) {
   switch (length) {
     case 64:
-      *ppSineTab = SineTable512;
+      *ppSineTab = mpegh_SineTable512;
       *pStep = 1 << (9 - 4);
       break;
     case 128:
-      *ppSineTab = SineTable512;
+      *ppSineTab = mpegh_SineTable512;
       *pStep = 1 << (9 - 5);
       break;
     case 256:
-      *ppSineTab = SineTable512;
+      *ppSineTab = mpegh_SineTable512;
       *pStep = 1 << (9 - 6);
       break;
     case 512:
-      *ppSineTab = SineTable512;
+      *ppSineTab = mpegh_SineTable512;
       *pStep = 1 << (9 - 7);
       break;
     default:

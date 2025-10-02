@@ -204,7 +204,7 @@ void calculateVbap(HANDLE_GVBAPRENDERER hgVBAPRenderer, OAM_SAMPLE source, FIXP_
 
   /* Check whether a downmix matrix for ghost speaker exists or not */
   if ((hgVBAPRenderer->downmixMatrix != NULL) && !noDownmix) {
-    FDKmemclear(final_gains, numSpeaker * sizeof(FIXP_DBL));
+    mpegh_FDKmemclear(final_gains, numSpeaker * sizeof(FIXP_DBL));
 
     /* Downmix ghost speakers */
     for (row = 0; row < numSpeaker; row++) {
@@ -219,7 +219,7 @@ void calculateVbap(HANDLE_GVBAPRENDERER hgVBAPRenderer, OAM_SAMPLE source, FIXP_
     }
   } else {
     numSpeaker = hgVBAPRenderer->numChannels - hgVBAPRenderer->numLFE + hgVBAPRenderer->numGhosts;
-    FDKmemclear(final_gains, numSpeaker * sizeof(FIXP_DBL));
+    mpegh_FDKmemclear(final_gains, numSpeaker * sizeof(FIXP_DBL));
 
     for (row = 0; row < numSpeaker; row++) {
       final_gains[row] = hgVBAPRenderer->gainCache[row];
@@ -248,7 +248,7 @@ void calculateVbap(HANDLE_GVBAPRENDERER hgVBAPRenderer, OAM_SAMPLE source, FIXP_
 
 void calculateVbapGain(HANDLE_GVBAPRENDERER hgVBAPRenderer, OAM_SAMPLE source) {
   /* clear gain cache in handler */
-  FDKmemclear(hgVBAPRenderer->gainCache,
+  mpegh_FDKmemclear(hgVBAPRenderer->gainCache,
               (hgVBAPRenderer->numChannels + hgVBAPRenderer->numGhosts - hgVBAPRenderer->numLFE) *
                   sizeof(FIXP_DBL));
 
@@ -402,7 +402,7 @@ void calcSpreadVectors(HANDLE_GVBAPRENDERER hgVBAPRenderer, OAM_SAMPLE source) {
   /* New exponent will be 2 */
   spreadAngle = fMult(spreadAngle, (FIXP_DBL)1686629713); /* Multiply by pi/4 */
 
-  fixp_cos_sin(spreadAngle, 2, &cos_spread, &sin_spread);
+  mpegh_fixp_cos_sin(spreadAngle, 2, &cos_spread, &sin_spread);
   inv_sin_spread = invFixp(sin_spread, &exp);
 
   summand = fMultDiv2(cos_spread, inv_sin_spread) * p1;

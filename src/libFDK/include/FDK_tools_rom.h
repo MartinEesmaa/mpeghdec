@@ -107,20 +107,20 @@ extern RAM_ALIGN const LONG RotVector240[210];
 #endif /* USE_PACKED_ROTVECTOR_240 */
 
 /* Regular sine tables */
-extern RAM_ALIGN const FIXP_STP SineTable1024[];
-extern RAM_ALIGN const FIXP_STP SineTable512[];
+extern RAM_ALIGN const FIXP_STP mpegh_SineTable1024[];
+extern RAM_ALIGN const FIXP_STP mpegh_SineTable512[];
 
 /* AAC-LC windows */
-extern RAM_ALIGN const FIXP_WTP SineWindow1024[];
-extern RAM_ALIGN const FIXP_WTP KBDWindow1024[];
-extern RAM_ALIGN const FIXP_WTP SineWindow128[];
-extern RAM_ALIGN const FIXP_WTP KBDWindow128[];
+extern RAM_ALIGN const FIXP_WTP mpegh_SineWindow1024[];
+extern RAM_ALIGN const FIXP_WTP mpegh_KBDWindow1024[];
+extern RAM_ALIGN const FIXP_WTP mpegh_SineWindow128[];
+extern RAM_ALIGN const FIXP_WTP mpegh_KBDWindow128[];
 
 /* AAC-LD windows */
-extern RAM_ALIGN const FIXP_WTP SineWindow512[];
+extern RAM_ALIGN const FIXP_WTP mpegh_SineWindow512[];
 
 /* USAC TCX Window */
-extern RAM_ALIGN const FIXP_WTP SineWindow256[256];
+extern RAM_ALIGN const FIXP_WTP mpegh_SineWindow256[256];
 
 /* USAC 8/3 windows */
 
@@ -128,10 +128,10 @@ extern RAM_ALIGN const FIXP_WTP SineWindow256[256];
 
 /**
  * \brief Helper table for window slope mapping. You should prefer the usage of the
- * function FDKgetWindowSlope(), this table is only made public for some optimized
+ * function mpegh_FDKgetWindowSlope(), this table is only made public for some optimized
  * access inside dct.cpp.
  */
-extern const FIXP_WTP* const windowSlopes[2][4][10];
+extern const FIXP_WTP* const mpegh_windowSlopes[2][4][10];
 
 /**
  * \brief Window slope access helper. Obtain a window of given length and shape.
@@ -140,9 +140,9 @@ extern const FIXP_WTP* const windowSlopes[2][4][10];
  *              value is applied a mask of 1 to, mapping it to either 0 or 1.
  * \param Pointer to window slope or NULL if the requested window slope is not available.
  */
-const FIXP_WTP* FDKgetWindowSlope(int length, int shape);
+const FIXP_WTP* mpegh_FDKgetWindowSlope(int length, int shape);
 
-extern const FIXP_WTP sin_twiddle_L64[];
+extern const FIXP_WTP mpegh_sin_twiddle_L64[];
 
 /*
  * Raw Data Block list items.
@@ -213,7 +213,7 @@ typedef struct element_list element_list_t;
  * \param elFlags element specific flags.
  * \return element_list_t parser guidance structure.
  */
-const element_list_t* getBitstreamElementList(AUDIO_OBJECT_TYPE aot, SCHAR epConfig,
+const element_list_t* mpegh_getBitstreamElementList(AUDIO_OBJECT_TYPE aot, SCHAR epConfig,
                                               UCHAR nChannels, UCHAR layer, UINT elFlags);
 
 typedef enum {

@@ -115,12 +115,12 @@ TDLimiterPtr pcmLimiter_Create(unsigned int maxAttackMs, unsigned int releaseMs,
   release = (unsigned int)(releaseMs * maxSampleRate / 1000);
 
   /* alloc limiter struct */
-  limiter = (TDLimiterPtr)FDKcalloc(1, sizeof(struct TDLimiter));
+  limiter = (TDLimiterPtr)mpegh_FDKcalloc(1, sizeof(struct TDLimiter));
   if (!limiter) return NULL;
 
   /* alloc max and delay buffers */
-  limiter->maxBuf = (FIXP_DBL*)FDKcalloc(attack + 1, sizeof(FIXP_DBL));
-  limiter->delayBuf = (FIXP_DBL*)FDKcalloc(attack * maxChannels, sizeof(FIXP_DBL));
+  limiter->maxBuf = (FIXP_DBL*)mpegh_FDKcalloc(attack + 1, sizeof(FIXP_DBL));
+  limiter->delayBuf = (FIXP_DBL*)mpegh_FDKcalloc(attack * maxChannels, sizeof(FIXP_DBL));
 
   if (!limiter->maxBuf || !limiter->delayBuf) {
     pcmLimiter_Destroy(limiter);
@@ -185,8 +185,8 @@ TDLIMITER_ERROR pcmLimiter_Apply(TDLimiterPtr limiter, PCM_LIM* samplesIn, INT_P
     }
 
     if (limiter->scaling != scaling) {
-      scaleValuesSaturate(delayBuf, attack * channels, limiter->scaling - scaling);
-      scaleValuesSaturate(maxBuf, attack + 1, limiter->scaling - scaling);
+      mpegh_scaleValuesSaturate(delayBuf, attack * channels, limiter->scaling - scaling);
+      mpegh_scaleValuesSaturate(maxBuf, attack + 1, limiter->scaling - scaling);
       max = scaleValueSaturate(max, limiter->scaling - scaling);
       limiter->scaling = scaling;
     }
@@ -298,7 +298,7 @@ TDLIMITER_ERROR pcmLimiter_Apply(TDLimiterPtr limiter, PCM_LIM* samplesIn, INT_P
       delayTailCopyLength = fMin(delayTailLength, nSamples - delayHeadCopyLength);
 
 #if PCM_LIM_BITS == DFRACT_BITS
-      FDKmemcpy(delayBuf + delayBufIdx * channels, samplesIn + delayDirectCopyLength * channels,
+      mpegh_FDKmemcpy(delayBuf + delayBufIdx * channels, samplesIn + delayDirectCopyLength * channels,
                 delayHeadCopyLength * channels * sizeof(PCM_LIM));
 #else
       FIXP_DBL* p2Delay = delayBuf + delayBufIdx * channels;
@@ -309,7 +309,7 @@ TDLIMITER_ERROR pcmLimiter_Apply(TDLimiterPtr limiter, PCM_LIM* samplesIn, INT_P
 #endif
 
 #if PCM_LIM_BITS == DFRACT_BITS
-      FDKmemcpy(delayBuf, samplesIn + (delayDirectCopyLength + delayHeadCopyLength) * channels,
+      mpegh_FDKmemcpy(delayBuf, samplesIn + (delayDirectCopyLength + delayHeadCopyLength) * channels,
                 delayTailCopyLength * channels * sizeof(PCM_LIM));
 #else
       p2Delay = delayBuf;
@@ -330,7 +330,7 @@ TDLIMITER_ERROR pcmLimiter_Apply(TDLimiterPtr limiter, PCM_LIM* samplesIn, INT_P
         limiter->smoothState0 = FL2FXCONST_DBL(1.0f / (1 << 1));
         limiter->minGain = FL2FXCONST_DBL(1.0f / (1 << 1));
         limiter->previous_mode = 0; /* Set to simplified mode */
-        FDKmemset(limiter->maxBuf, 0, (limiter->attack + 1) * sizeof(FIXP_DBL));
+        mpegh_FDKmemset(limiter->maxBuf, 0, (limiter->attack + 1) * sizeof(FIXP_DBL));
       }
 
       /* Store the circular buffer pointer */
@@ -494,8 +494,8 @@ TDLIMITER_ERROR pcmLimiter_Reset(TDLimiterPtr limiter) {
     limiter->minGain = FL2FXCONST_DBL(1.0f / (1 << 1));
     limiter->scaling = 0;
 
-    FDKmemset(limiter->maxBuf, 0, (limiter->attack + 1) * sizeof(FIXP_DBL));
-    FDKmemset(limiter->delayBuf, 0, limiter->attack * limiter->channels * sizeof(FIXP_DBL));
+    mpegh_FDKmemset(limiter->maxBuf, 0, (limiter->attack + 1) * sizeof(FIXP_DBL));
+    mpegh_FDKmemset(limiter->delayBuf, 0, limiter->attack * limiter->channels * sizeof(FIXP_DBL));
   } else {
     return TDLIMIT_INVALID_HANDLE;
   }
@@ -506,10 +506,10 @@ TDLIMITER_ERROR pcmLimiter_Reset(TDLimiterPtr limiter) {
 /* destroy limiter */
 TDLIMITER_ERROR pcmLimiter_Destroy(TDLimiterPtr limiter) {
   if (limiter != NULL) {
-    FDKfree(limiter->maxBuf);
-    FDKfree(limiter->delayBuf);
+    mpegh_FDKfree(limiter->maxBuf);
+    mpegh_FDKfree(limiter->delayBuf);
 
-    FDKfree(limiter);
+    mpegh_FDKfree(limiter);
   } else {
     return TDLIMIT_INVALID_HANDLE;
   }

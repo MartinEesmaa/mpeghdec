@@ -113,7 +113,7 @@ int CJointStereo_Read(HANDLE_FDK_BITSTREAM bs, CJointStereoData* pJointStereoDat
 
   pJointStereoData->MsMaskPresent = (UCHAR)FDKread2Bits(bs);
 
-  FDKmemclear(pJointStereoData->MsUsed, scaleFactorBandsTransmitted * sizeof(UCHAR));
+  mpegh_FDKmemclear(pJointStereoData->MsUsed, scaleFactorBandsTransmitted * sizeof(UCHAR));
 
   pJointStereoData->cplx_pred_flag = 0;
   if (cplxPredictionActiv) {
@@ -192,9 +192,9 @@ int CJointStereo_Read(HANDLE_FDK_BITSTREAM bs, CJointStereoData* pJointStereoDat
              (pJointStereoPersistentData->winSeqPrev != BLOCK_SHORT)) ||
             ((pJointStereoPersistentData->winSeqPrev == BLOCK_SHORT) &&
              (windowSequence != BLOCK_SHORT))) {
-          FDKmemclear(pJointStereoPersistentData->alpha_q_re_prev,
+          mpegh_FDKmemclear(pJointStereoPersistentData->alpha_q_re_prev,
                       JointStereoMaximumGroups * JointStereoMaximumBands * sizeof(SHORT));
-          FDKmemclear(pJointStereoPersistentData->alpha_q_im_prev,
+          mpegh_FDKmemclear(pJointStereoPersistentData->alpha_q_im_prev,
                       JointStereoMaximumGroups * JointStereoMaximumBands * sizeof(SHORT));
         }
         if (flags & AC_MPEGH3DA) {
@@ -207,9 +207,9 @@ int CJointStereo_Read(HANDLE_FDK_BITSTREAM bs, CJointStereoData* pJointStereoDat
             }
           }
         } else {
-          FDKmemclear(cplxPredictionData->alpha_q_re,
+          mpegh_FDKmemclear(cplxPredictionData->alpha_q_re,
                       JointStereoMaximumGroups * JointStereoMaximumBands * sizeof(SHORT));
-          FDKmemclear(cplxPredictionData->alpha_q_im,
+          mpegh_FDKmemclear(cplxPredictionData->alpha_q_im,
                       JointStereoMaximumGroups * JointStereoMaximumBands * sizeof(SHORT));
         }
 
@@ -338,7 +338,7 @@ int CJointStereo_ReadIGF(HANDLE_FDK_BITSTREAM bs, CJointStereoData* pJointStereo
 
   pJointStereoData->IGF_MsMaskPresent = (UCHAR)FDKread2Bits(bs);
 
-  FDKmemclear(&(pJointStereoData->MsUsed[igfStartSfb]),
+  mpegh_FDKmemclear(&(pJointStereoData->MsUsed[igfStartSfb]),
               (JointStereoMaximumBands - igfStartSfb) * sizeof(UCHAR));
 
   pJointStereoData->igf_cplx_pred_flag = 0;
@@ -1003,7 +1003,7 @@ void CJointStereo_ApplyMS(CAacDecoderChannelInfo* pAacDecoderChannelInfo[2],
 
       for (groupwin = 0; groupwin < pWindowGroupLength[group]; groupwin++, window++) {
         /* initialize the MDST with zeros */
-        FDKmemclear(&dmx_im[windowLen * window], windowLen * sizeof(FIXP_DBL));
+        mpegh_FDKmemclear(&dmx_im[windowLen * window], windowLen * sizeof(FIXP_DBL));
 
         /* 1. calculate the previous downmix MDCT. We do this once just for the Main band. */
         if (cplxPredictionData->complex_coef == 1) {
@@ -1044,7 +1044,7 @@ void CJointStereo_ApplyMS(CAacDecoderChannelInfo* pAacDecoderChannelInfo[2],
                 /* now scale channels and determine downmix MDCT of previous frame */
                 if (pAacDecoderStaticChannelInfo[L]
                         ->pCpeStaticData->jointStereoPersistentData.clearSpectralCoeffs == 1) {
-                  FDKmemclear(dmx_re_prev, windowLen * sizeof(FIXP_DBL));
+                  mpegh_FDKmemclear(dmx_re_prev, windowLen * sizeof(FIXP_DBL));
                   dmx_re_prev_e = 0;
                 } else {
                   if (cplxPredictionData->pred_dir == 0) {
@@ -1067,7 +1067,7 @@ void CJointStereo_ApplyMS(CAacDecoderChannelInfo* pAacDecoderChannelInfo[2],
                 /* In case that we use INF we have to preserve the state of the "dmx_re_prev"
                 (original or computed). This is necessary because we have to apply MS over the
                 separate IGF tiles. */
-                FDKmemcpy(store_dmx_re_prev, &dmx_re_prev[0], windowLen * sizeof(FIXP_DBL));
+                mpegh_FDKmemcpy(store_dmx_re_prev, &dmx_re_prev[0], windowLen * sizeof(FIXP_DBL));
 
                 /* Particular exponent of the computed/original "dmx_re_prev" must be kept for the
                  * tile MS calculations if necessary.*/
@@ -1094,15 +1094,15 @@ void CJointStereo_ApplyMS(CAacDecoderChannelInfo* pAacDecoderChannelInfo[2],
           if (window == 0) {
             if (dmx_re_prev_e < frameMaxScale) {
               if (mainband_flag == 0) {
-                scaleValues(dmx_re_prev, store_dmx_re_prev, windowLen,
+                mpegh_scaleValues(dmx_re_prev, store_dmx_re_prev, windowLen,
                             -fMin(DFRACT_BITS - 1, (frameMaxScale - dmx_re_prev_e)));
               } else {
-                scaleValues(dmx_re_prev, windowLen,
+                mpegh_scaleValues(dmx_re_prev, windowLen,
                             -fMin(DFRACT_BITS - 1, (frameMaxScale - dmx_re_prev_e)));
               }
             } else {
               if (mainband_flag == 0) {
-                FDKmemcpy(dmx_re_prev, store_dmx_re_prev, windowLen * sizeof(FIXP_DBL));
+                mpegh_FDKmemcpy(dmx_re_prev, store_dmx_re_prev, windowLen * sizeof(FIXP_DBL));
               }
               specScaleL[0] = dmx_re_prev_e;
               specScaleR[0] = dmx_re_prev_e;
@@ -1110,7 +1110,7 @@ void CJointStereo_ApplyMS(CAacDecoderChannelInfo* pAacDecoderChannelInfo[2],
           } else { /* window != 0 */
             FDK_ASSERT(pAacDecoderChannelInfo[L]->icsInfo.WindowSequence == BLOCK_SHORT);
             if (specScaleL[window - 1] < frameMaxScale) {
-              scaleValues(&dmx_re[windowLen * (window - 1)], windowLen,
+              mpegh_scaleValues(&dmx_re[windowLen * (window - 1)], windowLen,
                           -fMin(DFRACT_BITS - 1, (frameMaxScale - specScaleL[window - 1])));
             } else {
               specScaleL[window] = specScaleL[window - 1];

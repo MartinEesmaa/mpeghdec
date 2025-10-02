@@ -92,36 +92,36 @@ amm-info@iis.fraunhofer.de
 
 #include "genericStds.h"
 
-void* fdkCallocMatrix1D_aligned(UINT dim1, UINT size) {
-  return FDKaalloc(dim1 * size, ALIGNMENT_DEFAULT);
+void* mpegh_fdkCallocMatrix1D_aligned(UINT dim1, UINT size) {
+  return mpegh_FDKaalloc(dim1 * size, ALIGNMENT_DEFAULT);
 }
 
 void fdkFreeMatrix1D(void* p) {
   if (p != NULL) {
-    FDKfree_L(p);
+    mpegh_FDKfree_L(p);
   }
 }
 
-void fdkFreeMatrix1D_aligned(void* p) {
+void mpegh_fdkFreeMatrix1D_aligned(void* p) {
   if (p != NULL) {
-    FDKafree_L(p);
+    mpegh_FDKafree_L(p);
   }
 }
 
-void* fdkCallocMatrix1D(UINT dim1, UINT size) {
-  return FDKcalloc(dim1, size);
+void* mpegh_fdkCallocMatrix1D(UINT dim1, UINT size) {
+  return mpegh_FDKcalloc(dim1, size);
 }
 
 /* 2D */
-void** fdkCallocMatrix2D(UINT dim1, UINT dim2, UINT size) {
+void** mpegh_fdkCallocMatrix2D(UINT dim1, UINT dim2, UINT size) {
   void** p1;
   UINT i;
   char* p2;
   if (!dim1 || !dim2) return NULL;
-  if ((p1 = (void**)fdkCallocMatrix1D(dim1, sizeof(void*))) == NULL) {
+  if ((p1 = (void**)mpegh_fdkCallocMatrix1D(dim1, sizeof(void*))) == NULL) {
     goto bail;
   }
-  if ((p2 = (char*)fdkCallocMatrix1D(dim1 * dim2, size)) == NULL) {
+  if ((p2 = (char*)mpegh_fdkCallocMatrix1D(dim1 * dim2, size)) == NULL) {
     fdkFreeMatrix1D(p1);
     p1 = NULL;
     goto bail;
@@ -134,7 +134,7 @@ bail:
   return p1;
 }
 
-void fdkFreeMatrix2D(void** p) {
+void mpegh_fdkFreeMatrix2D(void** p) {
   if (!p) return;
   fdkFreeMatrix1D(p[0]);
   fdkFreeMatrix1D(p);

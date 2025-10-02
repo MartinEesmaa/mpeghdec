@@ -129,7 +129,7 @@ INT activeDmxStftInit(void** handle, UINT numInChans, UINT numOutChans, FIXP_DBL
   FDK_ASSERT(numInChans <= MAX_CHANNELS);
   FDK_ASSERT(numOutChans <= MAX_CHANNELS);
 
-  *handle = (activeDownmixer*)FDKaalloc(sizeof(activeDownmixer), ALIGNMENT_DEFAULT);
+  *handle = (activeDownmixer*)mpegh_FDKaalloc(sizeof(activeDownmixer), ALIGNMENT_DEFAULT);
   if (*handle == NULL) {
     return status = -1;
   }
@@ -146,28 +146,28 @@ INT activeDmxStftInit(void** handle, UINT numInChans, UINT numOutChans, FIXP_DBL
     h->realizedSigHeadroomPrev[erb] = 31; /* start value */
   }
 
-  h->targetEnePrev = (FIXP_DBL**)FDKcalloc(numOutChans, sizeof(FIXP_DBL*));
+  h->targetEnePrev = (FIXP_DBL**)mpegh_FDKcalloc(numOutChans, sizeof(FIXP_DBL*));
   if (h->targetEnePrev == NULL) {
     return status = -1;
   }
-  h->realizedEnePrev = (FIXP_DBL**)FDKcalloc(numOutChans, sizeof(FIXP_DBL*));
+  h->realizedEnePrev = (FIXP_DBL**)mpegh_FDKcalloc(numOutChans, sizeof(FIXP_DBL*));
   if (h->realizedEnePrev == NULL) {
     return status = -1;
   }
   for (ch = 0; ch < numOutChans; ch++) {
     h->targetEnePrev[ch] =
-        (FIXP_DBL*)FDKaalloc(STFT_ERB_BANDS * sizeof(FIXP_DBL), ALIGNMENT_DEFAULT);
+        (FIXP_DBL*)mpegh_FDKaalloc(STFT_ERB_BANDS * sizeof(FIXP_DBL), ALIGNMENT_DEFAULT);
     if (h->targetEnePrev[ch] == NULL) {
       status = -1;
     }
     h->realizedEnePrev[ch] =
-        (FIXP_DBL*)FDKaalloc(STFT_ERB_BANDS * sizeof(FIXP_DBL), ALIGNMENT_DEFAULT);
+        (FIXP_DBL*)mpegh_FDKaalloc(STFT_ERB_BANDS * sizeof(FIXP_DBL), ALIGNMENT_DEFAULT);
     if (h->realizedEnePrev[ch] == NULL) {
       status = -1;
     }
   }
 
-  h->targetEnePrevExp = (INT*)FDKaalloc(STFT_ERB_BANDS * sizeof(INT), ALIGNMENT_DEFAULT);
+  h->targetEnePrevExp = (INT*)mpegh_FDKaalloc(STFT_ERB_BANDS * sizeof(INT), ALIGNMENT_DEFAULT);
   if (h->targetEnePrevExp == NULL) {
     status = -1;
   }
@@ -192,23 +192,23 @@ void activeDmxClose_STFT(void* handle) {
     for (ch = 0; ch < h->numOutChans; ch++) {
       if (h->targetEnePrev) {
         if (h->targetEnePrev[ch]) {
-          FDKafree(h->targetEnePrev[ch]);
+          mpegh_FDKafree(h->targetEnePrev[ch]);
         }
       }
       if (h->realizedEnePrev) {
         if (h->realizedEnePrev[ch]) {
-          FDKafree(h->realizedEnePrev[ch]);
+          mpegh_FDKafree(h->realizedEnePrev[ch]);
         }
       }
     }
 
-    FDKfree(h->targetEnePrev);
-    FDKfree(h->realizedEnePrev);
+    mpegh_FDKfree(h->targetEnePrev);
+    mpegh_FDKfree(h->realizedEnePrev);
     if (h->targetEnePrevExp) {
-      FDKafree(h->targetEnePrevExp);
+      mpegh_FDKafree(h->targetEnePrevExp);
     }
 
-    FDKafree(h);
+    mpegh_FDKafree(h);
   }
 }
 
@@ -418,7 +418,7 @@ void activeDmxProcess_STFT(void* handle) {
       erb_stop_ix = erb_freq_idx_256_58[erb];
       inBufStftHeadroom[erb] =
           fMin(inBufStftHeadroom[erb],
-               getScalefactor(&inBuf[2 * erb_start_ix], 2 * (erb_stop_ix - erb_start_ix)));
+               mpegh_getScalefactor(&inBuf[2 * erb_start_ix], 2 * (erb_stop_ix - erb_start_ix)));
       erb_start_ix = erb_stop_ix; /* for next loop iteration */
     }
   }
@@ -436,7 +436,7 @@ void activeDmxProcess_STFT(void* handle) {
         erb_stop_ix = erb_freq_idx_256_58[erb];
         inBufStftHeadroom[erb] =
             fMin(inBufStftHeadroom[erb],
-                 getScalefactor(&inBuf[2 * erb_start_ix], 2 * (erb_stop_ix - erb_start_ix)));
+                 mpegh_getScalefactor(&inBuf[2 * erb_start_ix], 2 * (erb_stop_ix - erb_start_ix)));
         erb_start_ix = erb_stop_ix; /* for next loop iteration */
       }
     }
@@ -446,9 +446,9 @@ void activeDmxProcess_STFT(void* handle) {
   /*               Clear Buffer                */
   /*********************************************/
   for (chOut = 0; chOut < numOutChans; chOut++) {
-    FDKmemclear(realizedSig[chOut], STFT_LENGTH * sizeof(FIXP_DBL));
+    mpegh_FDKmemclear(realizedSig[chOut], STFT_LENGTH * sizeof(FIXP_DBL));
   }
-  FDKmemclear(targetEneArr, STFT_ERB_BANDS * numOutChans * sizeof(FIXP_DBL));
+  mpegh_FDKmemclear(targetEneArr, STFT_ERB_BANDS * numOutChans * sizeof(FIXP_DBL));
 
   UINT erb_is4GVH_L = 58, erb_is4GVH_H = 58;
 
@@ -585,7 +585,7 @@ void activeDmxProcess_STFT(void* handle) {
       erb_stop_ix = erb_freq_idx_256_58[erb];
       realizedSigHeadroom[erb] = fMin(
           realizedSigHeadroom[erb],
-          getScalefactor(&realizedSig[chOut][2 * erb_start_ix], 2 * (erb_stop_ix - erb_start_ix)));
+          mpegh_getScalefactor(&realizedSig[chOut][2 * erb_start_ix], 2 * (erb_stop_ix - erb_start_ix)));
       erb_start_ix = erb_stop_ix; /* for next loop iteration */
     }
   }
@@ -607,19 +607,19 @@ void activeDmxProcess_STFT(void* handle) {
   if (immersiveMode) {
     for (chIn = 0; chIn < h->numInChans; chIn++) {
       if (chIn == (UINT)_p->topIn[TFL])
-        FDKmemcpy(h->prevInputBufferStft[TFL], h->inputBufferStft[chIn],
+        mpegh_FDKmemcpy(h->prevInputBufferStft[TFL], h->inputBufferStft[chIn],
                   STFT_LENGTH * sizeof(FIXP_DBL));
       if (chIn == (UINT)_p->topIn[TFC])
-        FDKmemcpy(h->prevInputBufferStft[TFC], h->inputBufferStft[chIn],
+        mpegh_FDKmemcpy(h->prevInputBufferStft[TFC], h->inputBufferStft[chIn],
                   STFT_LENGTH * sizeof(FIXP_DBL));
       if (chIn == (UINT)_p->topIn[TFR])
-        FDKmemcpy(h->prevInputBufferStft[TFR], h->inputBufferStft[chIn],
+        mpegh_FDKmemcpy(h->prevInputBufferStft[TFR], h->inputBufferStft[chIn],
                   STFT_LENGTH * sizeof(FIXP_DBL));
       if (chIn == (UINT)_p->topIn[TFLA])
-        FDKmemcpy(h->prevInputBufferStft[TFLA], h->inputBufferStft[chIn],
+        mpegh_FDKmemcpy(h->prevInputBufferStft[TFLA], h->inputBufferStft[chIn],
                   STFT_LENGTH * sizeof(FIXP_DBL));
       if (chIn == (UINT)_p->topIn[TFRA])
-        FDKmemcpy(h->prevInputBufferStft[TFRA], h->inputBufferStft[chIn],
+        mpegh_FDKmemcpy(h->prevInputBufferStft[TFRA], h->inputBufferStft[chIn],
                   STFT_LENGTH * sizeof(FIXP_DBL));
     }
   }
@@ -767,7 +767,7 @@ void activeDmxProcess_STFT(void* handle) {
     for (chOut = 0; chOut < numOutChans; chOut++) {
       if (chOut_count[chOut] != 0) {
         /* Passive downmix, AES == 0. EQ = 1.0 */
-        scaleValues(realizedSig[chOut], 2 * erb_freq_idx_256_58[STFT_ERB_BANDS - 1], eq_e);
+        mpegh_scaleValues(realizedSig[chOut], 2 * erb_freq_idx_256_58[STFT_ERB_BANDS - 1], eq_e);
       }
     }
   } else

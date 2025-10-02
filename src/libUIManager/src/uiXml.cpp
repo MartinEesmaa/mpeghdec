@@ -156,13 +156,13 @@ static void writeString(UI_MANAGER_XML_WRITER* pWriter, const char* str) {
 
   if (!pWriter->nLeft) return;
 
-  l = FDKstrlen(str);
+  l = mpegh_FDKstrlen(str);
   if (l > pWriter->nLeft) {
     pWriter->nLeft = 0;
     return;
   }
 
-  FDKstrncpy(pWriter->pOut, str, pWriter->nLeft);
+  mpegh_FDKstrncpy(pWriter->pOut, str, pWriter->nLeft);
   pWriter->pOut += l;
   pWriter->nLeft -= l;
 }
@@ -187,7 +187,7 @@ static void writeEscapedString(UI_MANAGER_XML_WRITER* pWriter, const char* str) 
 
   if (!pWriter->nLeft) return;
 
-  l = FDKstrlen(str);
+  l = mpegh_FDKstrlen(str);
   for (i = 0; i < l; i++) {
     UINT chars_len;
     const char* chars_pointer;
@@ -228,7 +228,7 @@ static void writeEscapedString(UI_MANAGER_XML_WRITER* pWriter, const char* str) 
       pWriter->nLeft = 0;
       return;
     }
-    FDKstrncpy(pWriter->pOut, chars_pointer, chars_len);
+    mpegh_FDKstrncpy(pWriter->pOut, chars_pointer, chars_len);
     pWriter->pOut += chars_len;
     pWriter->nLeft -= chars_len;
   }
@@ -950,7 +950,7 @@ static void writeScene(HANDLE_UI_MANAGER hUiManager, UCHAR shortInfo) {
 
     for (i = 1; i < nSortedGrpIDs; i++) {
       if (sortedGrpIDs[i] == mainDlg) {
-        FDKmemmove(sortedGrpIDs + 1, sortedGrpIDs, i * sizeof(USHORT));
+        mpegh_FDKmemmove(sortedGrpIDs + 1, sortedGrpIDs, i * sizeof(USHORT));
         sortedGrpIDs[0] = mainDlg;
         break;
       }
@@ -1059,7 +1059,7 @@ static UINT findChar(char charToFind, const char* strToSearchIn, UINT lenToSearc
 static UINT findString(const char* strToFind, const char* strToSearchIn, UINT lenToSearchIn) {
   UINT i, j, l;
 
-  l = FDKstrlen(strToFind);
+  l = mpegh_FDKstrlen(strToFind);
 
   if (lenToSearchIn < l) return 0;
 
@@ -1180,8 +1180,8 @@ static void readText(const char* str, char* text) {
 
 /* read boolean */
 static UCHAR readBool(const char* str) {
-  if (FDKstrncmp(str, "true", 4) == 0) return 1;
-  if (FDKstrncmp(str, "false", 4) == 0) return 0;
+  if (mpegh_FDKstrncmp(str, "true", 4) == 0) return 1;
+  if (mpegh_FDKstrncmp(str, "false", 4) == 0) return 0;
   return readInt(str) ? 1 : 0;
 }
 
@@ -1228,7 +1228,7 @@ UINT uiManagerParseXmlAction(const char* xmlIn, UINT xmlInSize, UI_MANAGER_ACTIO
   int i, l = xmlInSize;
   const char *p = xmlIn, *pAttrib;
 
-  FDKmemclear(&pAction->uuid, 16 * sizeof(UCHAR));
+  mpegh_FDKmemclear(&pAction->uuid, 16 * sizeof(UCHAR));
   pAction->actionType = UI_MANAGER_COMMAND_INVALID;
   pAction->paramInt = 0;
   pAction->paramFloat = (FIXP_DBL)0;

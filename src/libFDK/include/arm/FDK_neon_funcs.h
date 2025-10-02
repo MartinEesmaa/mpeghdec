@@ -2647,11 +2647,11 @@ void FDK_check_s16_overflow(FIXP_DBL value)
 {
   if (value > (FIXP_DBL) 0x7FFF)
   {
-    FDKprintf("Error: 16-bit overflow: 0x%016X\n", value);
+    mpegh_FDKprintf("Error: 16-bit overflow: 0x%016X\n", value);
   }
   else if (value < (FIXP_DBL) 0xFFFF8000)
   {
-    FDKprintf("Error: 16-bit underflow: 0x%016X\n", value);
+    mpegh_FDKprintf("Error: 16-bit underflow: 0x%016X\n", value);
   }
 }
 
@@ -2660,11 +2660,11 @@ void FDK_check_s32_overflow(INT64 value)
 {
   if (value > (INT64) 0x7FFFFFFF)
   {
-    FDKprintf("Error: 32-bit overflow: 0x%016X\n", value);
+    mpegh_FDKprintf("Error: 32-bit overflow: 0x%016X\n", value);
   }
   else if (-value > (INT64) 2147483648 /* 0x8000.000 */)
   {
-    FDKprintf("Error: 32-bit underflow: 0x%016X\n", value);
+    mpegh_FDKprintf("Error: 32-bit underflow: 0x%016X\n", value);
   }
 }
 
@@ -2685,7 +2685,7 @@ void FDK_check_move_float_immediate(FLOAT immediate)
       if (testFloat == immediate) return;
     }
 
-  FDKprintf("Error: %f can not expressed as  +/- n * 2^(-r), where n and r are integers, 16 <= n <= 31, 0 <= r <= 7 \n", immediate);
+  mpegh_FDKprintf("Error: %f can not expressed as  +/- n * 2^(-r), where n and r are integers, 16 <= n <= 31, 0 <= r <= 7 \n", immediate);
 }
 
 void FDK_check_move_immediate(int size, int datatype, int sign, INT64 immediate)
@@ -2707,10 +2707,10 @@ void FDK_check_move_immediate(int size, int datatype, int sign, INT64 immediate)
     if (datatype == 8)
     {
       if (sign == -1)
-        FDKprintf ("Error in 8-bit MVN immediate: 0x%16X - Use VMOV instead of VMVN for 8-bit constants\n", ~immediate);
+        mpegh_FDKprintf ("Error in 8-bit MVN immediate: 0x%16X - Use VMOV instead of VMVN for 8-bit constants\n", ~immediate);
       if (byte1 | byte2 | byte3 | byte4 | byte5 | byte6 | byte7)
       {
-        FDKprintf ("Error in 8-bit immediate: 0x%016X - upper bytes must be 0x00\n", immediate);
+        mpegh_FDKprintf ("Error in 8-bit immediate: 0x%016X - upper bytes must be 0x00\n", immediate);
       }
     }
     else if (datatype == 16)
@@ -2718,9 +2718,9 @@ void FDK_check_move_immediate(int size, int datatype, int sign, INT64 immediate)
       if (byte2 | byte3 | byte4 | byte5 | byte6 | byte7)
       {
         if (sign == 1)
-          FDKprintf ("Error in 16-bit MOV immediate: 0x%016X - upper bits (>16) must be 0x00\n", immediate);
+          mpegh_FDKprintf ("Error in 16-bit MOV immediate: 0x%016X - upper bits (>16) must be 0x00\n", immediate);
         else
-          FDKprintf ("Error in 16-bit MVN immediate: 0x%016X - upper bits (>16) must be 0xFF\n", ~immediate);
+          mpegh_FDKprintf ("Error in 16-bit MVN immediate: 0x%016X - upper bits (>16) must be 0xFF\n", ~immediate);
       }
       else
       {
@@ -2730,9 +2730,9 @@ void FDK_check_move_immediate(int size, int datatype, int sign, INT64 immediate)
               (((INT64) byte1 <<  8) == immediate) ))
         {
            if (sign == 1)
-             FDKprintf ("Error in 16-bit MOV immediate: 0x%016X - must be in range: 0x00XY, 0xXY00\n", immediate);
+             mpegh_FDKprintf ("Error in 16-bit MOV immediate: 0x%016X - must be in range: 0x00XY, 0xXY00\n", immediate);
            else
-             FDKprintf ("Error in 16-bit MVN immediate: 0x%016X - must be in range: 0xFFXY, 0xXYFF\n", ~immediate);
+             mpegh_FDKprintf ("Error in 16-bit MVN immediate: 0x%016X - must be in range: 0xFFXY, 0xXYFF\n", ~immediate);
         }
       }
     }
@@ -2743,9 +2743,9 @@ void FDK_check_move_immediate(int size, int datatype, int sign, INT64 immediate)
         if (byte4 | byte5 | byte6 | byte7)
         {
            if (sign == 1)
-             FDKprintf ("Error in 32-bit MOV immediate: 0x%016X - upper fillbytes must be 0x00\n", immediate);
+             mpegh_FDKprintf ("Error in 32-bit MOV immediate: 0x%016X - upper fillbytes must be 0x00\n", immediate);
            else
-             FDKprintf ("Error in 32-bit MVN immediate: 0x%016X - upper fillbytes must be 0xFF\n", ~immediate);
+             mpegh_FDKprintf ("Error in 32-bit MVN immediate: 0x%016X - upper fillbytes must be 0xFF\n", ~immediate);
         }
         if (!((((INT64) byte0 <<  0) == immediate) ||
               (((INT64) byte1 <<  8) == immediate) ||
@@ -2755,15 +2755,15 @@ void FDK_check_move_immediate(int size, int datatype, int sign, INT64 immediate)
               ((((INT64) byte2 << 16) | 0xFFFF) == immediate) ))
         {
            if (sign == 1)
-             FDKprintf ("Error in 32-bit MOV immediate: 0x%016X - must be in range: 0x000000XY, 0x0000XY00, 0x00XY0000, 0xXY000000, 0x0000XYFF, 0x00XYFFFF \n", immediate);
+             mpegh_FDKprintf ("Error in 32-bit MOV immediate: 0x%016X - must be in range: 0x000000XY, 0x0000XY00, 0x00XY0000, 0xXY000000, 0x0000XYFF, 0x00XYFFFF \n", immediate);
            else
-             FDKprintf ("Error in 32-bit MVN immediate: 0x%016X - must be in range: 0xFFFFFFXY, 0xFFFFXYFF, 0xFFXYFFFF, 0xXYFFFFFF, 0xFFFFXY00, 0xFFXY0000 \n",~immediate);
+             mpegh_FDKprintf ("Error in 32-bit MVN immediate: 0x%016X - must be in range: 0xFFFFFFXY, 0xFFFFXYFF, 0xFFXYFFFF, 0xXYFFFFFF, 0xFFFFXY00, 0xFFXY0000 \n",~immediate);
         }
     }
     else if (datatype == 64)
     {
       if (sign == -1)
-        FDKprintf ("Error in 64-bit MVN immediate: 0x%16X - Use VMOV instead of VMVN for 64-bit constants\n", ~immediate);
+        mpegh_FDKprintf ("Error in 64-bit MVN immediate: 0x%16X - Use VMOV instead of VMVN for 64-bit constants\n", ~immediate);
 
       /* all bytes must match either 0x00 or 0xFF */
       if (!(( (byte0 == 0x00) || (byte0 == 0xFF) ) || ( (byte1 == 0x00) || (byte1 == 0xFF) ) ||
@@ -2771,7 +2771,7 @@ void FDK_check_move_immediate(int size, int datatype, int sign, INT64 immediate)
             ( (byte4 == 0x00) || (byte4 == 0xFF) ) || ( (byte5 == 0x00) || (byte5 == 0xFF) ) ||
             ( (byte6 == 0x00) || (byte6 == 0xFF) ) || ( (byte7 == 0x00) || (byte7 == 0xFF) ) ))
       {
-        FDKprintf ("Error in 64-bit MOV immediate: 0x%16X - any byte must be either 0x00/0xFF\n", immediate);
+        mpegh_FDKprintf ("Error in 64-bit MOV immediate: 0x%16X - any byte must be either 0x00/0xFF\n", immediate);
       }
     }
   }

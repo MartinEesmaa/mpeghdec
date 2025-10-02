@@ -723,7 +723,7 @@ static AAC_DECODER_ERROR CAacDecoder_InitRenderer(HANDLE_AACDECODER self, const 
           goto bail;
         }
 
-        FDKmemclear(outGeo, sizeof(outGeo));
+        mpegh_FDKmemclear(outGeo, sizeof(outGeo));
         cicpErr = cicp2geometry_get_geometry_from_cicp(cicpIndexOut, outGeo, &chan, &lfe);
         if (cicpErr) {
           err = AAC_DEC_UNSUPPORTED_CHANNELCONFIG;
@@ -1011,7 +1011,7 @@ static void CAacDecoder_DeInit(HANDLE_AACDECODER self, const int subStreamIndex)
   for (ch = aacChannelOffset; ch < aacChannelOffset + aacChannels; ch++) {
     if (self->pAacDecoderChannelInfo[ch] != NULL) {
       if (self->pAacDecoderChannelInfo[ch]->pDynData != NULL) {
-        FDKfree(self->pAacDecoderChannelInfo[ch]->pDynData);
+        mpegh_FDKfree(self->pAacDecoderChannelInfo[ch]->pDynData);
       }
       if (self->pAacDecoderChannelInfo[ch]->pComStaticData != NULL) {
         if (self->pAacDecoderChannelInfo[ch]->pComStaticData->pWorkBufferCore1 != NULL) {
@@ -1032,12 +1032,12 @@ static void CAacDecoder_DeInit(HANDLE_AACDECODER self, const int subStreamIndex)
             self->pAacDecoderChannelInfo[ch + 1]->pComStaticData = NULL;
           }
         }
-        FDKfree(self->pAacDecoderChannelInfo[ch]->pComStaticData);
+        mpegh_FDKfree(self->pAacDecoderChannelInfo[ch]->pComStaticData);
         self->pAacDecoderChannelInfo[ch]->pComStaticData = NULL;
       }
       if (self->pAacDecoderChannelInfo[ch]->pComData != NULL) {
         if (self->pAacDecoderChannelInfo[ch]->pComData->pJointStereoData != NULL) {
-          FDKfree(self->pAacDecoderChannelInfo[ch]->pComData->pJointStereoData);
+          mpegh_FDKfree(self->pAacDecoderChannelInfo[ch]->pComData->pJointStereoData);
         }
         /* Avoid double free of linked pComData in case of CPE by settings pointer to NULL. */
         if (ch < (28) - 1) {
@@ -1050,7 +1050,7 @@ static void CAacDecoder_DeInit(HANDLE_AACDECODER self, const int subStreamIndex)
         if (ch == aacChannelOffset) {
           FreeWorkBufferCore6((FIXP_DBL**)&self->pAacDecoderChannelInfo[ch]->pComData);
         } else {
-          FDKafree(self->pAacDecoderChannelInfo[ch]->pComData);
+          mpegh_FDKafree(self->pAacDecoderChannelInfo[ch]->pComData);
         }
         self->pAacDecoderChannelInfo[ch]->pComData = NULL;
       }
@@ -1131,7 +1131,7 @@ static void CAacDecoder_AcceptFlags(HANDLE_AACDECODER self, const CSAudioSpecifi
       self->elFlags[el] = elFlags[el];
     }
   } else {
-    FDKmemcpy(self->elFlags, elFlags,
+    mpegh_FDKmemcpy(self->elFlags, elFlags,
               sizeof(*elFlags) * (3 * ((28) * 2) + (((28) * 2)) / 2 + 4 * (1) + 1));
   }
 
@@ -1365,7 +1365,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_Init(HANDLE_AACDECODER self,
       elFlags[el] = 0;
     }
   } else {
-    FDKmemclear(elFlags, sizeof(elFlags));
+    mpegh_FDKmemclear(elFlags, sizeof(elFlags));
   }
 
   if ((asc->m_channelConfiguration > 0) || (asc->m_aot == AOT_MPEGH3DA) ||
@@ -1595,7 +1595,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_Init(HANDLE_AACDECODER self,
           goto bail;
         }
         self->pAacDecoderChannelInfo[ch]->pDynData =
-            (CAacDecoderDynamicData*)FDKmalloc(sizeof(CAacDecoderDynamicData));
+            (CAacDecoderDynamicData*)mpegh_FDKmalloc(sizeof(CAacDecoderDynamicData));
         if (self->pAacDecoderChannelInfo[ch]->pDynData == NULL) {
           goto bail;
         }
@@ -1639,7 +1639,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_Init(HANDLE_AACDECODER self,
                 goto bail;
               }
               self->pAacDecoderChannelInfo[ch]->pComStaticData =
-                  (CAacDecoderCommonStaticData*)FDKcalloc(1, sizeof(CAacDecoderCommonStaticData));
+                  (CAacDecoderCommonStaticData*)mpegh_FDKcalloc(1, sizeof(CAacDecoderCommonStaticData));
               if (self->pAacDecoderChannelInfo[ch]->pComStaticData == NULL) {
                 goto bail;
               }
@@ -1649,7 +1649,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_Init(HANDLE_AACDECODER self,
                 self->pAacDecoderChannelInfo[ch]->pComStaticData->pWorkBufferCore1 =
                     GetWorkBufferCore1();
               } else {
-                self->pAacDecoderChannelInfo[ch]->pComData = (CAacDecoderCommonData*)FDKaalloc(
+                self->pAacDecoderChannelInfo[ch]->pComData = (CAacDecoderCommonData*)mpegh_FDKaalloc(
                     sizeof(CAacDecoderCommonData), ALIGNMENT_DEFAULT);
                 self->pAacDecoderChannelInfo[ch]->pComStaticData->pWorkBufferCore1 =
                     self->pAacDecoderChannelInfo[aacChannelsOffset]
@@ -1661,7 +1661,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_Init(HANDLE_AACDECODER self,
               }
               if (el_channels == 2) {
                 self->pAacDecoderChannelInfo[ch]->pComData->pJointStereoData =
-                    (CJointStereoData*)FDKmalloc(sizeof(CJointStereoData));
+                    (CJointStereoData*)mpegh_FDKmalloc(sizeof(CJointStereoData));
                 if (self->pAacDecoderChannelInfo[ch]->pComData->pJointStereoData == NULL) {
                   goto bail;
                 }
@@ -1887,7 +1887,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_Init(HANDLE_AACDECODER self,
       self->pAacDecoderChannelInfo[ch]->granuleLength = self->streamInfo.aacSamplesPerFrame / 8;
       self->pAacDecoderChannelInfo[ch]->renderMode = initRenderMode;
 
-      mdct_init(&self->pAacDecoderStaticChannelInfo[ch]->IMdct,
+      mpegh_mdct_init(&self->pAacDecoderStaticChannelInfo[ch]->IMdct,
                 self->pAacDecoderStaticChannelInfo[ch]->pOverlapBuffer, OverlapBufferSize);
 
       /* Reset concealment only if ASC changed. Otherwise it will be done with any config callback.
@@ -2098,7 +2098,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_DecodeFrame(HANDLE_AACDECODER self, c
           &self->pAacDecoderStaticChannelInfo[ch]->concealmentInfo, &self->concealCommonData,
           self->pAacDecoderChannelInfo[0]->renderMode, self->streamInfo.aacSamplesPerFrame);
       /* Clear overlap-add buffers to avoid clicks. */
-      FDKmemclear(self->pAacDecoderStaticChannelInfo[ch]->pOverlapBuffer,
+      mpegh_FDKmemclear(self->pAacDecoderStaticChannelInfo[ch]->pOverlapBuffer,
                   OverlapBufferSize * sizeof(FIXP_DBL));
     }
     if (self->streamInfo.channelConfig > 0) {
@@ -2118,7 +2118,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_DecodeFrame(HANDLE_AACDECODER self, c
 
   if (self->flags[streamIndex] & AC_MPEGH3DA) {
     /* Clear the MCT element flags */
-    FDKmemclear(MCT_elFlags, sizeof(UINT) * (3 * ((28) * 2) + (((28) * 2)) / 2 + 4 * (1) + 1));
+    mpegh_FDKmemclear(MCT_elFlags, sizeof(UINT) * (3 * ((28) * 2) + (((28) * 2)) / 2 + 4 * (1) + 1));
     /* Assign a pointer to MCT_elFlags array*/
     p2_MCT_elFlags = MCT_elFlags;
   }
@@ -2740,16 +2740,16 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_DecodeFrame(HANDLE_AACDECODER self, c
     aacChannels = self->aacChannelsPrev;
     /* Because the downmix could be active, its necessary to restore the channel type and indices.
      */
-    FDKmemcpy(self->channelType, self->channelTypePrev,
+    mpegh_FDKmemcpy(self->channelType, self->channelTypePrev,
               (28) * sizeof(AUDIO_CHANNEL_TYPE));                                    /* restore */
-    FDKmemcpy(self->channelIndices, self->channelIndicesPrev, (28) * sizeof(UCHAR)); /* restore */
+    mpegh_FDKmemcpy(self->channelIndices, self->channelIndicesPrev, (28) * sizeof(UCHAR)); /* restore */
   } else {
     /* store or restore the number of channels and the corresponding info */
     if (self->frameOK && !(flags & AACDEC_CONCEAL)) {
       self->aacChannelsPrev = aacChannels; /* store */
-      FDKmemcpy(self->channelTypePrev, self->channelType,
+      mpegh_FDKmemcpy(self->channelTypePrev, self->channelType,
                 (28) * sizeof(AUDIO_CHANNEL_TYPE));                                    /* store */
-      FDKmemcpy(self->channelIndicesPrev, self->channelIndices, (28) * sizeof(UCHAR)); /* store */
+      mpegh_FDKmemcpy(self->channelIndicesPrev, self->channelIndices, (28) * sizeof(UCHAR)); /* store */
     } else {
       if (self->aacChannels > 0) {
         if ((self->buildUpStatus == AACDEC_MPEGH_BUILD_UP_ON) ||
@@ -2760,9 +2760,9 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_DecodeFrame(HANDLE_AACDECODER self, c
         } else {
           aacChannels = self->aacChannelsPrev; /* restore */
         }
-        FDKmemcpy(self->channelType, self->channelTypePrev,
+        mpegh_FDKmemcpy(self->channelType, self->channelTypePrev,
                   (28) * sizeof(AUDIO_CHANNEL_TYPE)); /* restore */
-        FDKmemcpy(self->channelIndices, self->channelIndicesPrev,
+        mpegh_FDKmemcpy(self->channelIndices, self->channelIndicesPrev,
                   (28) * sizeof(UCHAR)); /* restore */
       }
     }
@@ -2867,7 +2867,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_DecodeFrame(HANDLE_AACDECODER self, c
           /* Clear audio data for sub streams which are currently not available. */
           if (transportDec_GetAuBitsTotal(self->hInput, streamIndex) <= 0 &&
               !(flags & (AACDEC_FLUSH | AACDEC_CONCEAL))) {
-            FDKmemclear(pTimeData + offset, sizeof(PCM_DEC) * self->streamInfo.aacSamplesPerFrame);
+            mpegh_FDKmemclear(pTimeData + offset, sizeof(PCM_DEC) * self->streamInfo.aacSamplesPerFrame);
             continue;
           }
         }
@@ -2875,7 +2875,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_DecodeFrame(HANDLE_AACDECODER self, c
         if (flags & AACDEC_FLUSH) {
           /* Clear pAacDecoderChannelInfo->pSpectralCoefficient because with AACDEC_FLUSH set it
            * contains undefined data. */
-          FDKmemclear(pAacDecoderChannelInfo->pSpectralCoefficient,
+          mpegh_FDKmemclear(pAacDecoderChannelInfo->pSpectralCoefficient,
                       sizeof(FIXP_DBL) * self->streamInfo.aacSamplesPerFrame);
         }
 
@@ -2921,7 +2921,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_DecodeFrame(HANDLE_AACDECODER self, c
           break;
         }
         if (self->flushStatus && (self->flushCnt > 0) && !(flags & AACDEC_CONCEAL)) {
-          FDKmemclear(pTimeData + offset, sizeof(PCM_DEC) * self->streamInfo.aacSamplesPerFrame);
+          mpegh_FDKmemclear(pTimeData + offset, sizeof(PCM_DEC) * self->streamInfo.aacSamplesPerFrame);
         } else
           switch (pAacDecoderChannelInfo->renderMode) {
             case AACDEC_RENDER_IMDCT:
@@ -3333,7 +3333,7 @@ TRANSPORTDEC_ERROR PcmDataPayload(EarconDecoder* earconDecoder, FIXP_DBL* TimeDa
         earconDecoder->AccumulatedFrameSize = 0;
       }
       FDK_ASSERT((earconDecoder->AccumulatedFrameSize + OverallSamplesUsed) <= EARCON_BUFFER_SIZE);
-      FDKmemmove(&earconDecoder->EarconData[0], &earconDecoder->EarconData[OverallSamplesUsed],
+      mpegh_FDKmemmove(&earconDecoder->EarconData[0], &earconDecoder->EarconData[OverallSamplesUsed],
                  sizeof(FIXP_SGL) * earconDecoder->AccumulatedFrameSize);
       earconDecoder->numPcmSignals_old = numSpeakers;
 

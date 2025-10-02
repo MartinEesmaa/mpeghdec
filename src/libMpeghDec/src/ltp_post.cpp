@@ -245,7 +245,7 @@ static void ltp_get_zir(FIXP_DBL* zir, int length, FIXP_SGL* synth_ltp, FIXP_SGL
     y0++;
   }
 
-  FDKmemclear(zir, length * sizeof(FIXP_DBL));
+  mpegh_FDKmemclear(zir, length * sizeof(FIXP_DBL));
 
   CLpc_Synthesis(zir, length, 1, A, A_e, lpcorder, buf, &stIdx);
 
@@ -351,7 +351,7 @@ static void ltp_synth_filter(FIXP_SGL* synth_ltp, FIXP_SGL* synth, int length, i
 
 #endif /* defined(FUNCTION_ltp_synth_filter_aac) */
   } else {
-    FDKmemcpy(synth_ltp, synth, length * sizeof(FIXP_SGL));
+    mpegh_FDKmemcpy(synth_ltp, synth, length * sizeof(FIXP_SGL));
   }
 
   return;
@@ -435,10 +435,10 @@ void ltp_post(FIXP_DBL* sig, int L_frame, int fs, int* ltp_param, int* pitch_int
     FDK_ASSERT((L_frame >= LTP_MEM_IN_SIZE) && (L_frame >= LTP_MEM_OUT_SIZE));
 
     /* Update mem_in states */
-    scaleValuesSaturate(mem_in, sig + L_frame - LTP_MEM_IN_SIZE, LTP_MEM_IN_SIZE, PCM_OUT_HEADROOM);
+    mpegh_scaleValuesSaturate(mem_in, sig + L_frame - LTP_MEM_IN_SIZE, LTP_MEM_IN_SIZE, PCM_OUT_HEADROOM);
 
     /* Update mem_out states */
-    scaleValuesSaturate(mem_out, sig + L_frame - LTP_MEM_OUT_SIZE, LTP_MEM_OUT_SIZE,
+    mpegh_scaleValuesSaturate(mem_out, sig + L_frame - LTP_MEM_OUT_SIZE, LTP_MEM_OUT_SIZE,
                         PCM_OUT_HEADROOM);
 
     /* Update past values */
@@ -466,13 +466,13 @@ void ltp_post(FIXP_DBL* sig, int L_frame, int fs, int* ltp_param, int* pitch_int
 
   /* Input buffer */
   sig_in = buf_in + LTP_MEM_IN_SIZE;
-  FDKmemcpy(buf_in, mem_in, LTP_MEM_IN_SIZE * sizeof(FIXP_SGL));
-  scaleValuesSaturate(sig_in, sig, L_frame, PCM_OUT_HEADROOM);
-  FDKmemcpy(mem_in, sig_in + L_frame - LTP_MEM_IN_SIZE, LTP_MEM_IN_SIZE * sizeof(FIXP_SGL));
+  mpegh_FDKmemcpy(buf_in, mem_in, LTP_MEM_IN_SIZE * sizeof(FIXP_SGL));
+  mpegh_scaleValuesSaturate(sig_in, sig, L_frame, PCM_OUT_HEADROOM);
+  mpegh_FDKmemcpy(mem_in, sig_in + L_frame - LTP_MEM_IN_SIZE, LTP_MEM_IN_SIZE * sizeof(FIXP_SGL));
 
   /* Output buffer */
   sig_out = buf_out + LTP_MEM_OUT_SIZE;
-  FDKmemcpy(buf_out, mem_out, LTP_MEM_OUT_SIZE * sizeof(FIXP_SGL));
+  mpegh_FDKmemcpy(buf_out, mem_out, LTP_MEM_OUT_SIZE * sizeof(FIXP_SGL));
 
   /* LTP parameters: integer pitch, fractional pitch, gain */
   ltp_decode_params(ltp_param, &pitch_int, &pitch_fr, &gain, pit_min, pit_fr1, pit_fr2, pit_max,
@@ -491,7 +491,7 @@ void ltp_post(FIXP_DBL* sig, int L_frame, int fs, int* ltp_param, int* pitch_int
 
   /******** Transition part ********/
   if (gain == (FIXP_SGL)0 && *gain_past == (FIXP_SGL)0) {
-    FDKmemcpy(sig_out + enc_dec_delay, sig_in + enc_dec_delay, L_transition * sizeof(FIXP_SGL));
+    mpegh_FDKmemcpy(sig_out + enc_dec_delay, sig_in + enc_dec_delay, L_transition * sizeof(FIXP_SGL));
   } else if (*gain_past == (FIXP_SGL)0) {
     ltp_synth_filter(sig_out + enc_dec_delay, sig_in + enc_dec_delay, L_transition, pitch_int,
                      pitch_fr, gain, ltp_param[2], pitres, NULL, 1, filtIdx);
@@ -529,7 +529,7 @@ void ltp_post(FIXP_DBL* sig, int L_frame, int fs, int* ltp_param, int* pitch_int
   *pitch_fr_past = pitch_fr;
   *gain_past = gain;
   *gainIdx_past = ltp_param[2];
-  FDKmemcpy(mem_out, buf_out + L_frame, LTP_MEM_OUT_SIZE * sizeof(FIXP_SGL));
+  mpegh_FDKmemcpy(mem_out, buf_out + L_frame, LTP_MEM_OUT_SIZE * sizeof(FIXP_SGL));
 
   return;
 }

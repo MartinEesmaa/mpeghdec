@@ -96,7 +96,7 @@ amm-info@iis.fraunhofer.de
 /**********************************************************************************************************************************/
 
 int allocateStftFilterbankData(STFT_FILTERBANK* stft_filterbank) {
-  stft_filterbank->prevAudioInput = (FIXP_DBL*)fdkCallocMatrix1D_aligned(
+  stft_filterbank->prevAudioInput = (FIXP_DBL*)mpegh_fdkCallocMatrix1D_aligned(
       stft_filterbank->stftFilterbankConfig.frameSize, sizeof(FIXP_DBL));
   if (stft_filterbank->prevAudioInput == NULL) {
     return STFT_ERR_MEM_ERROR;
@@ -108,7 +108,7 @@ int allocateStftFilterbankData(STFT_FILTERBANK* stft_filterbank) {
 /**********************************************************************************************************************************/
 
 int freeStftFilterbankData(STFT_FILTERBANK* stft_filterbank) {
-  fdkFreeMatrix1D_aligned((void*)stft_filterbank->prevAudioInput);
+  mpegh_fdkFreeMatrix1D_aligned((void*)stft_filterbank->prevAudioInput);
   stft_filterbank->prevAudioInput = NULL;
 
   return 0;

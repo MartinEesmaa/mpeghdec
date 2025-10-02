@@ -111,7 +111,7 @@ amm-info@iis.fraunhofer.de
 #if defined(__GNUC__)
 #define FUNCTION_scaleValues_DBL
 /***************************************************/
-/******** scaleValues, in/out vector identical *****/
+/******** mpegh_scaleValues, in/out vector identical *****/
 /***************************************************/
 FDK_ASM_ROUTINE_START(void,scaleValuesDBL,(
         FIXP_DBL *vector,
@@ -287,7 +287,7 @@ FDK_label(scaleValues_DBL_end)
   FDK_return()
 FDK_ASM_ROUTINE_END()
 
-void scaleValues (
+void mpegh_scaleValues (
         FIXP_DBL *vector,
         INT len,
         INT scalefactor
@@ -303,7 +303,7 @@ void scaleValues (
 #if defined(__GNUC__)
 #define FUNCTION_scaleValues_DBLDBL
 /***************************************************/
-/******** scaleValues, in/out vector different *****/
+/******** mpegh_scaleValues, in/out vector different *****/
 /***************************************************/
 FDK_ASM_ROUTINE_START(void,scaleValuesDBLDBL,(
         FIXP_DBL *dst,
@@ -480,7 +480,7 @@ FDK_label(scaleValues_DBLDBL_end)
   FDK_return()
 FDK_ASM_ROUTINE_END()
 
-void scaleValues (
+void mpegh_scaleValues (
         FIXP_DBL *dst,
         const FIXP_DBL *src,
         INT len,
@@ -600,7 +600,7 @@ A64_label(getScalefactor_DBL_8x_end)
 
 A64_ASM_ROUTINE_RETURN(INT)
 
-INT getScalefactor(const FIXP_DBL *vector, INT len)
+INT mpegh_getScalefactor(const FIXP_DBL *vector, INT len)
 {
     return getScalefactor_DBL_NeonV8(vector, len);
 }
@@ -692,7 +692,7 @@ A64_label(scaleValuesSaturate_SGL_loop_8x_end)
 
 A64_ASM_ROUTINE_END()
 
-SCALE_INLINE void scaleValuesSaturate(
+SCALE_INLINE void mpegh_scaleValuesSaturate(
                   FIXP_SGL* dst,
                   const FIXP_DBL* src,
                   const INT len,
@@ -784,7 +784,7 @@ A64_label(scaleValuesSaturate_DBL_loop_8x_end)
 
 A64_ASM_ROUTINE_END()
 
-SCALE_INLINE void scaleValuesSaturate(
+SCALE_INLINE void mpegh_scaleValuesSaturate(
                   FIXP_DBL* dst,
                   const FIXP_DBL* src,
                   const INT len,
@@ -797,7 +797,7 @@ SCALE_INLINE void scaleValuesSaturate(
 
 #ifdef FUNCTION_scaleValuesSaturate_DBL
 
-SCALE_INLINE void scaleValuesSaturate(
+SCALE_INLINE void mpegh_scaleValuesSaturate(
                   FIXP_DBL* dst,
                   const INT len,
                   const INT scaleFactor    /* positive means: shift left */
@@ -880,7 +880,7 @@ A64_label(scaleValues_DBL_loop_8x_end)
 
 A64_ASM_ROUTINE_END()
 
-SCALE_INLINE void scaleValues(
+SCALE_INLINE void mpegh_scaleValues(
   FIXP_DBL* dst,
   const FIXP_DBL* src,
   const INT len,
@@ -893,7 +893,7 @@ SCALE_INLINE void scaleValues(
 
 #ifdef FUNCTION_scaleValues_DBL
 
-SCALE_INLINE void scaleValues(
+SCALE_INLINE void mpegh_scaleValues(
                   FIXP_DBL* dst,
                   const INT len,
                   const INT scaleFactor    /* positive means: shift left */
@@ -909,7 +909,7 @@ SCALE_INLINE void scaleValues(
 #if !defined(FUNCTION_scaleValuesWithFactor_DBL)
 #define FUNCTION_scaleValuesWithFactor_DBL
 SCALE_INLINE
-void scaleValuesWithFactor(
+void mpegh_scaleValuesWithFactor(
         FIXP_DBL *vector,
         FIXP_DBL factor,
         INT len,

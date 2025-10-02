@@ -176,7 +176,7 @@ INT processSynthesisSTFT(FIXP_DBL* RESTRICT inputBuffer, FIXP_DBL* RESTRICT outp
 static void filterbankSineWindowingSTFT(const FIXP_DBL* RESTRICT audioInputTime,
                                         FIXP_DBL* RESTRICT audioInputTimePrev,
                                         FIXP_DBL* RESTRICT audioOutputFreq, UINT fftSize) {
-  const FIXP_WTP* sinetab = FDKgetWindowSlope(fftSize / 2, 0 /* Shape = SINE */);
+  const FIXP_WTP* sinetab = mpegh_FDKgetWindowSlope(fftSize / 2, 0 /* Shape = SINE */);
 
 #ifdef FUNCTION_filterbankSineWindowingSTFT_func1
   filterbankSineWindowingSTFT_func1(audioInputTime, audioInputTimePrev, audioOutputFreq, fftSize,
@@ -255,7 +255,7 @@ static void filterbankOverlapAddAudioFrames(FIXP_DBL* audioInput, FIXP_DBL* prev
   FIXP_DBL* RESTRICT audioInputTime = audioInput;
   FIXP_DBL* RESTRICT audioInputTimePrev = prevAudioInput;
 
-  const FIXP_WTP* sinetab = FDKgetWindowSlope(fftSize / 2, 0 /* Shape = SINE */);
+  const FIXP_WTP* sinetab = mpegh_FDKgetWindowSlope(fftSize / 2, 0 /* Shape = SINE */);
 
 #ifdef FUNCTION_filterbankOverlapAddAudioFrames_func1
   filterbankOverlapAddAudioFrames_func1(audioInputTime, audioInputTimePrev, audioOutput, fftSize,

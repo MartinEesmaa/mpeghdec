@@ -174,7 +174,7 @@ static void startSelectionProcess(HANDLE_DRC_DECODER hDrcDec) {
   if (!hDrcDec->status) return;
 
   C_ALLOC_SCRATCH_START(oldSelProcOutput, SEL_PROC_OUTPUT, 1);
-  FDKmemcpy(oldSelProcOutput, &hDrcDec->selProcOutput, sizeof(SEL_PROC_OUTPUT));
+  mpegh_FDKmemcpy(oldSelProcOutput, &hDrcDec->selProcOutput, sizeof(SEL_PROC_OUTPUT));
 
   if (hDrcDec->functionalRange & DRC_DEC_SELECTION) {
     uniDrcConfigHasChanged = hDrcDec->uniDrcConfig.diff;
@@ -218,11 +218,11 @@ FDK_drcDec_Open(HANDLE_DRC_DECODER* phDrcDec, const DRC_DEC_FUNCTIONAL_RANGE fun
   DRCDEC_SELECTION_PROCESS_RETURN sErr = DRCDEC_SELECTION_PROCESS_NO_ERROR;
   HANDLE_DRC_DECODER hDrcDec;
 
-  *phDrcDec = (HANDLE_DRC_DECODER)FDKcalloc(1, sizeof(struct s_drc_decoder));
+  *phDrcDec = (HANDLE_DRC_DECODER)mpegh_FDKcalloc(1, sizeof(struct s_drc_decoder));
   if (!*phDrcDec) return DRC_DEC_OUT_OF_MEMORY;
   hDrcDec = *phDrcDec;
 
-  hDrcDec->uniDrcConfig.p_scratch = (UINT*)FDKcalloc(1, getScratchBufferSize());
+  hDrcDec->uniDrcConfig.p_scratch = (UINT*)mpegh_FDKcalloc(1, getScratchBufferSize());
   if (!hDrcDec->uniDrcConfig.p_scratch) return DRC_DEC_OUT_OF_MEMORY;
 
   hDrcDec->functionalRange = functionalRange;
@@ -374,10 +374,10 @@ FDK_drcDec_Close(HANDLE_DRC_DECODER* phDrcDec) {
     drcDec_SelectionProcess_Delete(&(hDrcDec->hSelectionProc));
   }
 
-  FDKfree(hDrcDec->uniDrcConfig.p_scratch);
+  mpegh_FDKfree(hDrcDec->uniDrcConfig.p_scratch);
   hDrcDec->uniDrcConfig.p_scratch = NULL;
 
-  FDKfree(*phDrcDec);
+  mpegh_FDKfree(*phDrcDec);
   *phDrcDec = NULL;
 
   return DRC_DEC_OK;

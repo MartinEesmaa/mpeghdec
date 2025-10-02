@@ -130,7 +130,7 @@ DRC_ERROR
 drcDec_GainDecoder_Open(HANDLE_DRC_GAIN_DECODER* phGainDec) {
   DRC_GAIN_DECODER* hGainDec = NULL;
 
-  hGainDec = (DRC_GAIN_DECODER*)FDKcalloc(1, sizeof(DRC_GAIN_DECODER));
+  hGainDec = (DRC_GAIN_DECODER*)mpegh_FDKcalloc(1, sizeof(DRC_GAIN_DECODER));
   if (hGainDec == NULL) return DE_MEMORY_ERROR;
 
   hGainDec->multiBandActiveDrcIndex = -1;
@@ -211,7 +211,7 @@ drcDec_GainDecoder_Config(HANDLE_DRC_GAIN_DECODER hGainDec, HANDLE_UNI_DRC_CONFI
   if (pCoef) {
     hGainDec->drcCoef = *pCoef; /* keep deep copy of drcCoefficients */
   } else {
-    FDKmemset(&hGainDec->drcCoef, 0, sizeof(DRC_COEFFICIENTS_UNI_DRC));
+    mpegh_FDKmemset(&hGainDec->drcCoef, 0, sizeof(DRC_COEFFICIENTS_UNI_DRC));
   }
 
   if (hGainDec->drcCoef.drcFrameSizePresent &&
@@ -235,7 +235,7 @@ drcDec_GainDecoder_Config(HANDLE_DRC_GAIN_DECODER hGainDec, HANDLE_UNI_DRC_CONFI
 DRC_ERROR
 drcDec_GainDecoder_Close(HANDLE_DRC_GAIN_DECODER* phGainDec) {
   if (*phGainDec != NULL) {
-    FDKfree(*phGainDec);
+    mpegh_FDKfree(*phGainDec);
     *phGainDec = NULL;
   }
 

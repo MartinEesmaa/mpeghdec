@@ -103,7 +103,7 @@ amm-info@iis.fraunhofer.de
 
 /**
  * Identifiers for various memory locations. They are used along with memory allocation
- * functions like FDKcalloc_L() to specify the requested memory's location.
+ * functions like mpegh_FDKcalloc_L() to specify the requested memory's location.
  */
 typedef enum {
   /* Internal */
@@ -156,11 +156,11 @@ typedef enum {
 #define C_ALLOC_MEM(name, type, num)               \
   type* Get##name(int n) {                         \
     FDK_ASSERT((n) == 0);                          \
-    return ((type*)FDKcalloc(num, sizeof(type)));  \
+    return ((type*)mpegh_FDKcalloc(num, sizeof(type)));  \
   }                                                \
   void Free##name(type** p) {                      \
     if (p != NULL) {                               \
-      FDKfree(*p);                                 \
+      mpegh_FDKfree(*p);                                 \
       *p = NULL;                                   \
     }                                              \
   }                                                \
@@ -172,11 +172,11 @@ typedef enum {
 #define C_ALLOC_MEM2(name, type, n1, n2)                 \
   type* Get##name(int n) {                               \
     FDK_ASSERT((n) < (n2));                              \
-    return ((type*)FDKcalloc(n1, sizeof(type)));         \
+    return ((type*)mpegh_FDKcalloc(n1, sizeof(type)));         \
   }                                                      \
   void Free##name(type** p) {                            \
     if (p != NULL) {                                     \
-      FDKfree(*p);                                       \
+      mpegh_FDKfree(*p);                                       \
       *p = NULL;                                         \
     }                                                    \
   }                                                      \
@@ -189,12 +189,12 @@ typedef enum {
   type* Get##name(int n) {                                            \
     type* ap;                                                         \
     FDK_ASSERT((n) == 0);                                             \
-    ap = ((type*)FDKaalloc((num) * sizeof(type), ALIGNMENT_DEFAULT)); \
+    ap = ((type*)mpegh_FDKaalloc((num) * sizeof(type), ALIGNMENT_DEFAULT)); \
     return ap;                                                        \
   }                                                                   \
   void Free##name(type** p) {                                         \
     if (p != NULL) {                                                  \
-      FDKafree(*p);                                                   \
+      mpegh_FDKafree(*p);                                                   \
       *p = NULL;                                                      \
     }                                                                 \
   }                                                                   \
@@ -207,12 +207,12 @@ typedef enum {
   type* Get##name(int n) {                                           \
     type* ap;                                                        \
     FDK_ASSERT((n) < (n2));                                          \
-    ap = ((type*)FDKaalloc((n1) * sizeof(type), ALIGNMENT_DEFAULT)); \
+    ap = ((type*)mpegh_FDKaalloc((n1) * sizeof(type), ALIGNMENT_DEFAULT)); \
     return ap;                                                       \
   }                                                                  \
   void Free##name(type** p) {                                        \
     if (p != NULL) {                                                 \
-      FDKafree(*p);                                                  \
+      mpegh_FDKafree(*p);                                                  \
       *p = NULL;                                                     \
     }                                                                \
   }                                                                  \
@@ -224,11 +224,11 @@ typedef enum {
 #define C_ALLOC_MEM_L(name, type, num, s)              \
   type* Get##name(int n) {                             \
     FDK_ASSERT((n) == 0);                              \
-    return ((type*)FDKcalloc_L(num, sizeof(type), s)); \
+    return ((type*)mpegh_FDKcalloc_L(num, sizeof(type), s)); \
   }                                                    \
   void Free##name(type** p) {                          \
     if (p != NULL) {                                   \
-      FDKfree_L(*p);                                   \
+      mpegh_FDKfree_L(*p);                                   \
       *p = NULL;                                       \
     }                                                  \
   }                                                    \
@@ -240,11 +240,11 @@ typedef enum {
 #define C_ALLOC_MEM2_L(name, type, n1, n2, s)            \
   type* Get##name(int n) {                               \
     FDK_ASSERT((n) < (n2));                              \
-    return (type*)FDKcalloc_L(n1, sizeof(type), s);      \
+    return (type*)mpegh_FDKcalloc_L(n1, sizeof(type), s);      \
   }                                                      \
   void Free##name(type** p) {                            \
     if (p != NULL) {                                     \
-      FDKfree_L(*p);                                     \
+      mpegh_FDKfree_L(*p);                                     \
       *p = NULL;                                         \
     }                                                    \
   }                                                      \
@@ -257,12 +257,12 @@ typedef enum {
   type* Get##name(int n) {                                                 \
     type* ap;                                                              \
     FDK_ASSERT((n) == 0);                                                  \
-    ap = ((type*)FDKaalloc_L((num) * sizeof(type), ALIGNMENT_DEFAULT, s)); \
+    ap = ((type*)mpegh_FDKaalloc_L((num) * sizeof(type), ALIGNMENT_DEFAULT, s)); \
     return ap;                                                             \
   }                                                                        \
   void Free##name(type** p) {                                              \
     if (p != NULL) {                                                       \
-      FDKafree_L(*p);                                                      \
+      mpegh_FDKafree_L(*p);                                                      \
       *p = NULL;                                                           \
     }                                                                      \
   }                                                                        \
@@ -275,12 +275,12 @@ typedef enum {
   type* Get##name(int n) {                                                \
     type* ap;                                                             \
     FDK_ASSERT((n) < (n2));                                               \
-    ap = ((type*)FDKaalloc_L((n1) * sizeof(type), ALIGNMENT_DEFAULT, s)); \
+    ap = ((type*)mpegh_FDKaalloc_L((n1) * sizeof(type), ALIGNMENT_DEFAULT, s)); \
     return ap;                                                            \
   }                                                                       \
   void Free##name(type** p) {                                             \
     if (p != NULL) {                                                      \
-      FDKafree_L(*p);                                                     \
+      mpegh_FDKafree_L(*p);                                                     \
       *p = NULL;                                                          \
     }                                                                     \
   }                                                                       \
@@ -360,73 +360,73 @@ INT FDKisalpha(INT c);
 /* Wrapper for <ctypes.h>'s tolower(). */
 INT FDKtolower(INT c);
 
-void FDKprintf(const char* szFmt, ...);
+void mpegh_FDKprintf(const char* szFmt, ...);
 
-void FDKprintfErr(const char* szFmt, ...);
+void mpegh_FDKprintfErr(const char* szFmt, ...);
 
 /** Wrapper for <stdio.h>'s getchar(). */
-INT FDKgetchar(void);
+INT mpegh_FDKgetchar(void);
 
-INT FDKfprintf(void* stream, const char* format, ...);
+INT mpegh_FDKfprintf(void* stream, const char* format, ...);
 
-char* FDKstrchr(char* s, INT c);
-const char* FDKstrstr(const char* haystack, const char* needle);
-char* FDKstrcpy(char* dest, const char* src);
-char* FDKstrncpy(char* dest, const char* src, const UINT n);
+char* mpegh_FDKstrchr(char* s, INT c);
+const char* mpegh_FDKstrstr(const char* haystack, const char* needle);
+char* mpegh_FDKstrcpy(char* dest, const char* src);
+char* mpegh_FDKstrncpy(char* dest, const char* src, const UINT n);
 
 #define FDK_MAX_OVERLAYS 9 /**< Maximum number of memory overlays. */
 
-void* FDKcalloc(const UINT n, const UINT size);
-void* FDKmalloc(const UINT size);
-void FDKfree(void* ptr);
+void* mpegh_FDKcalloc(const UINT n, const UINT size);
+void* mpegh_FDKmalloc(const UINT size);
+void mpegh_FDKfree(void* ptr);
 
 /**
- *  Allocate and clear an aligned memory area. Use FDKafree() instead of FDKfree() for these memory
+ *  Allocate and clear an aligned memory area. Use mpegh_FDKafree() instead of mpegh_FDKfree() for these memory
  * areas.
  *
  * \param size       Size of requested memory in bytes.
  * \param alignment  Alignment of requested memory in bytes.
  * \return           Pointer to allocated memory.
  */
-void* FDKaalloc(const UINT size, const UINT alignment);
+void* mpegh_FDKaalloc(const UINT size, const UINT alignment);
 
 /**
  *  Free an aligned memory area.
  *
  * \param ptr  Pointer to be freed.
  */
-void FDKafree(void* ptr);
+void mpegh_FDKafree(void* ptr);
 
 /**
  *  Allocate memory in a specific memory section.
  *  Requests can be made for internal or external memory. If internal memory is
- *  requested, FDKcalloc_L() first tries to use L1 memory, which sizes are defined
+ *  requested, mpegh_FDKcalloc_L() first tries to use L1 memory, which sizes are defined
  *  by ::DATA_L1_A_SIZE and ::DATA_L1_B_SIZE. If no L1 memory is available, then
- *  FDKcalloc_L() tries to use L2 memory. If that fails as well, the requested
- *  memory is allocated at an extern location using the fallback FDKcalloc().
+ *  mpegh_FDKcalloc_L() tries to use L2 memory. If that fails as well, the requested
+ *  memory is allocated at an extern location using the fallback mpegh_FDKcalloc().
  *
  * \param n     See MSDN documentation on calloc().
  * \param size  See MSDN documentation on calloc().
  * \param s     Memory section.
  * \return      See MSDN documentation on calloc().
  */
-void* FDKcalloc_L(const UINT n, const UINT size, MEMORY_SECTION s);
+void* mpegh_FDKcalloc_L(const UINT n, const UINT size, MEMORY_SECTION s);
 
 /**
  *  Allocate aligned memory in a specific memory section.
- *  See FDKcalloc_L() description for details - same applies here.
+ *  See mpegh_FDKcalloc_L() description for details - same applies here.
  */
-void* FDKaalloc_L(const UINT size, const UINT alignment, MEMORY_SECTION s);
+void* mpegh_FDKaalloc_L(const UINT size, const UINT alignment, MEMORY_SECTION s);
 
 /**
  *  Free memory that was allocated in a specific memory section.
  */
-void FDKfree_L(void* ptr);
+void mpegh_FDKfree_L(void* ptr);
 
 /**
  *  Free aligned memory that was allocated in a specific memory section.
  */
-void FDKafree_L(void* ptr);
+void mpegh_FDKafree_L(void* ptr);
 
 /**
  * Copy memory. Source and destination memory must not overlap.
@@ -436,7 +436,7 @@ void FDKafree_L(void* ptr);
  * The function arguments correspond to the standard memcpy(). Please see MSDN
  * documentation for details on how to use it.
  */
-void FDKmemcpy(void* dst, const void* src, const UINT size);
+void mpegh_FDKmemcpy(void* dst, const void* src, const UINT size);
 
 /**
  * Copy memory. Source and destination memory are allowed to overlap.
@@ -446,7 +446,7 @@ void FDKmemcpy(void* dst, const void* src, const UINT size);
  * The function arguments correspond to the standard memmove(). Please see MSDN
  * documentation for details on how to use it.
  */
-void FDKmemmove(void* dst, const void* src, const UINT size);
+void mpegh_FDKmemmove(void* dst, const void* src, const UINT size);
 
 /**
  * Clear memory.
@@ -456,21 +456,21 @@ void FDKmemmove(void* dst, const void* src, const UINT size);
  * The function arguments correspond to the standard memclear(). Please see MSDN
  * documentation for details on how to use it.
  */
-void FDKmemclear(void* memPtr, const UINT size);
+void mpegh_FDKmemclear(void* memPtr, const UINT size);
 
 /**
  * Fill memory with values.
  * The function arguments correspond to the standard memset(). Please see MSDN
  * documentation for details on how to use it.
  */
-void FDKmemset(void* memPtr, const INT value, const UINT size);
+void mpegh_FDKmemset(void* memPtr, const INT value, const UINT size);
 
 /* Compare function wrappers */
-INT FDKmemcmp(const void* s1, const void* s2, const UINT size);
-INT FDKstrcmp(const char* s1, const char* s2);
-INT FDKstrncmp(const char* s1, const char* s2, const UINT size);
+INT mpegh_FDKmemcmp(const void* s1, const void* s2, const UINT size);
+INT mpegh_FDKstrcmp(const char* s1, const char* s2);
+INT mpegh_FDKstrncmp(const char* s1, const char* s2, const UINT size);
 
-UINT FDKstrlen(const char* s);
+UINT mpegh_FDKstrlen(const char* s);
 
 #define FDKmax(a, b) ((a) > (b) ? (a) : (b))
 #define FDKmin(a, b) ((a) < (b) ? (a) : (b))
@@ -485,7 +485,7 @@ UINT FDKstrlen(const char* s);
  *
  * \return  1 if platform is little endian, non-1 if platform is big endian.
  */
-int IS_LITTLE_ENDIAN(void);
+int MPEGH_IS_LITTLE_ENDIAN(void);
 
 /*!
  *  Convert input value to little endian format.
@@ -493,43 +493,43 @@ int IS_LITTLE_ENDIAN(void);
  * \param val  Value to be converted. It may be in both big or little endian.
  * \return     Value in little endian format.
  */
-UINT TO_LITTLE_ENDIAN(UINT val);
+UINT MPEGH_TO_LITTLE_ENDIAN(UINT val);
 
 /*!
- * \fn     FDKFILE *FDKfopen(const char *filename, const char *mode);
+ * \fn     FDKFILE *mpegh_FDKfopen(const char *filename, const char *mode);
  *         Standard fopen() wrapper.
- * \fn     INT FDKfclose(FDKFILE *FP);
+ * \fn     INT mpegh_FDKfclose(FDKFILE *FP);
  *         Standard fclose() wrapper.
- * \fn     INT FDKfseek(FDKFILE *FP, LONG OFFSET, int WHENCE);
+ * \fn     INT mpegh_FDKfseek(FDKFILE *FP, LONG OFFSET, int WHENCE);
  *         Standard fseek() wrapper.
- * \fn     INT FDKftell(FDKFILE *FP);
+ * \fn     INT mpegh_FDKftell(FDKFILE *FP);
  *         Standard ftell() wrapper.
  * \fn     INT FDKfseek64(FDKFILE *FP, INT64 OFFSET, int WHENCE);
  *         Machine dependent fseek() wrapper for files >4GB.
  * \fn     INT64 FDKftell64(FDKFILE *FP);
  *         Machine dependent ftell() wrapper for files >4GB.
- * \fn     INT FDKfflush(FDKFILE *fp);
+ * \fn     INT mpegh_FDKfflush(FDKFILE *fp);
  *         Standard fflush() wrapper.
- * \fn     UINT FDKfwrite(const void *ptrf, INT size, UINT nmemb, FDKFILE *fp);
+ * \fn     UINT mpegh_FDKfwrite(const void *ptrf, INT size, UINT nmemb, FDKFILE *fp);
  *         Standard fwrite() wrapper.
- * \fn     UINT FDKfread(void *dst, INT size, UINT nmemb, FDKFILE *fp);
+ * \fn     UINT mpegh_FDKfread(void *dst, INT size, UINT nmemb, FDKFILE *fp);
  *         Standard fread() wrapper.
  */
 typedef void FDKFILE;
-extern const INT FDKSEEK_SET, FDKSEEK_CUR, FDKSEEK_END;
+extern const INT MPEGH_FDKSEEK_SET, MPEGH_FDKSEEK_CUR, MPEGH_FDKSEEK_END;
 
-FDKFILE* FDKfopen(const char* filename, const char* mode);
-INT FDKfclose(FDKFILE* FP);
-INT FDKfseek(FDKFILE* FP, LONG OFFSET, int WHENCE);
-INT FDKftell(FDKFILE* FP);
+FDKFILE* mpegh_FDKfopen(const char* filename, const char* mode);
+INT mpegh_FDKfclose(FDKFILE* FP);
+INT mpegh_FDKfseek(FDKFILE* FP, LONG OFFSET, int WHENCE);
+INT mpegh_FDKftell(FDKFILE* FP);
 INT FDKfseek64(FDKFILE* fp, INT64 OFFSET, int WHENCE);
 INT64 FDKftell64(FDKFILE* FP);
-INT FDKfflush(FDKFILE* fp);
-UINT FDKfwrite(const void* ptrf, INT size, UINT nmemb, FDKFILE* fp);
-UINT FDKfread(void* dst, INT size, UINT nmemb, FDKFILE* fp);
-char* FDKfgets(void* dst, INT size, FDKFILE* fp);
-void FDKrewind(FDKFILE* fp);
-INT FDKfeof(FDKFILE* fp);
+INT mpegh_FDKfflush(FDKFILE* fp);
+UINT mpegh_FDKfwrite(const void* ptrf, INT size, UINT nmemb, FDKFILE* fp);
+UINT mpegh_FDKfread(void* dst, INT size, UINT nmemb, FDKFILE* fp);
+char* mpegh_FDKfgets(void* dst, INT size, FDKFILE* fp);
+void mpegh_FDKrewind(FDKFILE* fp);
+INT mpegh_FDKfeof(FDKFILE* fp);
 
 /**
  * \brief        Write each member in little endian order. Convert automatically to host endianess.
@@ -539,7 +539,7 @@ INT FDKfeof(FDKFILE* fp);
  * \param fp     File pointer of type FDKFILE.
  * \return       Number of items read on success and fread() error on failure.
  */
-UINT FDKfwrite_EL(const void* ptrf, INT size, UINT nmemb, FDKFILE* fp);
+UINT mpegh_FDKfwrite_EL(const void* ptrf, INT size, UINT nmemb, FDKFILE* fp);
 
 /**
  * \brief        Read variable of size "size" as little endian. Convert automatically to host
@@ -550,7 +550,7 @@ UINT FDKfwrite_EL(const void* ptrf, INT size, UINT nmemb, FDKFILE* fp);
  * \param fp     File pointer of type FDKFILE.
  * \return       Number of items read on success and fread() error on failure.
  */
-UINT FDKfread_EL(void* dst, INT size, UINT nmemb, FDKFILE* fp);
+UINT mpegh_FDKfread_EL(void* dst, INT size, UINT nmemb, FDKFILE* fp);
 
 #ifdef __cplusplus
 }

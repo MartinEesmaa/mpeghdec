@@ -150,7 +150,7 @@ void CLpc_Synthesis(FIXP_DBL* signal, const int signal_size, const int inc, cons
  * \param state state buffer of size LPC_MAX_ORDER
  */
 
-void CLpc_SynthesisLattice(FIXP_DBL* signal, const int signal_size, const int signal_e,
+void mpegh_CLpc_SynthesisLattice(FIXP_DBL* signal, const int signal_size, const int signal_e,
                            const int signal_e_out, const int inc, const FIXP_DBL* coeff,
                            const int order, FIXP_DBL* state);
 
@@ -177,7 +177,7 @@ INT CLpc_ParcorToLpc(const FIXP_LPC reflCoeff[], FIXP_LPC LpcCoeff[], const int 
  * \param pPredictionGain_m prediction gain mantissa
  * \param pPredictionGain_e prediction gain exponent
  */
-void CLpc_AutoToParcor(FIXP_DBL acorr[], const int acorr_e, FIXP_LPC reflCoeff[], const int order,
+void mpegh_CLpc_AutoToParcor(FIXP_DBL acorr[], const int acorr_e, FIXP_LPC reflCoeff[], const int order,
                        FIXP_DBL* pPredictionGain_m, INT* pPredictionGain_e);
 
 /**

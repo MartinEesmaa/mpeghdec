@@ -312,7 +312,7 @@ A64_ASM_ROUTINE_END()
 
 #define FUNCTION_CLpc_SynthesisLattice_DBL
 
-void CLpc_SynthesisLattice(
+void mpegh_CLpc_SynthesisLattice(
         FIXP_DBL *signal,
         const int signal_size,
         const int signal_e,
@@ -910,8 +910,8 @@ void CLpc_Synthesis(
   int lpcCoeffShift = lpcCoeff_e+1;
 
   FIXP_LPC_TNS  coeff[2*LPC_MAX_ORDER];
-  FDKmemcpy(&coeff[0],     lpcCoeff_m, order*sizeof(FIXP_LPC_TNS));
-  FDKmemcpy(&coeff[order], lpcCoeff_m, order*sizeof(FIXP_LPC_TNS));
+  mpegh_FDKmemcpy(&coeff[0],     lpcCoeff_m, order*sizeof(FIXP_LPC_TNS));
+  mpegh_FDKmemcpy(&coeff[order], lpcCoeff_m, order*sizeof(FIXP_LPC_TNS));
 
   FDK_ASSERT(lpcCoeffShift >= 0);
   /* y(n) = x(n) - lpc[1]*y(n-1) - ... - lpc[order]*y(n-order) */
@@ -1574,8 +1574,8 @@ void CLpc_Synthesis(
     int lpcCoeffShift = lpcCoeff_e + 1;
     FIXP_LPC_TNS coeff[2*LPC_MAX_ORDER];
 
-    FDKmemcpy(&coeff[0],     lpcCoeff_m, order*sizeof(FIXP_LPC_TNS));
-    FDKmemcpy(&coeff[order], lpcCoeff_m, order*sizeof(FIXP_LPC_TNS));
+    mpegh_FDKmemcpy(&coeff[0],     lpcCoeff_m, order*sizeof(FIXP_LPC_TNS));
+    mpegh_FDKmemcpy(&coeff[order], lpcCoeff_m, order*sizeof(FIXP_LPC_TNS));
 
     FDK_ASSERT(lpcCoeffShift >= 0);
 

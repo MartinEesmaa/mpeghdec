@@ -1202,7 +1202,7 @@ FDK_label(dit_ifft_loop1)
 #ifdef DEBUG_dit_ifft
       for (int i = 0; i < (1 << ldn); i+= 4)
       {
-          FDKprintf("l1: 0x%08X 0x%08X  0x%08X 0x%08X  0x%08X 0x%08X  0x%08X 0x%08X  %d..%d\n", x[2*i+0], x[2*i+1],  x[2*i+2], x[2*i+3],  x[2*i+4], x[2*i+5],  x[2*i+6], x[2*i+7], i, i+3);
+          mpegh_FDKprintf("l1: 0x%08X 0x%08X  0x%08X 0x%08X  0x%08X 0x%08X  0x%08X 0x%08X  %d..%d\n", x[2*i+0], x[2*i+1],  x[2*i+2], x[2*i+3],  x[2*i+4], x[2*i+5],  x[2*i+6], x[2*i+7], i, i+3);
       }
 #endif
     //-----------------------------------------------------------------------------
@@ -1252,7 +1252,7 @@ FDK_label(dit_ifft_loop2)
 #ifdef DEBUG_dit_ifft
       for (int i = 0; i < (1 << ldn); i+= 4)
       {
-          FDKprintf("l2: 0x%08X 0x%08X  0x%08X 0x%08X  0x%08X 0x%08X  0x%08X 0x%08X  %d..%d\n", x[2*i+0], x[2*i+1],  x[2*i+2], x[2*i+3],  x[2*i+4], x[2*i+5],  x[2*i+6], x[2*i+7], i, i+3);
+          mpegh_FDKprintf("l2: 0x%08X 0x%08X  0x%08X 0x%08X  0x%08X 0x%08X  0x%08X 0x%08X  %d..%d\n", x[2*i+0], x[2*i+1],  x[2*i+2], x[2*i+3],  x[2*i+4], x[2*i+5],  x[2*i+6], x[2*i+7], i, i+3);
       }
 #endif    //-----------------------------------------------------------------------------
     FDK_asr_imm(r3, r3, 1)                // r3:  trigDataSize >>= 1
@@ -1378,7 +1378,7 @@ FDK_label(dit_ifft_loop3_outer_cont)
 #ifdef DEBUG_dit_ifft
       for (int i = 0; i < (1 << ldn); i+= 4)
       {
-          FDKprintf("l4: 0x%08X 0x%08X  0x%08X 0x%08X  0x%08X 0x%08X  0x%08X 0x%08X  %d..%d\n", x[2*i+0], x[2*i+1],  x[2*i+2], x[2*i+3],  x[2*i+4], x[2*i+5],  x[2*i+6], x[2*i+7], i, i+3);
+          mpegh_FDKprintf("l4: 0x%08X 0x%08X  0x%08X 0x%08X  0x%08X 0x%08X  0x%08X 0x%08X  %d..%d\n", x[2*i+0], x[2*i+1],  x[2*i+2], x[2*i+3],  x[2*i+4], x[2*i+5],  x[2*i+6], x[2*i+7], i, i+3);
       }
 #endif 
     FDK_mvpop(Q4,Q7)

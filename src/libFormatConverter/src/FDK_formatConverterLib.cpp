@@ -146,10 +146,10 @@ INT IIS_FormatConverter_Create(IIS_FORMATCONVERTER_HANDLE* self, IIS_FORMATCONVE
     }
   }
 
-  if (((*self) = (IIS_FORMATCONVERTER_HANDLE)FDKcalloc(1, sizeof **self)) == NULL) {
+  if (((*self) = (IIS_FORMATCONVERTER_HANDLE)mpegh_FDKcalloc(1, sizeof **self)) == NULL) {
     return err = 1;
   }
-  if (((*self)->member = FDKcalloc(1, sizeof(IIS_FORMATCONVERTER_INTERNAL))) == NULL) {
+  if (((*self)->member = mpegh_FDKcalloc(1, sizeof(IIS_FORMATCONVERTER_INTERNAL))) == NULL) {
     return err = 1;
   }
   _p = (IIS_FORMATCONVERTER_INTERNAL*)(*self)->member;
@@ -166,10 +166,10 @@ INT IIS_FormatConverter_Create(IIS_FORMATCONVERTER_HANDLE* self, IIS_FORMATCONVE
     _p->fcNumFreqBands = _p->stftLength / 2 + 1;
     _p->fcCenterFrequencies = f_bands_nrm_stft_256_erb_58;
   }
-  FDKmemcpy(_p->GVH, GVH, 13 * 6 * sizeof(FIXP_DBL));
-  FDKmemcpy(_p->GVL, GVL, 13 * 6 * sizeof(FIXP_DBL));
-  FDKmemclear(_p->GVH_e, sizeof(_p->GVH_e));
-  FDKmemclear(_p->GVL_e, sizeof(_p->GVH_e));
+  mpegh_FDKmemcpy(_p->GVH, GVH, 13 * 6 * sizeof(FIXP_DBL));
+  mpegh_FDKmemcpy(_p->GVL, GVL, 13 * 6 * sizeof(FIXP_DBL));
+  mpegh_FDKmemclear(_p->GVH_e, sizeof(_p->GVH_e));
+  mpegh_FDKmemclear(_p->GVL_e, sizeof(_p->GVH_e));
 
   _p->frameSize = frameSize;
 
@@ -208,7 +208,7 @@ INT IIS_FormatConverter_Create(IIS_FORMATCONVERTER_HANDLE* self, IIS_FORMATCONVE
 
   FDK_ASSERT(outGeo != NULL);
 
-  FDKmemcpy(_p->outChannelGeo, outGeo, (sizeof *outGeo) * numOutChannels);
+  mpegh_FDKmemcpy(_p->outChannelGeo, outGeo, (sizeof *outGeo) * numOutChannels);
   (*self)->numLocalSpeaker = numOutChannels;
 
   return err;
@@ -236,7 +236,7 @@ INT IIS_FormatConverter_Config_AddInputSetup(IIS_FORMATCONVERTER_HANDLE self,
     return 1;
   }
 
-  FDKmemcpy(&(_p->inputChannelGeo[_p->numTotalInputChannels]), geo, numChannels * sizeof *geo);
+  mpegh_FDKmemcpy(&(_p->inputChannelGeo[_p->numTotalInputChannels]), geo, numChannels * sizeof *geo);
 
   _p->numTotalInputChannels += numChannels;
 
@@ -486,11 +486,11 @@ static int IIS_FormatConverter_Process_STFT(IIS_FORMATCONVERTER_HANDLE self,
     int STFT_headroom = 31;
     int STFT_headroom_prescaling = 0;
     for (ch = 0; ch < _p->numTotalInputChannels; ch++) {
-      STFT_headroom = fMin(STFT_headroom, getScalefactor(&(deinBuffer[ch][i * _p->stftFrameSize]),
+      STFT_headroom = fMin(STFT_headroom, mpegh_getScalefactor(&(deinBuffer[ch][i * _p->stftFrameSize]),
                                                          (_p->stftFrameSize)));
     }
     for (ch = 0; ch < _p->numOutputChannels; ch++) {
-      STFT_headroom = fMin(STFT_headroom, getScalefactor(&(deoutBuffer[ch][i * _p->stftFrameSize]),
+      STFT_headroom = fMin(STFT_headroom, mpegh_getScalefactor(&(deoutBuffer[ch][i * _p->stftFrameSize]),
                                                          (_p->stftFrameSize)));
     }
 
@@ -586,7 +586,7 @@ int IIS_FormatConverter_Close(IIS_FORMATCONVERTER_HANDLE* self) {
 
   IIS_FORMATCONVERTER_INTERNAL* _p = (IIS_FORMATCONVERTER_INTERNAL*)(*self)->member;
   if (_p == NULL) {
-    FDKfree(*self);
+    mpegh_FDKfree(*self);
     *self = NULL;
     return 0;
   }
@@ -602,34 +602,34 @@ int IIS_FormatConverter_Close(IIS_FORMATCONVERTER_HANDLE* self) {
   if (_p->prevInputBufferStft) {
     for (i = 0; i < (TFRA + 1); i++) {
       if (_p->prevInputBufferStft[i]) {
-        FDKafree(_p->prevInputBufferStft[i]);
+        mpegh_FDKafree(_p->prevInputBufferStft[i]);
       }
     }
-    FDKfree(_p->prevInputBufferStft);
+    mpegh_FDKfree(_p->prevInputBufferStft);
   }
 
   if (_p->inputBufferStft) {
     for (i = 0; i < _p->numTotalInputChannels; i++) {
       if (_p->inputBufferStft[i]) {
-        FDKafree(_p->inputBufferStft[i]);
+        mpegh_FDKafree(_p->inputBufferStft[i]);
       }
     }
-    FDKfree(_p->inputBufferStft);
+    mpegh_FDKfree(_p->inputBufferStft);
   }
 
   if (_p->outputBufferStft) {
     for (i = 0; i < _p->numOutputChannels; i++) {
       if (_p->outputBufferStft[i]) {
-        FDKafree(_p->outputBufferStft[i]);
+        mpegh_FDKafree(_p->outputBufferStft[i]);
       }
     }
-    FDKfree(_p->outputBufferStft);
+    mpegh_FDKfree(_p->outputBufferStft);
   }
   formatConverterClose(_p);
 
-  FDKfree(_p);
+  mpegh_FDKfree(_p);
 
-  FDKfree(*self);
+  mpegh_FDKfree(*self);
   *self = NULL;
 
   return 0;
@@ -738,7 +738,7 @@ static INT gVBAPRenderer_GetStaticGains(CICP2GEOMETRY_CHANNEL_GEOMETRY* inGeomet
   /* Calculate inverse matrices */
   /* generateInverseMatrices(*phgVBAPRenderer); */
 
-  if ((gains = (FIXP_DBL*)FDKcalloc(outChannels, sizeof(FIXP_DBL))) == NULL) {
+  if ((gains = (FIXP_DBL*)mpegh_FDKcalloc(outChannels, sizeof(FIXP_DBL))) == NULL) {
     err = 1; /* memory allocation error */
     goto bail;
   }
@@ -771,7 +771,7 @@ bail:
     hgVBAPRenderer = NULL;
   }
 
-  if (gains) FDKfree(gains);
+  if (gains) mpegh_FDKfree(gains);
 
   return err;
 }
@@ -783,30 +783,30 @@ static INT _applyPartialVbapInputFallback(IIS_FORMATCONVERTER_INTERNAL* _p, UINT
   FIXP_DMX_H** tmpDmxMtx = NULL;
   FIXP_DMX_H** dmxMtx = NULL;
 
-  if ((dmxMtx = (FIXP_DMX_H**)FDKcalloc(_p->numTotalInputChannels, sizeof *dmxMtx)) == NULL) {
+  if ((dmxMtx = (FIXP_DMX_H**)mpegh_FDKcalloc(_p->numTotalInputChannels, sizeof *dmxMtx)) == NULL) {
     err = 1; /* memory allocation error */
     goto bail;
   }
   for (ch = 0; ch < (INT)_p->numTotalInputChannels; ch++) {
-    if ((dmxMtx[ch] = (FIXP_DMX_H*)FDKcalloc(_p->numOutputChannels, sizeof *dmxMtx[ch])) == NULL) {
+    if ((dmxMtx[ch] = (FIXP_DMX_H*)mpegh_FDKcalloc(_p->numOutputChannels, sizeof *dmxMtx[ch])) == NULL) {
       err = 1; /* memory allocation error */
       goto bail;
     }
   }
 
   /* allocate temporary memory */
-  if ((unknownChannelsGeo = (CICP2GEOMETRY_CHANNEL_GEOMETRY*)FDKcalloc(
+  if ((unknownChannelsGeo = (CICP2GEOMETRY_CHANNEL_GEOMETRY*)mpegh_FDKcalloc(
            numUnknownInCh, sizeof *unknownChannelsGeo)) == NULL) {
     err = 1; /* memory allocation error */
     goto bail;
   }
 
-  if ((tmpDmxMtx = (FIXP_DMX_H**)FDKcalloc(numUnknownInCh, sizeof *tmpDmxMtx)) == NULL) {
+  if ((tmpDmxMtx = (FIXP_DMX_H**)mpegh_FDKcalloc(numUnknownInCh, sizeof *tmpDmxMtx)) == NULL) {
     err = 1; /* memory allocation error */
     goto bail;
   }
   for (ch = 0; ch < (INT)numUnknownInCh; ch++) {
-    if ((tmpDmxMtx[ch] = (FIXP_DMX_H*)FDKcalloc(_p->numOutputChannels, sizeof *tmpDmxMtx[ch])) ==
+    if ((tmpDmxMtx[ch] = (FIXP_DMX_H*)mpegh_FDKcalloc(_p->numOutputChannels, sizeof *tmpDmxMtx[ch])) ==
         NULL) {
       err = 1; /* memory allocation error */
       goto bail;
@@ -849,26 +849,26 @@ static INT _applyPartialVbapInputFallback(IIS_FORMATCONVERTER_INTERNAL* _p, UINT
 bail:
   /* free memory */
   if (unknownChannelsGeo != NULL) {
-    FDKfree(unknownChannelsGeo);
+    mpegh_FDKfree(unknownChannelsGeo);
     unknownChannelsGeo = NULL;
   }
   if (tmpDmxMtx != NULL) {
     for (ch = 0; ch < (INT)numUnknownInCh; ch++) {
       if (tmpDmxMtx[ch] != NULL) {
-        FDKfree(tmpDmxMtx[ch]);
+        mpegh_FDKfree(tmpDmxMtx[ch]);
       }
     }
-    FDKfree(tmpDmxMtx);
+    mpegh_FDKfree(tmpDmxMtx);
     tmpDmxMtx = NULL;
   }
 
   if (dmxMtx != NULL) {
     for (ch = 0; ch < (INT)_p->numTotalInputChannels; ch++) {
       if (dmxMtx[ch] != NULL) {
-        FDKfree(dmxMtx[ch]);
+        mpegh_FDKfree(dmxMtx[ch]);
       }
     }
-    FDKfree(dmxMtx);
+    mpegh_FDKfree(dmxMtx);
     dmxMtx = NULL;
   }
 
@@ -891,12 +891,12 @@ static INT _applyFullVbapFallback(IIS_FORMATCONVERTER_INTERNAL* _p) {
   formatConverterPostprocessDmxMtx(_p->fcParams->dmxMtx, _p->numTotalInputChannels,
                                    _p->numOutputChannels);
 
-  if ((tmpDmxMtx = (FIXP_DMX_H**)FDKcalloc(_p->numTotalInputChannels, sizeof(tmpDmxMtx))) == NULL) {
+  if ((tmpDmxMtx = (FIXP_DMX_H**)mpegh_FDKcalloc(_p->numTotalInputChannels, sizeof(tmpDmxMtx))) == NULL) {
     err = 1; /* memory allocation error */
     goto bail;
   }
   for (int ch = 0; ch < (INT)_p->numTotalInputChannels; ch++) {
-    if ((tmpDmxMtx[ch] = (FIXP_DMX_H*)FDKcalloc(_p->numOutputChannels, sizeof(tmpDmxMtx[ch]))) ==
+    if ((tmpDmxMtx[ch] = (FIXP_DMX_H*)mpegh_FDKcalloc(_p->numOutputChannels, sizeof(tmpDmxMtx[ch]))) ==
         NULL) {
       err = 1; /* memory allocation error */
       goto bail;
@@ -912,10 +912,10 @@ bail:
   if (tmpDmxMtx != NULL) {
     for (int ch = 0; ch < (INT)_p->numTotalInputChannels; ch++) {
       if (tmpDmxMtx[ch] != NULL) {
-        FDKfree(tmpDmxMtx[ch]);
+        mpegh_FDKfree(tmpDmxMtx[ch]);
       }
     }
-    FDKfree(tmpDmxMtx);
+    mpegh_FDKfree(tmpDmxMtx);
     tmpDmxMtx = NULL;
   }
 
@@ -937,18 +937,18 @@ static INT _initSTFT(IIS_FORMATCONVERTER_INTERNAL* _p) {
   _p->stftFilterbankConfigAnalysis.fftSize = _p->stftLength;
   _p->stftFilterbankConfigAnalysis.stftFilterbankMode = STFT_FILTERBANK_MODE_TIME_TO_FREQ;
 
-  FDKmemcpy(&_p->stftFilterbankConfigSynthesis, &_p->stftFilterbankConfigAnalysis,
+  mpegh_FDKmemcpy(&_p->stftFilterbankConfigSynthesis, &_p->stftFilterbankConfigAnalysis,
             sizeof(_p->stftFilterbankConfigAnalysis));
   _p->stftFilterbankConfigSynthesis.stftFilterbankMode = STFT_FILTERBANK_MODE_FREQ_TO_TIME;
 
   /*Initialize Analysis filterbank*/
-  _p->inputBufferStft = (FIXP_DBL**)FDKcalloc(_p->numTotalInputChannels, sizeof(FIXP_DBL*));
+  _p->inputBufferStft = (FIXP_DBL**)mpegh_FDKcalloc(_p->numTotalInputChannels, sizeof(FIXP_DBL*));
   if (_p->inputBufferStft == NULL) {
     return status = -1;
   }
   for (ch = 0; ch < _p->numTotalInputChannels; ch++) {
     _p->inputBufferStft[ch] =
-        (FIXP_DBL*)FDKaalloc(_p->stftLength * sizeof(FIXP_DBL), ALIGNMENT_DEFAULT);
+        (FIXP_DBL*)mpegh_FDKaalloc(_p->stftLength * sizeof(FIXP_DBL), ALIGNMENT_DEFAULT);
     if (_p->inputBufferStft[ch] == NULL) {
       return status = -1;
     }
@@ -956,13 +956,13 @@ static INT _initSTFT(IIS_FORMATCONVERTER_INTERNAL* _p) {
 
   if (_p->immersiveDownmixFlag) {
     /* Initialize prevInputBufferStft */
-    _p->prevInputBufferStft = (FIXP_DBL**)FDKcalloc((TFRA + 1), sizeof(FIXP_DBL*));
+    _p->prevInputBufferStft = (FIXP_DBL**)mpegh_FDKcalloc((TFRA + 1), sizeof(FIXP_DBL*));
     if (_p->prevInputBufferStft == NULL) {
       return status = -1;
     }
     for (ch = 0; ch < (TFRA + 1); ch++) {
       _p->prevInputBufferStft[ch] =
-          (FIXP_DBL*)FDKaalloc(_p->stftLength * sizeof(FIXP_DBL), ALIGNMENT_DEFAULT);
+          (FIXP_DBL*)mpegh_FDKaalloc(_p->stftLength * sizeof(FIXP_DBL), ALIGNMENT_DEFAULT);
       if (_p->prevInputBufferStft[ch] == NULL) {
         status = -1;
       }
@@ -979,13 +979,13 @@ static INT _initSTFT(IIS_FORMATCONVERTER_INTERNAL* _p) {
   }
 
   /*Initialize Synthesis filterbank*/
-  _p->outputBufferStft = (FIXP_DBL**)FDKcalloc(_p->numOutputChannels, sizeof(FIXP_DBL*));
+  _p->outputBufferStft = (FIXP_DBL**)mpegh_FDKcalloc(_p->numOutputChannels, sizeof(FIXP_DBL*));
   if (_p->outputBufferStft == NULL) {
     return status = -1;
   }
   for (ch = 0; ch < _p->numOutputChannels; ch++) {
     _p->outputBufferStft[ch] =
-        (FIXP_DBL*)FDKaalloc(_p->stftLength * sizeof(FIXP_DBL), ALIGNMENT_DEFAULT);
+        (FIXP_DBL*)mpegh_FDKaalloc(_p->stftLength * sizeof(FIXP_DBL), ALIGNMENT_DEFAULT);
     if (_p->outputBufferStft[ch] == NULL) {
       status = -1;
     }

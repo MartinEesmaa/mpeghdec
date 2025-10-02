@@ -189,19 +189,19 @@ void fft(int length, FIXP_DBL* pInput, INT* pScalefactor) {
   {
     switch (length) {
       case 64:
-        dit_fft(pInput, 6, SineTable512, 512);
+        dit_fft(pInput, 6, mpegh_SineTable512, 512);
         *pScalefactor += SCALEFACTOR64;
         break;
       case 128:
-        dit_fft(pInput, 7, SineTable512, 512);
+        dit_fft(pInput, 7, mpegh_SineTable512, 512);
         *pScalefactor += SCALEFACTOR128;
         break;
       case 256:
-        dit_fft(pInput, 8, SineTable512, 512);
+        dit_fft(pInput, 8, mpegh_SineTable512, 512);
         *pScalefactor += SCALEFACTOR256;
         break;
       case 512:
-        dit_fft(pInput, 9, SineTable512, 512);
+        dit_fft(pInput, 9, mpegh_SineTable512, 512);
         *pScalefactor += SCALEFACTOR512;
         break;
       default:

@@ -99,7 +99,7 @@ INT FDK_Delay_Create(FDK_SignalDelay* data, const USHORT delay, const UCHAR num_
   FDK_ASSERT(num_channels > 0);
 
   if (delay > 0) {
-    data->delay_line = (PCM_DEC*)FDKcalloc(num_channels * delay, sizeof(PCM_DEC));
+    data->delay_line = (PCM_DEC*)mpegh_FDKcalloc(num_channels * delay, sizeof(PCM_DEC));
     if (data->delay_line == NULL) {
       return -1;
     }
@@ -114,7 +114,7 @@ INT FDK_Delay_Create(FDK_SignalDelay* data, const USHORT delay, const UCHAR num_
 
 void FDK_Delay_Destroy(FDK_SignalDelay* data) {
   if (data->delay_line != NULL) {
-    FDKfree(data->delay_line);
+    mpegh_FDKfree(data->delay_line);
   }
   data->delay_line = NULL;
   data->delay = 0;

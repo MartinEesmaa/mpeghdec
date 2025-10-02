@@ -161,7 +161,7 @@ void CBlock_ScaleSpectralData(CAacDecoderChannelInfo* pAacDecoderChannelInfo, UC
       GetScaleFactorBandOffsets(&pAacDecoderChannelInfo->icsInfo, pSamplingRateInfo);
   SPECTRAL_PTR RESTRICT pSpectralCoefficient = pAacDecoderChannelInfo->pSpectralCoefficient;
 
-  FDKmemclear(pSpecScale, 8 * sizeof(SHORT));
+  mpegh_FDKmemclear(pSpecScale, 8 * sizeof(SHORT));
 
   for (window = 0, group = 0; group < GetWindowGroups(&pAacDecoderChannelInfo->icsInfo); group++) {
     for (groupwin = 0; groupwin < GetWindowGroupLength(&pAacDecoderChannelInfo->icsInfo, group);
@@ -207,7 +207,7 @@ void CBlock_ScaleSpectralData(CAacDecoderChannelInfo* pAacDecoderChannelInfo, UC
             SpecScale_window_tns + pAacDecoderChannelInfo->pDynData->TnsData.GainLd;
         FDK_ASSERT(tns_stop >= tns_start);
         /* Consider existing headroom of all MDCT lines inside the TNS bands. */
-        SpecScale_window_tns -= getScalefactor(pSpectrum + BandOffsets[tns_start],
+        SpecScale_window_tns -= mpegh_getScalefactor(pSpectrum + BandOffsets[tns_start],
                                                BandOffsets[tns_stop] - BandOffsets[tns_start]);
         if (SpecScale_window <= 17) {
           SpecScale_window_tns++;
@@ -317,7 +317,7 @@ void CBlock_ScaleTileData(CAacDecoderStaticChannelInfo* pAacDecoderStaticChannel
               SpecScale_window_tns + pAacDecoderChannelInfo->pDynData->TnsData.GainLd;
           FDK_ASSERT(tns_stop >= tns_start);
           /* Consider existing headroom of all MDCT lines inside the TNS bands. */
-          SpecScale_window_tns -= getScalefactor(tile_spectrum + BandOffsets[tns_start],
+          SpecScale_window_tns -= mpegh_getScalefactor(tile_spectrum + BandOffsets[tns_start],
                                                  BandOffsets[tns_stop] - BandOffsets[tns_start]);
           if (SpecScale_window <= 17) {
             SpecScale_window_tns++;
@@ -468,7 +468,7 @@ AAC_DECODER_ERROR CBlock_InverseQuantizeSpectralData(CAacDecoderChannelInfo* pAa
       GetScaleFactorBandOffsets(&pAacDecoderChannelInfo->icsInfo, pSamplingRateInfo);
   const SHORT total_bands = GetScaleFactorBandsTotal(&pAacDecoderChannelInfo->icsInfo);
 
-  FDKmemclear(pAacDecoderChannelInfo->pDynData->aSfbScale, (8 * 16) * sizeof(SHORT));
+  mpegh_FDKmemclear(pAacDecoderChannelInfo->pDynData->aSfbScale, (8 * 16) * sizeof(SHORT));
 
   for (window = 0, group = 0; group < GetWindowGroups(&pAacDecoderChannelInfo->icsInfo); group++) {
     for (groupwin = 0; groupwin < GetWindowGroupLength(&pAacDecoderChannelInfo->icsInfo, group);
@@ -551,7 +551,7 @@ AAC_DECODER_ERROR CBlock_InverseQuantizeSpectralData(CAacDecoderChannelInfo* pAa
       FIXP_DBL* pSpectralCoefficient = SPEC(pAacDecoderChannelInfo->pSpectralCoefficient, window,
                                             pAacDecoderChannelInfo->granuleLength) +
                                        start_clear;
-      FDKmemclear(pSpectralCoefficient, diff_clear * sizeof(FIXP_DBL));
+      mpegh_FDKmemclear(pSpectralCoefficient, diff_clear * sizeof(FIXP_DBL));
 
     } /* for (groupwin=0; groupwin < GetWindowGroupLength(&pAacDecoderChannelInfo->icsInfo,group);
          groupwin++, window++) */
@@ -748,13 +748,13 @@ void CBlock_ApplyNoise(CAacDecoderStaticChannelInfo* pAacDecoderStaticChannelInf
             &pAacDecoderStaticChannelInfo->IGF_StaticData
                  .sGridInfoTab[GetWindowSequence(&pAacDecoderChannelInfo->icsInfo) == BLOCK_SHORT];
         IGF_MAP_INFO_HANDLE hMap = &hGrid->sIGFMapInfoTab[tileIdx];
-        FDKmemcpy(pAacDecoderStaticChannelInfo->IGF_StaticData.fSpectrumTab_sfb_exp[tileIdx],
+        mpegh_FDKmemcpy(pAacDecoderStaticChannelInfo->IGF_StaticData.fSpectrumTab_sfb_exp[tileIdx],
                   pAacDecoderChannelInfo->pDynData->aSfbScale,
                   sizeof(SHORT) * IGF_MAX_WIN * IGF_MAX_SFB_SHORT);
 
         if (pAacDecoderChannelInfo->IGFdata.bitstreamData[0].igf_allZero) {
           /* copy noise filled spectrum to the internal representation: */
-          FDKmemcpy(hMap->fSpectrumTab[0], pAacDecoderChannelInfo->pSpectralCoefficient,
+          mpegh_FDKmemcpy(hMap->fSpectrumTab[0], pAacDecoderChannelInfo->pSpectralCoefficient,
                     sizeof(FIXP_DBL) * 1024);
         }
 
@@ -815,7 +815,7 @@ void IGF_StereoFillingPrepare(CAacDecoderChannelInfo* pAacDecoderChannelInfo,
     FIXP_DBL* dmx_prev = dmx_prev_modified;
 
     /* Find the available headroom of the downmix signal and a suitable shift value*/
-    INT head_shift = getScalefactor(&dmx_prev[bin_start], sfb_width);
+    INT head_shift = mpegh_getScalefactor(&dmx_prev[bin_start], sfb_width);
 
     /* Avoiding noise boosting. Cleaning noise*/
     if (head_shift > 25) {
@@ -975,7 +975,7 @@ void IGF_StereoFillingApply(CAacDecoderChannelInfo* pAacDecoderChannelInfo,
 
     /* Stereo filling changes the dynamic range of the signal,despite keeping the energy of
     the signal constant. */
-    INT head_shift = getScalefactor(&pSpec[bin_start], sfb_width);
+    INT head_shift = mpegh_getScalefactor(&pSpec[bin_start], sfb_width);
 
     /* Do not calculate zeros or -1s */
     if (head_shift == 31) {
@@ -1095,7 +1095,7 @@ void ApplyTools(CAacDecoderStaticChannelInfo* pAacDecoderStaticChannelInfo[],
     if ((elFlags & AC_EL_ENHANCED_NOISE) && (!(elFlags & AC_EL_IGF_AFTER_TNS)) &&
         ((elFlags & AC_EL_IGF_INDEP_TILING) || !common_window)) {
       UCHAR TNF_mask[1024];
-      FDKmemclear(TNF_mask, 1024);
+      mpegh_FDKmemclear(TNF_mask, 1024);
 
       /* Run main IGF routine */
       CIgf_apply(&pAacDecoderStaticChannelInfo[channel]->IGF_StaticData,
@@ -1220,7 +1220,7 @@ void ApplyTools(CAacDecoderStaticChannelInfo* pAacDecoderStaticChannelInfo[],
     if ((elFlags & AC_EL_ENHANCED_NOISE) && (elFlags & AC_EL_IGF_AFTER_TNS) &&
         ((elFlags & AC_EL_IGF_INDEP_TILING) || !common_window)) {
       UCHAR TNF_mask[1024];
-      FDKmemclear(TNF_mask, 1024);
+      mpegh_FDKmemclear(TNF_mask, 1024);
 
       /* Run main IGF routine */
       CIgf_apply(&pAacDecoderStaticChannelInfo[channel]->IGF_StaticData,
@@ -1328,19 +1328,19 @@ void CBlock_FrequencyToTime(CAacDecoderStaticChannelInfo* pAacDecoderStaticChann
 #if defined(FDK_ASSERT_ENABLE)
       nSamples =
 #endif
-          imlt_block(
+          mpegh_imlt_block(
               &pAacDecoderStaticChannelInfo->IMdct, tmp,
               SPEC_LONG(pAacDecoderChannelInfo->pSpectralCoefficient),
               pAacDecoderChannelInfo->specScale, nSpec, frameLen, tl,
-              FDKgetWindowSlope(fl, GetWindowShape(&pAacDecoderChannelInfo->icsInfo)), fl,
-              FDKgetWindowSlope(fr, GetWindowShape(&pAacDecoderChannelInfo->icsInfo)), fr,
+              mpegh_FDKgetWindowSlope(fl, GetWindowShape(&pAacDecoderChannelInfo->icsInfo)), fl,
+              mpegh_FDKgetWindowSlope(fr, GetWindowShape(&pAacDecoderChannelInfo->icsInfo)), fr,
               (FIXP_DBL)0,
               pAacDecoderChannelInfo->currAliasingSymmetry ? MLT_FLAG_CURR_ALIAS_SYMMETRY : 0);
 
 #if defined(FUNCTION_scale_imdct_samples)
       scale_imdct_samples(tmp, outSamples, frameLen, 1);
 #else
-      scaleValuesSaturate(outSamples, tmp, frameLen, MDCT_OUT_HEADROOM - aacOutDataHeadroom);
+      mpegh_scaleValuesSaturate(outSamples, tmp, frameLen, MDCT_OUT_HEADROOM - aacOutDataHeadroom);
 #endif /* defined(FUNCTION_scale_imdct_samples) */
     }
   }
