@@ -96,7 +96,7 @@ amm-info@iis.fraunhofer.de
 
 void* mpegh_fdkCallocMatrix1D(UINT dim1, UINT size);
 void* mpegh_fdkCallocMatrix1D_aligned(UINT dim1, UINT size);
-void fdkFreeMatrix1D(void* p);
+void mpegh_fdkFreeMatrix1D(void* p);
 void mpegh_fdkFreeMatrix1D_aligned(void* p);
 
 void** mpegh_fdkCallocMatrix2D(UINT dim1, UINT dim2, UINT size);

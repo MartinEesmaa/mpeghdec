@@ -96,7 +96,7 @@ void* mpegh_fdkCallocMatrix1D_aligned(UINT dim1, UINT size) {
   return mpegh_FDKaalloc(dim1 * size, ALIGNMENT_DEFAULT);
 }
 
-void fdkFreeMatrix1D(void* p) {
+void mpegh_fdkFreeMatrix1D(void* p) {
   if (p != NULL) {
     mpegh_FDKfree_L(p);
   }
@@ -122,7 +122,7 @@ void** mpegh_fdkCallocMatrix2D(UINT dim1, UINT dim2, UINT size) {
     goto bail;
   }
   if ((p2 = (char*)mpegh_fdkCallocMatrix1D(dim1 * dim2, size)) == NULL) {
-    fdkFreeMatrix1D(p1);
+    mpegh_fdkFreeMatrix1D(p1);
     p1 = NULL;
     goto bail;
   }
@@ -136,6 +136,6 @@ bail:
 
 void mpegh_fdkFreeMatrix2D(void** p) {
   if (!p) return;
-  fdkFreeMatrix1D(p[0]);
-  fdkFreeMatrix1D(p);
+  mpegh_fdkFreeMatrix1D(p[0]);
+  mpegh_fdkFreeMatrix1D(p);
 }
