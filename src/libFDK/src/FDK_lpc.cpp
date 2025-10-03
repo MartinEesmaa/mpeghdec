@@ -452,7 +452,7 @@ void mpegh_CLpc_AutoToParcor(FIXP_DBL acorr[], const int acorr_e, FIXP_LPC reflC
   if (pPredictionGain_m != NULL) {
     if (acorr[0] > (FIXP_DBL)0) {
       /* prediction gain = signal power / error (residual) power */
-      *pPredictionGain_m = fDivNormSigned(autoCorr_0, acorr[0], &scale);
+      *pPredictionGain_m = mpegh_fDivNormSigned(autoCorr_0, acorr[0], &scale);
       *pPredictionGain_e = scale;
     } else {
       *pPredictionGain_m = (FIXP_DBL)0;
@@ -476,7 +476,7 @@ void CLpc_AutoToLpcIGF(FIXP_DBL* lpcCoeff_m, INT* lpcCoeff_e, const FIXP_DBL* R,
 
   p = m;
 
-  a_m[0] = -fDivNormSigned(R[1], R[0]);
+  a_m[0] = -mpegh_fDivNormSigned(R[1], R[0]);
   a_e[0] = 0;
 
   /* err = R[0] + R[1] * a[0] = R[0] + R[1]*R[1]/R[0] */
@@ -491,7 +491,7 @@ void CLpc_AutoToLpcIGF(FIXP_DBL* lpcCoeff_m, INT* lpcCoeff_e, const FIXP_DBL* R,
       s_m = fAddNorm(s_m, s_e, fMult(a_m[i], R[t - i]), a_e[i] + R_e, &s_e);
     }
     /* tmp_e = m, v_e = m */
-    g_m = fDivNormSigned(s_m, err_m, &g_e);
+    g_m = mpegh_fDivNormSigned(s_m, err_m, &g_e);
     g_m = -g_m; /* negate after division to circumvent possible overflow of -s_m */
     g_e += s_e - err_e;
 
@@ -560,7 +560,7 @@ void CLpc_AutoToLpc(FIXP_LPC* lpcCoeff_m, INT* lpcCoeff_e, const FIXP_DBL* R, co
 
   p = m;
 
-  rc_m[0] = -fDivNormSigned(R[1] << acorr_headroom, acorr_nrg); /* rc[0] = -r[1] / r[0]  */
+  rc_m[0] = -mpegh_fDivNormSigned(R[1] << acorr_headroom, acorr_nrg); /* rc[0] = -r[1] / r[0]  */
   a_m[0] = rc_m[0];
   a_e[0] = 0;
   sigma2_m = (acorr_nrg >> 1) +
@@ -581,7 +581,7 @@ void CLpc_AutoToLpc(FIXP_LPC* lpcCoeff_m, INT* lpcCoeff_e, const FIXP_DBL* R, co
                      &s_e); /* Sum */
     }
     /* tmp_e = m, v_e = m */
-    g_m = fDivNormSigned(s_m, err_m, &g_e); /* RC[Loop-1] = -Sum/Sigma2 */
+    g_m = mpegh_fDivNormSigned(s_m, err_m, &g_e); /* RC[Loop-1] = -Sum/Sigma2 */
     g_m = -g_m; /* negate after division to circumvent possible overflow of -s_m */
 
     g_e += s_e - err_e; /* RC[Loop-1] = -Sum/Sigma2 */

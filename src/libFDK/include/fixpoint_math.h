@@ -204,11 +204,11 @@ FDK_INLINE INT fIsLessThan(FIXP_SGL a_m, INT a_e, FIXP_SGL b_m, INT b_e) {
  */
 #define CalcLdData(op) fLog2(op, 0)
 
-void LdDataVector(FIXP_DBL* srcVector, FIXP_DBL* destVector, INT number);
+void mpegh_LdDataVector(FIXP_DBL* srcVector, FIXP_DBL* destVector, INT number);
 
-extern const UINT exp2_tab_long[32];
-extern const UINT exp2w_tab_long[32];
-extern const UINT exp2x_tab_long[32];
+extern const UINT mpegh_exp2_tab_long[32];
+extern const UINT mpegh_exp2w_tab_long[32];
+extern const UINT mpegh_exp2x_tab_long[32];
 
 LNK_SECTION_CODE_L1
 FDK_INLINE FIXP_DBL CalcInvLdData(const FIXP_DBL x) {
@@ -225,9 +225,9 @@ FDK_INLINE FIXP_DBL CalcInvLdData(const FIXP_DBL x) {
     UINT index1 = (UINT)(LONG)(x >> 20) & 0x1F;
     int exp = fMin(31, ((x > FL2FXCONST_DBL(0.0f)) ? (31 - (int)(x >> 25)) : (int)(-(x >> 25))));
 
-    UINT lookup1 = exp2_tab_long[index1] * set_zero;
-    UINT lookup2 = exp2w_tab_long[index2];
-    UINT lookup3 = exp2x_tab_long[index3];
+    UINT lookup1 = mpegh_exp2_tab_long[index1] * set_zero;
+    UINT lookup2 = mpegh_exp2w_tab_long[index2];
+    UINT lookup3 = mpegh_exp2x_tab_long[index3];
     UINT lookup3f = lookup3 + (UINT)(LONG)fMultDiv2((FIXP_DBL)(0x0016302F), (FIXP_SGL)frac);
 
     UINT lookup12 = (UINT)(LONG)fMult((FIXP_DBL)lookup1, (FIXP_DBL)lookup2);
@@ -239,8 +239,8 @@ FDK_INLINE FIXP_DBL CalcInvLdData(const FIXP_DBL x) {
   return retVal;
 }
 
-void InitLdInt();
-FIXP_DBL CalcLdInt(INT i);
+void mpegh_InitLdInt();
+FIXP_DBL mpegh_CalcLdInt(INT i);
 
 extern const USHORT mpegh_sqrt_tab[49];
 
@@ -435,7 +435,7 @@ FIXP_DBL mul_dbl_sgl_rnd(const FIXP_DBL op1, const FIXP_SGL op2);
  * \param result_e pointer to an INT where the exponent of the result is stored into
  * \return mantissa of the product f1*f2
  */
-FIXP_DBL fMultNorm(FIXP_DBL f1, FIXP_DBL f2, INT* result_e);
+FIXP_DBL mpegh_fMultNorm(FIXP_DBL f1, FIXP_DBL f2, INT* result_e);
 
 /**
  * \brief Multiply 2 values using maximum precision. The exponent of the result is 0.
@@ -443,11 +443,11 @@ FIXP_DBL fMultNorm(FIXP_DBL f1, FIXP_DBL f2, INT* result_e);
  * \param f2_m mantissa of factor 2
  * \return mantissa of the result with exponent equal to 0
  */
-inline FIXP_DBL fMultNorm(FIXP_DBL f1, FIXP_DBL f2) {
+inline FIXP_DBL mpegh_fMultNorm(FIXP_DBL f1, FIXP_DBL f2) {
   FIXP_DBL m;
   INT e;
 
-  m = fMultNorm(f1, f2, &e);
+  m = mpegh_fMultNorm(f1, f2, &e);
 
   m = scaleValueSaturate(m, e);
 
@@ -463,11 +463,11 @@ inline FIXP_DBL fMultNorm(FIXP_DBL f1, FIXP_DBL f2) {
  * \param result_e exponent for the returned mantissa of the result
  * \return mantissa of the result with exponent equal to result_e
  */
-inline FIXP_DBL fMultNorm(FIXP_DBL f1_m, INT f1_e, FIXP_DBL f2_m, INT f2_e, INT result_e) {
+inline FIXP_DBL mpegh_fMultNorm(FIXP_DBL f1_m, INT f1_e, FIXP_DBL f2_m, INT f2_e, INT result_e) {
   FIXP_DBL m;
   INT e;
 
-  m = fMultNorm(f1_m, f2_m, &e);
+  m = mpegh_fMultNorm(f1_m, f2_m, &e);
 
   m = scaleValueSaturate(m, e + f1_e + f2_e - result_e);
 
@@ -486,7 +486,7 @@ inline INT fMultI(FIXP_DBL a, INT b) {
   FIXP_DBL m, mi;
   INT m_e;
 
-  m = fMultNorm(a, (FIXP_DBL)b, &m_e);
+  m = mpegh_fMultNorm(a, (FIXP_DBL)b, &m_e);
 
   if (m_e < (INT)0) {
     if (m_e > (INT)-DFRACT_BITS) {
@@ -514,7 +514,7 @@ inline INT fMultIfloor(FIXP_DBL a, INT b) {
   FIXP_DBL m, mi;
   INT m_e;
 
-  m = fMultNorm(a, (FIXP_DBL)b, &m_e);
+  m = mpegh_fMultNorm(a, (FIXP_DBL)b, &m_e);
 
   if (m_e < (INT)0) {
     if (m_e > (INT)-DFRACT_BITS) {
@@ -544,7 +544,7 @@ inline INT fMultIceil(FIXP_DBL a, INT b) {
   FIXP_DBL m, mi;
   INT m_e;
 
-  m = fMultNorm(a, (FIXP_DBL)b, &m_e);
+  m = mpegh_fMultNorm(a, (FIXP_DBL)b, &m_e);
 
   if (m_e < (INT)0) {
     if (m_e > (INT) - (DFRACT_BITS - 1)) {
@@ -579,7 +579,7 @@ inline INT fMultIceil(FIXP_DBL a, INT b) {
  * \param result_e pointer to an INT where the exponent of the result is stored into
  * \return num/denum with exponent = *result_e
  */
-FIXP_DBL fDivNorm(FIXP_DBL num, FIXP_DBL denom, INT* result_e);
+FIXP_DBL mpegh_fDivNorm(FIXP_DBL num, FIXP_DBL denom, INT* result_e);
 
 /**
  * \brief Divide 2 positive FIXP_DBL values with normalization of input values.
@@ -587,7 +587,7 @@ FIXP_DBL fDivNorm(FIXP_DBL num, FIXP_DBL denom, INT* result_e);
  * \param denum denominator
  * \return num/denum with exponent = 0
  */
-FIXP_DBL fDivNorm(FIXP_DBL num, FIXP_DBL denom);
+FIXP_DBL mpegh_fDivNorm(FIXP_DBL num, FIXP_DBL denom);
 
 /**
  * \brief Divide 2 signed FIXP_DBL values with normalization of input values.
@@ -596,7 +596,7 @@ FIXP_DBL fDivNorm(FIXP_DBL num, FIXP_DBL denom);
  * \param result_e pointer to an INT where the exponent of the result is stored into
  * \return num/denum with exponent = *result_e
  */
-FIXP_DBL fDivNormSigned(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e);
+FIXP_DBL mpegh_fDivNormSigned(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e);
 
 /**
  * \brief Divide 2 signed FIXP_DBL values with normalization of input values.
@@ -604,7 +604,7 @@ FIXP_DBL fDivNormSigned(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e);
  * \param denum denominator
  * \return num/denum with exponent = 0
  */
-FIXP_DBL fDivNormSigned(FIXP_DBL num, FIXP_DBL denom);
+FIXP_DBL mpegh_fDivNormSigned(FIXP_DBL num, FIXP_DBL denom);
 #endif /* FUNCTION_fDivNorm */
 
 /**
@@ -680,7 +680,7 @@ inline FIXP_DBL fAddNorm(FIXP_DBL a_m, INT a_e, FIXP_DBL b_m, INT b_e, INT resul
  * \param denum denomintator
  * \return num/denum with exponent = 0
  */
-FIXP_DBL fDivNormHighPrec(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e);
+FIXP_DBL mpegh_fDivNormHighPrec(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e);
 
 #ifndef FUNCTION_fPow
 /**
@@ -690,7 +690,7 @@ FIXP_DBL fDivNormHighPrec(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e);
  * \param result_e pointer to a INT where the exponent of the result will be stored into
  * \return mantissa of the result
  */
-FIXP_DBL f2Pow(const FIXP_DBL exp_m, const INT exp_e, INT* result_e);
+FIXP_DBL mpegh_f2Pow(const FIXP_DBL exp_m, const INT exp_e, INT* result_e);
 
 /**
  * \brief return 2 ^ (exp_m * 2^exp_e). This version returns only the mantissa with implicit
@@ -699,7 +699,7 @@ FIXP_DBL f2Pow(const FIXP_DBL exp_m, const INT exp_e, INT* result_e);
  * \param exp_e exponent of the exponent to 2.0f
  * \return mantissa of the result
  */
-FIXP_DBL f2Pow(const FIXP_DBL exp_m, const INT exp_e);
+FIXP_DBL mpegh_f2Pow(const FIXP_DBL exp_m, const INT exp_e);
 
 /**
  * \brief return x ^ (exp_m * 2^exp_e), where log2(x) = baseLd_m * 2^(baseLd_e). This saves
@@ -711,7 +711,7 @@ FIXP_DBL f2Pow(const FIXP_DBL exp_m, const INT exp_e);
  * \param result_e pointer to a INT where the exponent of the result will be stored into
  * \return mantissa of the result
  */
-FIXP_DBL fLdPow(FIXP_DBL baseLd_m, INT baseLd_e, FIXP_DBL exp_m, INT exp_e, INT* result_e);
+FIXP_DBL mpegh_fLdPow(FIXP_DBL baseLd_m, INT baseLd_e, FIXP_DBL exp_m, INT exp_e, INT* result_e);
 
 /**
  * \brief return x ^ (exp_m * 2^exp_e), where log2(x) = baseLd_m * 2^(baseLd_e). This saves
@@ -723,10 +723,10 @@ FIXP_DBL fLdPow(FIXP_DBL baseLd_m, INT baseLd_e, FIXP_DBL exp_m, INT exp_e, INT*
  * \param exp_e exponent of the exponent to 2.0f
  * \return mantissa of the result
  */
-FIXP_DBL fLdPow(FIXP_DBL baseLd_m, INT baseLd_e, FIXP_DBL exp_m, INT exp_e);
+FIXP_DBL mpegh_fLdPow(FIXP_DBL baseLd_m, INT baseLd_e, FIXP_DBL exp_m, INT exp_e);
 
 /**
- * \brief return (base_m * 2^base_e) ^ (exp * 2^exp_e). Use fLdPow() instead whenever possible.
+ * \brief return (base_m * 2^base_e) ^ (exp * 2^exp_e). Use mpegh_fLdPow() instead whenever possible.
  * \param base_m mantissa of the base.
  * \param base_e exponent of the base.
  * \param exp_m mantissa of power to be calculated of the base.
@@ -734,7 +734,7 @@ FIXP_DBL fLdPow(FIXP_DBL baseLd_m, INT baseLd_e, FIXP_DBL exp_m, INT exp_e);
  * \param result_e pointer to a INT where the exponent of the result will be stored into.
  * \return mantissa of the result.
  */
-FIXP_DBL fPow(FIXP_DBL base_m, INT base_e, FIXP_DBL exp_m, INT exp_e, INT* result_e);
+FIXP_DBL mpegh_fPow(FIXP_DBL base_m, INT base_e, FIXP_DBL exp_m, INT exp_e, INT* result_e);
 
 /**
  * \brief return (base_m * 2^base_e) ^ N
@@ -744,7 +744,7 @@ FIXP_DBL fPow(FIXP_DBL base_m, INT base_e, FIXP_DBL exp_m, INT exp_e, INT* resul
  * \param result_e pointer to a INT where the exponent of the result will be stored into
  * \return mantissa of the result
  */
-FIXP_DBL fPowInt(FIXP_DBL base_m, INT base_e, INT N, INT* result_e);
+FIXP_DBL mpegh_fPowInt(FIXP_DBL base_m, INT base_e, INT N, INT* result_e);
 #endif /* #ifndef FUNCTION_fPow */
 
 #ifndef FUNCTION_fLog2
@@ -756,7 +756,7 @@ FIXP_DBL fPowInt(FIXP_DBL base_m, INT base_e, INT N, INT* result_e);
  * \return the mantissa of the result.
  * \param
  */
-FIXP_DBL CalcLog2(FIXP_DBL arg, INT arg_e, INT* result_e);
+FIXP_DBL mpegh_CalcLog2(FIXP_DBL arg, INT arg_e, INT* result_e);
 
 /**
  * \brief calculate logarithm of base 2 of x_m * 2^(x_e)
@@ -901,17 +901,17 @@ FDK_INLINE FIXP_SGL fNegateSaturate(FIXP_SGL x) {
 }
 #endif
 
-INT fixp_floorToInt(FIXP_DBL f_inp, INT sf);
-FIXP_DBL fixp_floor(FIXP_DBL f_inp, INT sf);
+INT mpegh_fixp_floorToInt(FIXP_DBL f_inp, INT sf);
+FIXP_DBL mpegh_fixp_floor(FIXP_DBL f_inp, INT sf);
 
-INT fixp_ceilToInt(FIXP_DBL f_inp, INT sf);
-FIXP_DBL fixp_ceil(FIXP_DBL f_inp, INT sf);
+INT mpegh_fixp_ceilToInt(FIXP_DBL f_inp, INT sf);
+FIXP_DBL mpegh_fixp_ceil(FIXP_DBL f_inp, INT sf);
 
-INT fixp_truncateToInt(FIXP_DBL f_inp, INT sf);
-FIXP_DBL fixp_truncate(FIXP_DBL f_inp, INT sf);
+INT mpegh_fixp_truncateToInt(FIXP_DBL f_inp, INT sf);
+FIXP_DBL mpegh_fixp_truncate(FIXP_DBL f_inp, INT sf);
 
-INT fixp_roundToInt(FIXP_DBL f_inp, INT sf);
-FIXP_DBL fixp_round(FIXP_DBL f_inp, INT sf);
+INT mpegh_fixp_roundToInt(FIXP_DBL f_inp, INT sf);
+FIXP_DBL mpegh_fixp_round(FIXP_DBL f_inp, INT sf);
 
 /*****************************************************************************
 

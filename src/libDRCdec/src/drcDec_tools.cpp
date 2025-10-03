@@ -269,7 +269,7 @@ dB2lin(const FIXP_DBL dB_m, const int dB_e, int* pLin_e) {
      return lin_val = 10^(dB_val/20) = 2^(log2(10)/20*dB_val)
      with dB_val = dB_m *2^dB_e and lin_val = lin_m * 2^lin_e */
   FIXP_DBL lin_m =
-      f2Pow(fMult(dB_m, FL2FXCONST_DBL(0.1660964f * (float)(1 << 2))), dB_e - 2, pLin_e);
+      mpegh_f2Pow(fMult(dB_m, FL2FXCONST_DBL(0.1660964f * (float)(1 << 2))), dB_e - 2, pLin_e);
 
   return lin_m;
 }
@@ -280,7 +280,7 @@ approxDb2lin(const FIXP_DBL dB_m, const int dB_e, int* pLin_e) {
      return lin_val = 2^(dB_val/6)
      with dB_val = dB_m *2^dB_e and lin_val = lin_m * 2^lin_e */
   FIXP_DBL lin_m =
-      f2Pow(fMult(dB_m, FL2FXCONST_DBL(0.1666667f * (float)(1 << 2))), dB_e - 2, pLin_e);
+      mpegh_f2Pow(fMult(dB_m, FL2FXCONST_DBL(0.1666667f * (float)(1 << 2))), dB_e - 2, pLin_e);
 
   return lin_m;
 }

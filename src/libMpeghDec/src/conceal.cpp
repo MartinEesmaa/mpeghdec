@@ -418,7 +418,7 @@ CConcealment_SetAttenuation(CConcealParams* concealParams, const SHORT* fadeOutA
     /* now dequantize factors */
     for (i = 0; i < CONCEAL_MAX_NUM_FADE_FACTORS; i++) {
       concealParams->fadeOutFactor[i] = FX_DBL2FX_SGL(
-          fLdPow(CONCEAL_MIN_ATTENUATION_FACTOR_025_LD, 0,
+          mpegh_fLdPow(CONCEAL_MIN_ATTENUATION_FACTOR_025_LD, 0,
                  (FIXP_DBL)((INT)(FL2FXCONST_DBL(1.0 / 2.0) >> (CONCEAL_PARAMETER_BITS - 1)) *
                             (INT)fadeOutAttenuationVector[i]),
                  CONCEAL_PARAMETER_BITS));
@@ -442,7 +442,7 @@ CConcealment_SetAttenuation(CConcealParams* concealParams, const SHORT* fadeOutA
 
     /* now dequantize factors */
     for (i = 0; i < CONCEAL_MAX_NUM_FADE_FACTORS; i++) {
-      concealParams->fadeInFactor[i] = FX_DBL2FX_SGL(fLdPow(
+      concealParams->fadeInFactor[i] = FX_DBL2FX_SGL(mpegh_fLdPow(
           CONCEAL_MIN_ATTENUATION_FACTOR_025_LD, 0,
           (FIXP_DBL)((INT)(FIXP_ONE >> CONCEAL_PARAMETER_BITS) * (INT)fadeInAttenuationVector[i]),
           CONCEAL_PARAMETER_BITS));

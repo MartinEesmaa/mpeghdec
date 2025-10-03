@@ -328,7 +328,7 @@ void calcSpreadVectors(HANDLE_GVBAPRENDERER hgVBAPRenderer, OAM_SAMPLE source) {
 
     if ((spreadHeight != spreadAngle) && (hgVBAPRenderer->speakerSetup.hasHeightSpeakers == true)) {
       INT az_el_spread_ratio_e;
-      FIXP_DBL az_el_spread_ratio = fDivNorm(spreadHeight, spreadAngle, &az_el_spread_ratio_e);
+      FIXP_DBL az_el_spread_ratio = mpegh_fDivNorm(spreadHeight, spreadAngle, &az_el_spread_ratio_e);
       // we assert the divison returns an exponent in the range -(DFRACT_BITS - 1) <=
       // az_el_spread_ratio_e <= (DFRACT_BITS - 1)
       v = az_el_spread_ratio * v;

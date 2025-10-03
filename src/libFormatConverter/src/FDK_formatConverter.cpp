@@ -444,7 +444,7 @@ INT formatConverterPostprocessDmxMtx(FIXP_DMX_H** dmxMtx, const UINT numInputCha
 
     /* normalize gains */
     e = 0;
-    FIXP_DBL tmp = fDivNormHighPrec(origEne, modEne, &e);
+    FIXP_DBL tmp = mpegh_fDivNormHighPrec(origEne, modEne, &e);
     e = origEne_e - modEne_e + e;
     if (e & 1) {
       normFactor = sqrtFixp(tmp >> 1);

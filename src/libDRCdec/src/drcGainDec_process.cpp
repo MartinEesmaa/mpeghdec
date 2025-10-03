@@ -246,14 +246,14 @@ static DRC_ERROR _processNodeSegments(
     start = fMax(-timePrev, 1);
     stop = fMin(time, (SHORT)(frameSize - 1)) - timePrev + 1;
 
-    gainLinChanPrev = fMultNorm(gainLinPrev, 7, *pChannelGainPrevious, 8, 7);
+    gainLinChanPrev = mpegh_fMultNorm(gainLinPrev, 7, *pChannelGainPrevious, 8, 7);
 
     if (start == 1) { /* This is a new segment. Apply new channelGain. */
-      gainLinChan = fMultNorm(gainLin, 7, channelGain, 8, 7);
+      gainLinChan = mpegh_fMultNorm(gainLin, 7, channelGain, 8, 7);
       *pChannelGainPrevious = channelGain;
     } else { /* This is a segment already processed last frame. Needs to be completed with old
                 channelGain. */
-      gainLinChan = fMultNorm(gainLin, 7, *pChannelGainPrevious, 8, 7);
+      gainLinChan = mpegh_fMultNorm(gainLin, 7, *pChannelGainPrevious, 8, 7);
     }
 
     err = _interpolateDrcGain(gainInterpolationType, timePrev, duration, start, stop, stepsize,
@@ -504,7 +504,7 @@ processDrcSubband(HANDLE_DRC_GAIN_DECODER hGainDec, const int activeDrcIndex,
         for (b = 0; b < bandCount; b++) {
           gainLr = thisSubbandGainsBuffer[b * frameSizeSb + m];
           if (activeDrcLocation == 0 && activeDrcIndex == hGainDec->channelGainActiveDrcIndex) {
-            gainLr = fMultNorm(gainLr, 7, hGainDec->channelGain[c], 8, 7);
+            gainLr = mpegh_fMultNorm(gainLr, 7, hGainDec->channelGain[c], 8, 7);
           }
           n_min = fMin(CntLeadingZeros(gainLr) - 1, n_min);
         }
@@ -513,7 +513,7 @@ processDrcSubband(HANDLE_DRC_GAIN_DECODER hGainDec, const int activeDrcIndex,
           b--;
           gainLr = thisSubbandGainsBuffer[b * frameSizeSb + m];
           if (activeDrcLocation == 0 && activeDrcIndex == hGainDec->channelGainActiveDrcIndex) {
-            gainLr = fMultNorm(gainLr, 7, hGainDec->channelGain[c], 8, 7);
+            gainLr = mpegh_fMultNorm(gainLr, 7, hGainDec->channelGain[c], 8, 7);
           }
           gainLr <<= n_min;
           if (b == bandCount - 1) {
@@ -568,7 +568,7 @@ processDrcSubband(HANDLE_DRC_GAIN_DECODER hGainDec, const int activeDrcIndex,
       } else { /* single-band DRC */
         gainSb = thisSubbandGainsBuffer[m];
         if (activeDrcLocation == 0 && activeDrcIndex == hGainDec->channelGainActiveDrcIndex)
-          gainSb = fMultNorm(gainSb, 7, hGainDec->channelGain[c], 8, 7);
+          gainSb = mpegh_fMultNorm(gainSb, 7, hGainDec->channelGain[c], 8, 7);
         /* normalize gainSb for keeping signal precision */
         n_min = fMin(CntLeadingZeros(gainSb) - 1, n_min);
         gainSb <<= n_min;

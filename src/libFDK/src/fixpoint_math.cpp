@@ -102,10 +102,10 @@ amm-info@iis.fraunhofer.de
  */
 
 /*****************************************************************************
-  functionname: LdDataVector
+  functionname: mpegh_LdDataVector
 *****************************************************************************/
 LNK_SECTION_CODE_L1
-void LdDataVector(FIXP_DBL* srcVector, FIXP_DBL* destVector, INT n) {
+void mpegh_LdDataVector(FIXP_DBL* srcVector, FIXP_DBL* destVector, INT n) {
   INT i;
   for (i = 0; i < n; i++) {
     destVector[i] = fLog2(srcVector[i], 0);
@@ -193,9 +193,9 @@ function does not output negative values.
 /*  => result = (lookup1*lookup2*(lookup3+C1*frac)<<3)>>exp     */
 /* Due to the fact, that all lookup values contain a factor 0.5 */
 /* the result has to be shifted by 3 to the right also.         */
-/* Table exp2_tab_long contains the log2 for 0 to 1.0 in steps  */
-/* of 1/32, table exp2w_tab_long the log2 for 0 to 1/32 in steps*/
-/* of 1/1024, table exp2x_tab_long the log2 for 0 to 1/1024 in  */
+/* Table mpegh_exp2_tab_long contains the log2 for 0 to 1.0 in steps  */
+/* of 1/32, table mpegh_exp2w_tab_long the log2 for 0 to 1/32 in steps*/
+/* of 1/1024, table mpegh_exp2x_tab_long the log2 for 0 to 1/1024 in  */
 /* steps of 1/32768. Since the 2-logarithm of very very small   */
 /* negative value is rather linear, we can use interpolation.   */
 /* Limitations:                                                 */
@@ -208,7 +208,7 @@ function does not output negative values.
 /* This table is used for lookup 2^x with   */
 /* x in range [0...1.0[ in steps of 1/32 */
 LNK_SECTION_DATA_L1
-const UINT exp2_tab_long[32] = {
+const UINT mpegh_exp2_tab_long[32] = {
     0x40000000, 0x4166C34C, 0x42D561B4, 0x444C0740, 0x45CAE0F2, 0x47521CC6, 0x48E1E9BA,
     0x4A7A77D4, 0x4C1BF829, 0x4DC69CDD, 0x4F7A9930, 0x51382182, 0x52FF6B55, 0x54D0AD5A,
     0x56AC1F75, 0x5891FAC1, 0x5A82799A, 0x5C7DD7A4, 0x5E8451D0, 0x60962665, 0x62B39509,
@@ -220,7 +220,7 @@ const UINT exp2_tab_long[32] = {
 /* This table is used for lookup 2^x with   */
 /* x in range [0...1/32[ in steps of 1/1024 */
 LNK_SECTION_DATA_L1
-const UINT exp2w_tab_long[32] = {
+const UINT mpegh_exp2w_tab_long[32] = {
     0x40000000, 0x400B1818, 0x4016321B, 0x40214E0C, 0x402C6BE9, 0x40378BB4, 0x4042AD6D, 0x404DD113,
     0x4058F6A8, 0x40641E2B, 0x406F479E, 0x407A7300, 0x4085A051, 0x4090CF92, 0x409C00C4, 0x40A733E6,
     0x40B268FA, 0x40BD9FFF, 0x40C8D8F5, 0x40D413DD, 0x40DF50B8, 0x40EA8F86, 0x40F5D046, 0x410112FA,
@@ -230,7 +230,7 @@ const UINT exp2w_tab_long[32] = {
 /* This table is used for lookup 2^x with   */
 /* x in range [0...1/1024[ in steps of 1/32768 */
 LNK_SECTION_DATA_L1
-const UINT exp2x_tab_long[32] = {
+const UINT mpegh_exp2x_tab_long[32] = {
     0x40000000, 0x400058B9, 0x4000B173, 0x40010A2D, 0x400162E8, 0x4001BBA3, 0x4002145F, 0x40026D1B,
     0x4002C5D8, 0x40031E95, 0x40037752, 0x4003D011, 0x400428CF, 0x4004818E, 0x4004DA4E, 0x4005330E,
     0x40058BCE, 0x4005E48F, 0x40063D51, 0x40069613, 0x4006EED5, 0x40074798, 0x4007A05B, 0x4007F91F,
@@ -239,7 +239,7 @@ const UINT exp2x_tab_long[32] = {
 };
 
 /*****************************************************************************
-    functionname: InitLdInt and CalcLdInt
+    functionname: mpegh_InitLdInt and mpegh_CalcLdInt
     description:  Create and access table with integer LdData (0 to LD_INT_TAB_LEN)
 *****************************************************************************/
 #ifndef LD_INT_TAB_LEN
@@ -339,14 +339,14 @@ static const FIXP_DBL ldIntCoeff[] = {
 #endif
 
 LNK_SECTION_INITCODE
-void InitLdInt() {
+void mpegh_InitLdInt() {
   /* nothing to do! Use preinitialized logarithm table */
 }
 
 #if (LD_INT_TAB_LEN != 0)
 
 LNK_SECTION_CODE_L1
-FIXP_DBL CalcLdInt(INT i) {
+FIXP_DBL mpegh_CalcLdInt(INT i) {
   /* calculates ld(op)/LD_DATA_SCALING */
   /* op is assumed to be an integer value between 1 and LD_INT_TAB_LEN */
 
@@ -394,7 +394,7 @@ FIXP_DBL schur_div(FIXP_DBL num, FIXP_DBL denum, INT count) {
 #endif /* !defined(FUNCTION_schur_div) */
 
 #ifndef FUNCTION_fMultNorm
-FIXP_DBL fMultNorm(FIXP_DBL f1, FIXP_DBL f2, INT* result_e) {
+FIXP_DBL mpegh_fMultNorm(FIXP_DBL f1, FIXP_DBL f2, INT* result_e) {
   INT product = 0;
   INT norm_f1, norm_f2;
 
@@ -420,7 +420,7 @@ FIXP_DBL fMultNorm(FIXP_DBL f1, FIXP_DBL f2, INT* result_e) {
 #endif
 
 #ifndef FUNCTION_fDivNorm
-FIXP_DBL fDivNorm(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e) {
+FIXP_DBL mpegh_fDivNorm(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e) {
   FIXP_DBL div;
   INT norm_num, norm_den;
 
@@ -448,13 +448,13 @@ FIXP_DBL fDivNorm(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e) {
 #endif /* !FUNCTION_fDivNorm */
 
 #ifndef FUNCTION_fDivNorm
-FIXP_DBL fDivNorm(FIXP_DBL num, FIXP_DBL denom) {
+FIXP_DBL mpegh_fDivNorm(FIXP_DBL num, FIXP_DBL denom) {
   INT e;
   FIXP_DBL res;
 
   FDK_ASSERT(denom >= num);
 
-  res = fDivNorm(num, denom, &e);
+  res = mpegh_fDivNorm(num, denom, &e);
 
   /* Avoid overflow since we must output a value with exponent 0
      there is no other choice than saturating to almost 1.0f */
@@ -469,7 +469,7 @@ FIXP_DBL fDivNorm(FIXP_DBL num, FIXP_DBL denom) {
 #endif /* !FUNCTION_fDivNorm */
 
 #ifndef FUNCTION_fDivNormSigned
-FIXP_DBL fDivNormSigned(FIXP_DBL num, FIXP_DBL denom) {
+FIXP_DBL mpegh_fDivNormSigned(FIXP_DBL num, FIXP_DBL denom) {
   INT e;
   FIXP_DBL res;
   int sign;
@@ -479,7 +479,7 @@ FIXP_DBL fDivNormSigned(FIXP_DBL num, FIXP_DBL denom) {
   }
 
   sign = ((num >= (FIXP_DBL)0) != (denom >= (FIXP_DBL)0));
-  res = fDivNormSigned(num, denom, &e);
+  res = mpegh_fDivNormSigned(num, denom, &e);
 
   /* Saturate since we must output a value with exponent 0 */
   if ((e > 0) && (fAbs(res) >= FL2FXCONST_DBL(0.5))) {
@@ -494,7 +494,7 @@ FIXP_DBL fDivNormSigned(FIXP_DBL num, FIXP_DBL denom) {
 
   return res;
 }
-FIXP_DBL fDivNormSigned(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e) {
+FIXP_DBL mpegh_fDivNormSigned(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e) {
   FIXP_DBL div;
   INT norm_num, norm_den;
   int sign;
@@ -533,7 +533,7 @@ FIXP_DBL fDivNormSigned(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e) {
 #endif /* FUNCTION_fDivNormSigned */
 
 #ifndef FUNCTION_fDivNormHighPrec
-FIXP_DBL fDivNormHighPrec(FIXP_DBL num, FIXP_DBL denom, INT* result_e) {
+FIXP_DBL mpegh_fDivNormHighPrec(FIXP_DBL num, FIXP_DBL denom, INT* result_e) {
   FIXP_DBL div;
   INT norm_num, norm_den;
 
@@ -560,7 +560,7 @@ FIXP_DBL fDivNormHighPrec(FIXP_DBL num, FIXP_DBL denom, INT* result_e) {
 #endif /* !FUNCTION_fDivNormHighPrec */
 
 #ifndef FUNCTION_fPow
-FIXP_DBL f2Pow(const FIXP_DBL exp_m, const INT exp_e, INT* result_e) {
+FIXP_DBL mpegh_f2Pow(const FIXP_DBL exp_m, const INT exp_e, INT* result_e) {
   FIXP_DBL frac_part, result_m;
   INT int_part;
 
@@ -608,17 +608,17 @@ FIXP_DBL f2Pow(const FIXP_DBL exp_m, const INT exp_e, INT* result_e) {
   return result_m;
 }
 
-FIXP_DBL f2Pow(const FIXP_DBL exp_m, const INT exp_e) {
+FIXP_DBL mpegh_f2Pow(const FIXP_DBL exp_m, const INT exp_e) {
   FIXP_DBL result_m;
   INT result_e;
 
-  result_m = f2Pow(exp_m, exp_e, &result_e);
+  result_m = mpegh_f2Pow(exp_m, exp_e, &result_e);
   result_e = fixMin(DFRACT_BITS - 1, fixMax(-(DFRACT_BITS - 1), result_e));
 
   return scaleValue(result_m, result_e);
 }
 
-FIXP_DBL fPow(FIXP_DBL base_m, INT base_e, FIXP_DBL exp_m, INT exp_e, INT* result_e) {
+FIXP_DBL mpegh_fPow(FIXP_DBL base_m, INT base_e, FIXP_DBL exp_m, INT exp_e, INT* result_e) {
   INT ans_lg2_e, baselg2_e;
   FIXP_DBL base_lg2, ans_lg2, result;
 
@@ -645,12 +645,12 @@ FIXP_DBL fPow(FIXP_DBL base_m, INT base_e, FIXP_DBL exp_m, INT exp_e, INT* resul
   ans_lg2_e = exp_e + baselg2_e;
 
   /* Calc antilog */
-  result = f2Pow(ans_lg2, ans_lg2_e, result_e);
+  result = mpegh_f2Pow(ans_lg2, ans_lg2_e, result_e);
 
   return result;
 }
 
-FIXP_DBL fLdPow(FIXP_DBL baseLd_m, INT baseLd_e, FIXP_DBL exp_m, INT exp_e, INT* result_e) {
+FIXP_DBL mpegh_fLdPow(FIXP_DBL baseLd_m, INT baseLd_e, FIXP_DBL exp_m, INT exp_e, INT* result_e) {
   INT ans_lg2_e;
   FIXP_DBL ans_lg2, result;
 
@@ -668,21 +668,21 @@ FIXP_DBL fLdPow(FIXP_DBL baseLd_m, INT baseLd_e, FIXP_DBL exp_m, INT exp_e, INT*
   ans_lg2_e = exp_e + baseLd_e;
 
   /* Calc antilog */
-  result = f2Pow(ans_lg2, ans_lg2_e, result_e);
+  result = mpegh_f2Pow(ans_lg2, ans_lg2_e, result_e);
 
   return result;
 }
 
-FIXP_DBL fLdPow(FIXP_DBL baseLd_m, INT baseLd_e, FIXP_DBL exp_m, INT exp_e) {
+FIXP_DBL mpegh_fLdPow(FIXP_DBL baseLd_m, INT baseLd_e, FIXP_DBL exp_m, INT exp_e) {
   FIXP_DBL result_m;
   int result_e;
 
-  result_m = fLdPow(baseLd_m, baseLd_e, exp_m, exp_e, &result_e);
+  result_m = mpegh_fLdPow(baseLd_m, baseLd_e, exp_m, exp_e, &result_e);
 
   return SATURATE_SHIFT(result_m, -result_e, DFRACT_BITS);
 }
 
-FIXP_DBL fPowInt(FIXP_DBL base_m, INT base_e, INT exp, INT* pResult_e) {
+FIXP_DBL mpegh_fPowInt(FIXP_DBL base_m, INT base_e, INT exp, INT* pResult_e) {
   FIXP_DBL result;
 
   if (exp != 0) {
@@ -707,7 +707,7 @@ FIXP_DBL fPowInt(FIXP_DBL base_m, INT base_e, INT exp, INT* pResult_e) {
 
       if (exp < 0) {
         /* 1.0 / ans */
-        result = fDivNorm(FL2FXCONST_DBL(0.5f), result, &result_e);
+        result = mpegh_fDivNorm(FL2FXCONST_DBL(0.5f), result, &result_e);
         result_e++;
       } else {
         int ansScale = CountLeadingBits(result);
@@ -731,25 +731,25 @@ FIXP_DBL fPowInt(FIXP_DBL base_m, INT base_e, INT exp, INT* pResult_e) {
 #endif /* FUNCTION_fPow */
 
 #ifndef FUNCTION_fLog2
-FIXP_DBL CalcLog2(FIXP_DBL base_m, INT base_e, INT* result_e) {
+FIXP_DBL mpegh_CalcLog2(FIXP_DBL base_m, INT base_e, INT* result_e) {
   return fLog2(base_m, base_e, result_e);
 }
 #endif /* FUNCTION_fLog2 */
 
-INT fixp_floorToInt(FIXP_DBL f_inp, INT sf) {
+INT mpegh_fixp_floorToInt(FIXP_DBL f_inp, INT sf) {
   FDK_ASSERT(sf >= 0);
   INT floorInt = (INT)(f_inp >> ((DFRACT_BITS - 1) - sf));
   return floorInt;
 }
 
-FIXP_DBL fixp_floor(FIXP_DBL f_inp, INT sf) {
+FIXP_DBL mpegh_fixp_floor(FIXP_DBL f_inp, INT sf) {
   FDK_ASSERT(sf >= 0);
-  INT floorInt = fixp_floorToInt(f_inp, sf);
+  INT floorInt = mpegh_fixp_floorToInt(f_inp, sf);
   FIXP_DBL f_floor = (FIXP_DBL)(floorInt << ((DFRACT_BITS - 1) - sf));
   return f_floor;
 }
 
-INT fixp_ceilToInt(FIXP_DBL f_inp, INT sf)  // sf  mantissaBits left of dot
+INT mpegh_fixp_ceilToInt(FIXP_DBL f_inp, INT sf)  // sf  mantissaBits left of dot
 {
   FDK_ASSERT(sf >= 0);
   INT sx = (DFRACT_BITS - 1) - sf;  // sx  mantissaBits right of dot
@@ -765,10 +765,10 @@ INT fixp_ceilToInt(FIXP_DBL f_inp, INT sf)  // sf  mantissaBits left of dot
   return ceilInt;
 }
 
-FIXP_DBL fixp_ceil(FIXP_DBL f_inp, INT sf) {
+FIXP_DBL mpegh_fixp_ceil(FIXP_DBL f_inp, INT sf) {
   FDK_ASSERT(sf >= 0);
   INT sx = (DFRACT_BITS - 1) - sf;
-  INT ceilInt = fixp_ceilToInt(f_inp, sf);
+  INT ceilInt = mpegh_fixp_ceilToInt(f_inp, sf);
   ULONG mask = (ULONG)0x1 << (DFRACT_BITS - 1);  // 0x80000000
   ceilInt = ceilInt << sx;  // no fract warn bec. shift into saturation done on int side
 
@@ -781,14 +781,14 @@ FIXP_DBL fixp_ceil(FIXP_DBL f_inp, INT sf) {
 }
 
 /*****************************************************************************
-   fixp_truncateToInt()
+   mpegh_fixp_truncateToInt()
      Just remove the fractional part which is located right of decimal point
      Same as which is done when a float is casted to (INT) :
      result_INTtype = (INT)b_floatTypeInput;
 
    returns INT
 *****************************************************************************/
-INT fixp_truncateToInt(FIXP_DBL f_inp,
+INT mpegh_fixp_truncateToInt(FIXP_DBL f_inp,
                        INT sf)  // sf  mantissaBits left  of dot (without sign)  e.g. at width 32
                                 // this would be [sign]7.   supposed sf equals 8.
 {
@@ -807,27 +807,27 @@ INT fixp_truncateToInt(FIXP_DBL f_inp,
 }
 
 /*****************************************************************************
-   fixp_truncate()
+   mpegh_fixp_truncate()
      Just remove the fractional part which is located right of decimal point
 
    returns FIXP_DBL
 *****************************************************************************/
-FIXP_DBL fixp_truncate(FIXP_DBL f_inp, INT sf) {
+FIXP_DBL mpegh_fixp_truncate(FIXP_DBL f_inp, INT sf) {
   FDK_ASSERT(sf >= 0);
-  INT truncateInt = fixp_truncateToInt(f_inp, sf);
+  INT truncateInt = mpegh_fixp_truncateToInt(f_inp, sf);
   FIXP_DBL f_truncate = (FIXP_DBL)(truncateInt << ((DFRACT_BITS - 1) - sf));
   return f_truncate;
 }
 
 /*****************************************************************************
-  fixp_roundToInt()
+  mpegh_fixp_roundToInt()
     round [typical rounding]
 
     See fct roundRef() [which is the reference]
     Full-range test available in FDK_tools_test.cpp
   returns INT
 *****************************************************************************/
-INT fixp_roundToInt(FIXP_DBL f_inp, INT sf) {
+INT mpegh_fixp_roundToInt(FIXP_DBL f_inp, INT sf) {
   FDK_ASSERT(sf >= 0);
   FDK_ASSERT(sf <= (DFRACT_BITS - 1));
   INT rnd;
@@ -850,16 +850,16 @@ INT fixp_roundToInt(FIXP_DBL f_inp, INT sf) {
 }
 
 /*****************************************************************************
-  fixp_round()
+  mpegh_fixp_round()
     round [typical rounding]
 
     See fct roundRef() [which is the reference]
   returns FIXP_DBL
 *****************************************************************************/
-FIXP_DBL fixp_round(FIXP_DBL f_inp, INT sf) {
+FIXP_DBL mpegh_fixp_round(FIXP_DBL f_inp, INT sf) {
   FDK_ASSERT(sf >= 0);
   INT sx = DFRACT_BITS - 1 - sf;
-  INT r = fixp_roundToInt(f_inp, sf);
+  INT r = mpegh_fixp_roundToInt(f_inp, sf);
   ULONG mask = (ULONG)0x1 << (DFRACT_BITS - 1);  // 0x80000000
   r = r << sx;
 

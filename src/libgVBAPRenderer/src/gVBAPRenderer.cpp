@@ -605,7 +605,7 @@ static FIXP_DBL decodeDistance(INT positionDistance, INT bsReferenceDistance) {
     distance = fMult(FL2FXCONST_DBL(0.0472188798661443 * 16),
                      (FIXP_DBL)(LONG)(positionDistance - bsReferenceDistance - 120)
                          << (31 - 9)); /* exp 5 */
-    distance = f2Pow(distance, 5, &e);
+    distance = mpegh_f2Pow(distance, 5, &e);
 
     if ((e > 4) && (distance > ((FIXP_DBL)MAXVAL_DBL >> (e - 4)))) {
       distance = (FIXP_DBL)MAXVAL_DBL;
@@ -723,7 +723,7 @@ static FIXP_DBL gVBAPRenderer_Spread_internal_spread_Parable(
   FIXP_DBL tmp = fMult(spreadAngle, spreadAngle); /* exp 2 */
   INT e = 0;
 
-  tmp = -fDivNormHighPrec(-FL2FXCONST_DBL(GVBAP_SPREAD_PARABLE_SCALING_FACTOR / 2), tmp,
+  tmp = -mpegh_fDivNormHighPrec(-FL2FXCONST_DBL(GVBAP_SPREAD_PARABLE_SCALING_FACTOR / 2), tmp,
                           &e); /* exp e-1 */
   return scaleValue(tmp, e - 1 - GVBAP_SPREAD_PARABLE_EXP);
 }

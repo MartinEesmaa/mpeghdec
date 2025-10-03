@@ -677,7 +677,7 @@ FIXP_DBL peak_filter(FIXP_DBL f,          /* peak frequency [Hz] */
   /* peak gain in linear domain */
   tmp_V0 = fMult((FIXP_DBL)DBL_16_div_20, fAbs(g));
   V0_e += g_e - 4;
-  V0 = fPow((FIXP_DBL)DBL_10_div_16, 4, tmp_V0, V0_e, &V0_e);
+  V0 = mpegh_fPow((FIXP_DBL)DBL_10_div_16, 4, tmp_V0, V0_e, &V0_e);
 
   /* f*f*b*b */
   FIXP_DBL tmp_fPow2_f = fMult(f, f);
@@ -702,9 +702,9 @@ FIXP_DBL peak_filter(FIXP_DBL f,          /* peak frequency [Hz] */
   tmp_q_e -= norm_q;
   tmp_v = fMult(V0, V0);
   V0_e = 2 * V0_e;
-  tmp_v = fDivNormSigned(tmp_v, tmp_q, &tmp_v_e);
+  tmp_v = mpegh_fDivNormSigned(tmp_v, tmp_q, &tmp_v_e);
   tmp_v_e = tmp_v_e + (V0_e - tmp_q_e);
-  tmp_q = invFixp(tmp_q, &tmp_q_e);  // -fDivNormSigned( MINVAL_DBL, tmp_q, &tmp_q_e);
+  tmp_q = invFixp(tmp_q, &tmp_q_e);  // -mpegh_fDivNormSigned( MINVAL_DBL, tmp_q, &tmp_q_e);
   tmp_q = fAddNorm(tmp_q, tmp_q_e, MINVAL_DBL, 1, &tmp_q_e);
   tmp_v = fAddNorm(tmp_v, tmp_v_e, MINVAL_DBL, 1, &tmp_v_e);
 
@@ -719,17 +719,17 @@ FIXP_DBL peak_filter(FIXP_DBL f,          /* peak frequency [Hz] */
 
   /* 2nd order peak filter magnitude response */
   if (g < (FIXP_DBL)0) {
-    gain = fDivNormSigned(tmp_g_1, tmp_g_v, &gain_e);
+    gain = mpegh_fDivNormSigned(tmp_g_1, tmp_g_v, &gain_e);
     gain_e = gain_e + tmp_g_1_e - tmp_g_v_e;
   } else {
-    gain = fDivNormSigned(tmp_g_v, tmp_g_1, &gain_e);
+    gain = mpegh_fDivNormSigned(tmp_g_v, tmp_g_1, &gain_e);
     gain_e = gain_e - tmp_g_1_e + tmp_g_v_e;
   }
 
   INT tmp_G_e = 0;
   tmp_G = fMult((FIXP_DBL)DBL_16_div_20, G);
   tmp_G_e = tmp_G_e + G_e - 4;
-  tmp_G = fPow((FIXP_DBL)DBL_10_div_16, 4, tmp_G, tmp_G_e, &tmp_G_e);
+  tmp_G = mpegh_fPow((FIXP_DBL)DBL_10_div_16, 4, tmp_G, tmp_G_e, &tmp_G_e);
 
   if (gain_e & 0x1) {
     gain_e++;
@@ -1471,8 +1471,8 @@ converter_status_t converter_init(
               FIXP_DBL sin_alpha_m = mpegh_fixp_sin(alpha, alpha_e);
               FIXP_DBL cos_alpha_m = mpegh_fixp_cos(alpha, alpha_e);
 
-              FIXP_DBL tan_alpha0_m = fDivNormSigned(sin_alpha0_m, cos_alpha0_m, &alpha0_e);
-              FIXP_DBL tan_alpha_m = fDivNormSigned(sin_alpha_m, cos_alpha_m, &alpha_e);
+              FIXP_DBL tan_alpha0_m = mpegh_fDivNormSigned(sin_alpha0_m, cos_alpha0_m, &alpha0_e);
+              FIXP_DBL tan_alpha_m = mpegh_fDivNormSigned(sin_alpha_m, cos_alpha_m, &alpha_e);
 
               FIXP_DBL num_m, denom_m;
               INT num_e, denom_e;
@@ -1483,7 +1483,7 @@ converter_status_t converter_init(
               denom_m = fAddNorm(denom_m, denom_e, ((FIXP_DBL)0x00000001), (-3), &denom_e);
 
               INT a1_e = 0;
-              FIXP_DBL a1_m = fDivNormSigned(num_m, denom_m, &a1_e);
+              FIXP_DBL a1_m = mpegh_fDivNormSigned(num_m, denom_m, &a1_e);
               a1_e = a1_e + num_e - denom_e;
 
               INT nrm_e = 0, tmp_e = 0;
@@ -1759,8 +1759,8 @@ converter_status_t converter_init(
                 FIXP_DBL sin_alpha_m = mpegh_fixp_sin(alpha, alpha_e);
                 FIXP_DBL cos_alpha_m = mpegh_fixp_cos(alpha, alpha_e);
 
-                FIXP_DBL tan_alpha0_m = fDivNormSigned(sin_alpha0_m, cos_alpha0_m, &alpha0_e);
-                FIXP_DBL tan_alpha_m = fDivNormSigned(sin_alpha_m, cos_alpha_m, &alpha_e);
+                FIXP_DBL tan_alpha0_m = mpegh_fDivNormSigned(sin_alpha0_m, cos_alpha0_m, &alpha0_e);
+                FIXP_DBL tan_alpha_m = mpegh_fDivNormSigned(sin_alpha_m, cos_alpha_m, &alpha_e);
 
                 FIXP_DBL num_m, denom_m;
                 INT num_e, denom_e;
@@ -1771,7 +1771,7 @@ converter_status_t converter_init(
                 denom_m = fAddNorm(denom_m, denom_e, ((FIXP_DBL)0x00000001), (-3), &denom_e);
 
                 INT a1_e = 0;
-                FIXP_DBL a1_m = fDivNormSigned(num_m, denom_m, &a1_e);
+                FIXP_DBL a1_m = mpegh_fDivNormSigned(num_m, denom_m, &a1_e);
                 a1_e = a1_e + num_e - denom_e;
 
                 INT nrm_e = 0, tmp_e = 0;
@@ -1999,10 +1999,10 @@ void normalizePG(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
     P_e >>= 1;
 
     for (chout = FL; chout <= SR; chout++) {
-      /* fDivNorm */
+      /* mpegh_fDivNorm */
       // GVH[chin][chout] /= P;
       fcInt->GVH[chin][chout] =
-          fDivNormSigned(fcInt->GVH[chin][chout], P, &(fcInt->GVH_e[chin][chout]));
+          mpegh_fDivNormSigned(fcInt->GVH[chin][chout], P, &(fcInt->GVH_e[chin][chout]));
       fcInt->GVH_e[chin][chout] -= P_e;
     }
   }
@@ -2036,10 +2036,10 @@ void normalizePG(IIS_FORMATCONVERTER_INTERNAL_HANDLE fcInt) {
     P_e >>= 1;
 
     for (chout = FL; chout <= SR; chout++) {
-      /* fDivNorm */
+      /* mpegh_fDivNorm */
       // GVL[chin][chout] /= P;
       fcInt->GVL[chin][chout] =
-          fDivNormSigned(fcInt->GVL[chin][chout], P, &(fcInt->GVL_e[chin][chout]));
+          mpegh_fDivNormSigned(fcInt->GVL[chin][chout], P, &(fcInt->GVL_e[chin][chout]));
       fcInt->GVL_e[chin][chout] -= P_e;
     }
   }

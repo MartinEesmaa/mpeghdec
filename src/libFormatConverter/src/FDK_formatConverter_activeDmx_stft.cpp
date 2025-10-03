@@ -228,7 +228,7 @@ void activeDmxClose_STFT(void* handle) {
  */
 
 FDK_INLINE FIXP_DBL fDivNormNE(FIXP_DBL L_num, FIXP_DBL L_denum, INT* result_e) {
-  /* Helper function: Copy of fDivNorm but both L_num > 0 and L_denum > 0 */
+  /* Helper function: Copy of mpegh_fDivNorm but both L_num > 0 and L_denum > 0 */
   FIXP_DBL div;
   INT norm_num, norm_den;
 

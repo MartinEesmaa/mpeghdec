@@ -781,8 +781,8 @@ static FIXP_DBL computeLoudnessCompensationGain(
       tmp2Db += groupLoudness[n];
     }
     /* 10^(dB_val/10) = 2^(log2(10)/10*dB_val) */
-    tmp1 = f2Pow(fMult(tmp1Db, FL2FXCONST_DBL(0.3321928f * (float)(1 << 1))), 8 - 1, &tmp1_e);
-    tmp2 = f2Pow(fMult(tmp2Db, FL2FXCONST_DBL(0.3321928f * (float)(1 << 1))), 8 - 1, &tmp2_e);
+    tmp1 = mpegh_f2Pow(fMult(tmp1Db, FL2FXCONST_DBL(0.3321928f * (float)(1 << 1))), 8 - 1, &tmp1_e);
+    tmp2 = mpegh_f2Pow(fMult(tmp2Db, FL2FXCONST_DBL(0.3321928f * (float)(1 << 1))), 8 - 1, &tmp2_e);
 
     if (includeGroup[n]) {
       if (groupStateDefault[n]) {
@@ -799,7 +799,7 @@ static FIXP_DBL computeLoudnessCompensationGain(
 
   if ((lr_e == lai_e) && (loudnessAfterInteract == loudnessReference)) return (FIXP_DBL)0;
 
-  loudnessCompensationGainPow2 = fDivNorm(loudnessReference, loudnessAfterInteract, &lcgp2_e);
+  loudnessCompensationGainPow2 = mpegh_fDivNorm(loudnessReference, loudnessAfterInteract, &lcgp2_e);
   lcgp2_e += lr_e - lai_e;
 
   /* loudness compensation gain in dB */

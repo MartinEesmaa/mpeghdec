@@ -1442,7 +1442,7 @@ static void MCT_StereoFilling(FIXP_DBL* pSpec, SHORT* pSpec_exp,
         int temp_int;
 
         /* Divide by energy_sfb. Calculate (enTarget - enRes) / energy_dmx */
-        FIXP_DBL temp_FIXP_DBL = fDivNorm(Energy_Difference, energy_dmx, &temp_int);
+        FIXP_DBL temp_FIXP_DBL = mpegh_fDivNorm(Energy_Difference, energy_dmx, &temp_int);
 
         /* Correct the output exponent */
         temp_int += Energy_Difference_e - energy_dmx_e;
@@ -1520,7 +1520,7 @@ static void MCT_StereoFilling(FIXP_DBL* pSpec, SHORT* pSpec_exp,
       if (enRes > (FIXP_DBL)0) {
         /*Calculate (enTarget / enRes) */
         int temp_int;
-        FIXP_DBL temp_FIXP_DBL = fDivNorm(enTarget, enRes, &temp_int);
+        FIXP_DBL temp_FIXP_DBL = mpegh_fDivNorm(enTarget, enRes, &temp_int);
         temp_int += (enTarget_e - enRes_e);
 
         /*Calculate sqrt(enTarget / enRes) */

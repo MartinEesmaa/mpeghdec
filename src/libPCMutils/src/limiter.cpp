@@ -129,12 +129,12 @@ TDLimiterPtr pcmLimiter_Create(unsigned int maxAttackMs, unsigned int releaseMs,
 
   /* attackConst = pow(0.1, 1.0 / (attack + 1)) */
   exponent = invFixp(attack + 1);
-  attackConst = fPow(FL2FXCONST_DBL(0.1f), 0, exponent, 0, &e_ans);
+  attackConst = mpegh_fPow(FL2FXCONST_DBL(0.1f), 0, exponent, 0, &e_ans);
   attackConst = scaleValue(attackConst, e_ans);
 
   /* releaseConst  = (float)pow(0.1, 1.0 / (release + 1)) */
   exponent = invFixp(release + 1);
-  releaseConst = fPow(FL2FXCONST_DBL(0.1f), 0, exponent, 0, &e_ans);
+  releaseConst = mpegh_fPow(FL2FXCONST_DBL(0.1f), 0, exponent, 0, &e_ans);
   releaseConst = scaleValue(releaseConst, e_ans);
 
   /* init parameters */
@@ -389,7 +389,7 @@ TDLIMITER_ERROR pcmLimiter_Apply(TDLimiterPtr limiter, PCM_LIM* samplesIn, INT_P
         /* calc gain */
         /* gain is downscaled by one, so that gain = 1.0 can be represented */
         if (max > threshold) {
-          gain = fDivNorm(threshold, max) >> 1;
+          gain = mpegh_fDivNorm(threshold, max) >> 1;
         } else {
           gain = FL2FXCONST_DBL(1.0f / (1 << 1));
         }
@@ -535,7 +535,7 @@ INT pcmLimiter_GetMaxGainReduction(TDLimiterPtr limiter) {
 
   maxGainReduction = fMult(loggain, FL2FXCONST_DBL(-6.0206f / (1 << 3)));
 
-  return fixp_roundToInt(maxGainReduction, (e_ans + 3));
+  return mpegh_fixp_roundToInt(maxGainReduction, (e_ans + 3));
 }
 
 /* set number of channels */
@@ -587,12 +587,12 @@ TDLIMITER_ERROR pcmLimiter_SetSampleRate(TDLimiterPtr limiter, UINT sampleRate) 
 
   /* attackConst = pow(0.1, 1.0 / (attack + 1)) */
   exponent = invFixp(attack + 1);
-  attackConst = fPow(FL2FXCONST_DBL(0.1f), 0, exponent, 0, &e_ans);
+  attackConst = mpegh_fPow(FL2FXCONST_DBL(0.1f), 0, exponent, 0, &e_ans);
   attackConst = scaleValue(attackConst, e_ans);
 
   /* releaseConst  = (float)pow(0.1, 1.0 / (release + 1)) */
   exponent = invFixp(release + 1);
-  releaseConst = fPow(FL2FXCONST_DBL(0.1f), 0, exponent, 0, &e_ans);
+  releaseConst = mpegh_fPow(FL2FXCONST_DBL(0.1f), 0, exponent, 0, &e_ans);
   releaseConst = scaleValue(releaseConst, e_ans);
 
   limiter->attack = attack;
@@ -628,7 +628,7 @@ TDLIMITER_ERROR pcmLimiter_SetAttack(TDLimiterPtr limiter, unsigned int attackMs
 
   /* attackConst = pow(0.1, 1.0 / (attack + 1)) */
   exponent = invFixp(attack + 1);
-  attackConst = fPow(FL2FXCONST_DBL(0.1f), 0, exponent, 0, &e_ans);
+  attackConst = mpegh_fPow(FL2FXCONST_DBL(0.1f), 0, exponent, 0, &e_ans);
   attackConst = scaleValue(attackConst, e_ans);
 
   /* Reset in case that the attack time changes. Seamless switching is not supported yet */
@@ -656,7 +656,7 @@ TDLIMITER_ERROR pcmLimiter_SetRelease(TDLimiterPtr limiter, unsigned int release
 
   /* releaseConst  = (float)pow(0.1, 1.0 / (release + 1)) */
   exponent = invFixp(release + 1);
-  releaseConst = fPow(FL2FXCONST_DBL(0.1f), 0, exponent, 0, &e_ans);
+  releaseConst = mpegh_fPow(FL2FXCONST_DBL(0.1f), 0, exponent, 0, &e_ans);
   releaseConst = scaleValue(releaseConst, e_ans);
 
   limiter->releaseConst = releaseConst;

@@ -737,12 +737,12 @@ INT DecodeDownmixMatrix(INT inputIndex, INT inputCount, SpeakerInformation* inpu
       FIXP_DBL value = downmixMatrixTmp[i * outputCount + j];
       if ((value >> 23) != (FIXP_DBL)DMX_MATRIX_GAIN_ZERO) {
         INT exp_e = 0;
-        FIXP_DBL exp_m = fDivNormSigned(value, FL2FX_DBL(0.625), &exp_e);
+        FIXP_DBL exp_m = mpegh_fDivNormSigned(value, FL2FX_DBL(0.625), &exp_e);
         exp_e += 3; /* Value (Q23) / FL2FX_DBL(0.625) (Q26) -> exp_e = (8-5) */
         INT pow_e = 0;
         FIXP_DBL pow_m = 0;
         if (exp_m != (FIXP_DBL)0) {
-          pow_m = fPow(FL2FX_DBL(0.625), 4, exp_m, exp_e, &pow_e);
+          pow_m = mpegh_fPow(FL2FX_DBL(0.625), 4, exp_m, exp_e, &pow_e);
         } else {
           pow_m = (FIXP_DBL)MAXVAL_DBL;
           pow_e = 0;

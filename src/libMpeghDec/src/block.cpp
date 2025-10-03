@@ -862,7 +862,7 @@ void IGF_StereoFillingPrepare(CAacDecoderChannelInfo* pAacDecoderChannelInfo,
 
     /* Divide by energy_sfb. Calculate (sfb_width * (1 - factor))/energy_dmx[sfb] */
     int temp_exp;
-    FIXP_DBL temp_FIXP_DBL = fDivNorm(factor, energy_dmx, &temp_exp);
+    FIXP_DBL temp_FIXP_DBL = mpegh_fDivNorm(factor, energy_dmx, &temp_exp);
 
     /* Correct the output exponent */
     temp_exp += factor_exp - energy_dmx_e;
@@ -994,7 +994,7 @@ void IGF_StereoFillingApply(CAacDecoderChannelInfo* pAacDecoderChannelInfo,
 
     /*Calculate Scaled_Width/factor */
     INT temp_int;
-    FIXP_DBL temp_FIXP_DBL = fDivNorm(sfb_width_modified, factor, &temp_int);
+    FIXP_DBL temp_FIXP_DBL = mpegh_fDivNorm(sfb_width_modified, factor, &temp_int);
     temp_int += (sfb_width_modified_exp - factor_exp);
 
     /*Calculate sqrt(Scaled_Width/factor) */

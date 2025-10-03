@@ -937,7 +937,7 @@ static void iisIGFDecoderCollectEnergiesMonoNormalize(
             sE += acc;
           }
           /* Divide by the group length */
-          sE = fDivNorm(sE, groupLength, &temp_int);
+          sE = mpegh_fDivNorm(sE, groupLength, &temp_int);
           hWorkMem->sE[sfb] = sE;
           hWorkMem->sE_exp[sfb] = temp_int + max - 31;
 
@@ -963,7 +963,7 @@ static void iisIGFDecoderCollectEnergiesMonoNormalize(
             tE += acc;
           }
           /* Divide by the group length */
-          tE = fDivNorm(tE, groupLength, &temp_int);
+          tE = mpegh_fDivNorm(tE, groupLength, &temp_int);
           hWorkMem->tE[sfb] = tE;
           hWorkMem->tE_exp[sfb] = temp_int + max - 31;
 
@@ -1525,7 +1525,7 @@ static void iisIGFDecoderCalculateGainsNew(
         hMap->fSfbGainTab[ sfb ] = MIN( 10.f, (float)sqrt( mE / tE) );*/
 
         /* result= mE / tE */
-        temp_FIXP_DBL = fDivNorm(mE, tE, &temp_int);
+        temp_FIXP_DBL = mpegh_fDivNorm(mE, tE, &temp_int);
 
         /* add to shift */
         temp_int += mEtE_shift;
@@ -1879,7 +1879,7 @@ static void iisIGFDecoderDecodeDestinEnergies(
       INT sfe = *p2sfe;
 
       /* pow( 2.0, 0.25 * hMap->fSfbDestinEnergyTab[ sfb ] ) */
-      temp_FIXP_DBL = f2Pow((FIXP_DBL)sfe, 29, &exp_DBL);
+      temp_FIXP_DBL = mpegh_f2Pow((FIXP_DBL)sfe, 29, &exp_DBL);
 
       if (sfb_jump) {
         p2sfe++;
@@ -2415,13 +2415,13 @@ void iisIGFDecLibInit(
 
   /* hPrivateStaticData->igfMinSubbandLB  = INT( (1125 * aacFrameLength ) / (aacSampleRate >> 1) );
    */
-  temp = fDivNorm((FIXP_DBL)(1125 * aacFrameLength), (FIXP_DBL)(aacSampleRate >> 1), &exp);
+  temp = mpegh_fDivNorm((FIXP_DBL)(1125 * aacFrameLength), (FIXP_DBL)(aacSampleRate >> 1), &exp);
   hPrivateStaticData->igfMinSubbandLB = INT(temp >> (31 - exp));
   hPrivateStaticData->igfMinSubbandLB += hPrivateStaticData->igfMinSubbandLB % 2;
 
   /* hPrivateStaticData->igfMinSubbandSB  = INT( (1125 * aacFrameLength >> 3 ) / (aacSampleRate >>
    * 1) ); */
-  temp = fDivNorm((FIXP_DBL)(1125 * (aacFrameLength >> 3)), (FIXP_DBL)(aacSampleRate >> 1), &exp);
+  temp = mpegh_fDivNorm((FIXP_DBL)(1125 * (aacFrameLength >> 3)), (FIXP_DBL)(aacSampleRate >> 1), &exp);
   hPrivateStaticData->igfMinSubbandSB = INT(temp >> (31 - exp));
   hPrivateStaticData->igfMinSubbandSB += hPrivateStaticData->igfMinSubbandSB % 2;
 

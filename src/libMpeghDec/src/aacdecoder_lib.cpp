@@ -1149,8 +1149,8 @@ static void aacDecoder_UpdateBitStreamCounters(CStreamInfo* pSi, HANDLE_FDK_BITS
   if (pSi->frameSize > 0) {
     /* bitRate = nBits * sampleRate / frameSize */
     int ratio_e = 0;
-    FIXP_DBL ratio_m = fDivNorm(pSi->sampleRate, pSi->frameSize, &ratio_e);
-    pSi->bitRate = (INT)fMultNorm(nBits, DFRACT_BITS - 1, ratio_m, ratio_e, DFRACT_BITS - 1);
+    FIXP_DBL ratio_m = mpegh_fDivNorm(pSi->sampleRate, pSi->frameSize, &ratio_e);
+    pSi->bitRate = (INT)mpegh_fMultNorm(nBits, DFRACT_BITS - 1, ratio_m, ratio_e, DFRACT_BITS - 1);
   }
 
   /* bit/byte counters */

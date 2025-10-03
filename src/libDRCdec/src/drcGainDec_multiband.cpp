@@ -128,8 +128,8 @@ static void _generateSlope(const int audioDecoderSubbandCount, const FIXP_DBL* f
       /* response[s] = pow (10.0, NORM_CONST * log10(fCrossNormLo / fCenterNormSb[s]))
                      = pow (fCrossNormLo / fCenterNormSb[s], NORM_CONST) */
       if (fCenterNormSb[s] > (FIXP_DBL)0) {
-        ratio = fDivNorm(fCrossNormLo, fCenterNormSb[s], &r_e);
-        power = fPow(ratio, r_e, NORM_CONST, 2, &r_e);
+        ratio = mpegh_fDivNorm(fCrossNormLo, fCenterNormSb[s], &r_e);
+        power = mpegh_fPow(ratio, r_e, NORM_CONST, 2, &r_e);
         response[s] = FX_DBL2FX_SGL(scaleValue(power, r_e));
       } else {
         response[s] = (FIXP_SGL)0;
@@ -139,8 +139,8 @@ static void _generateSlope(const int audioDecoderSubbandCount, const FIXP_DBL* f
     } else {
       /* response[s] = pow (10.0, norm * log10(fCenterNormSb[s] / fCrossNormHi))
                      = pow (fCenterNormSb[s] / fCrossNormHi, NORM_CONST) */
-      ratio = fDivNorm(fCenterNormSb[s], fCrossNormHi, &r_e);
-      power = fPow(ratio, r_e, NORM_CONST, 2, &r_e);
+      ratio = mpegh_fDivNorm(fCenterNormSb[s], fCrossNormHi, &r_e);
+      power = mpegh_fPow(ratio, r_e, NORM_CONST, 2, &r_e);
       response[s] = FX_DBL2FX_SGL(scaleValue(power, r_e));
     }
   }
@@ -196,7 +196,7 @@ static DRC_ERROR _generateOverlapWeights(const int nDrcBands, const int drcBandT
       for (b = 0; b < nDrcBands; b++) {
         /* overlapForGroup[b].overlapWeight[s] /= wNorm; */
         tmp_overlapWeight =
-            fDivNorm(FX_SGL2FX_DBL(overlapForGroup[b].overlapWeight[s]), wNorm, &e_tmp);
+            mpegh_fDivNorm(FX_SGL2FX_DBL(overlapForGroup[b].overlapWeight[s]), wNorm, &e_tmp);
         overlapForGroup[b].overlapWeight[s] =
             FX_DBL2FX_SGL(scaleValueSaturate(tmp_overlapWeight, e_tmp - 3));
       }

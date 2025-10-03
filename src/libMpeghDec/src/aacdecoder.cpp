@@ -3039,7 +3039,7 @@ TRANSPORTDEC_ERROR PcmDataPayload(EarconDecoder* earconDecoder, FIXP_DBL* TimeDa
     /*Adjust exponent*/
     AttGain_exp = AttGain_exp - 2;
     /*Calculate pow2()*/
-    AttGain = f2Pow(AttGain, AttGain_exp, &AttGain_exp);
+    AttGain = mpegh_f2Pow(AttGain, AttGain_exp, &AttGain_exp);
 
     /*AttGain is less or equal to 1 (0x40000000 with exp=1). Make sure the exponent is always <=0 to
      * simplify the calcuations later*/
@@ -3082,7 +3082,7 @@ TRANSPORTDEC_ERROR PcmDataPayload(EarconDecoder* earconDecoder, FIXP_DBL* TimeDa
       /*Calculate ramp-up/down multiplicative factor.
       Needed for truncations and for frame lengths that
       are not a power of two */
-      FIXP_DBL factor = fDivNorm((FIXP_DBL)1, (FIXP_DBL)BaseframeSize);
+      FIXP_DBL factor = mpegh_fDivNorm((FIXP_DBL)1, (FIXP_DBL)BaseframeSize);
       AttGain_increment = fMult((AttGain - AttGain_old), factor);
     }
 
@@ -3138,7 +3138,7 @@ TRANSPORTDEC_ERROR PcmDataPayload(EarconDecoder* earconDecoder, FIXP_DBL* TimeDa
       /*Adjust exponent*/
       EarconGain_exp = EarconGain_exp - 2;
       /*Calculate pow2()*/
-      EarconGainNew = f2Pow(EarconGainNew, EarconGain_exp, &EarconGain_exp);
+      EarconGainNew = mpegh_f2Pow(EarconGainNew, EarconGain_exp, &EarconGain_exp);
 
       /*Adjust precision*/
       headroom = fNorm(EarconGainNew);
